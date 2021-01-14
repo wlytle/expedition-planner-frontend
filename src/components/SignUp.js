@@ -1,9 +1,11 @@
 import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
 
-const Login = () => {
+const SignUp = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
+  let history = useHistory();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -21,7 +23,10 @@ const Login = () => {
       }),
     })
       .then((r) => r.json())
-      .then(console.log);
+      .then((user) => {
+        localStorage.setItem("jwt", user.jwt);
+        history.push("/profile");
+      });
   };
 
   return (
@@ -52,11 +57,11 @@ const Login = () => {
           onChange={(e) => setPasswordConfirmation(e.target.value)}
         />
         <button className="button" type="submit">
-          Log In
+          Create Account
         </button>
       </form>
     </div>
   );
 };
 
-export default Login;
+export default SignUp;
