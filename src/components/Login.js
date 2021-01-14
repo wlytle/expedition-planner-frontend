@@ -2,22 +2,21 @@ import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { Button, Col, Row, Container, Form, Card } from "react-bootstrap";
 
-const SignUp = () => {
+const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [passwordConfirmation, setPasswordConfirmation] = useState("");
   let history = useHistory();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    fetch("http://localhost:3000/users", {
+    fetch("http://localhost:3000/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
       },
       body: JSON.stringify({
-        user: {
+        auth: {
           user_name: username,
           password: password,
         },
@@ -62,18 +61,6 @@ const SignUp = () => {
                     />
                   </Form.Group>
 
-                  <Form.Group controlId="formBasicPasswordConfirmation">
-                    <Form.Label>Confirm Passowrd</Form.Label>
-                    <Form.Control
-                      className="input"
-                      type="password"
-                      name="password_confirmation"
-                      placeholder="Confirm Password"
-                      value={passwordConfirmation}
-                      onChange={(e) => setPasswordConfirmation(e.target.value)}
-                    />
-                  </Form.Group>
-
                   <Button variant="primary" type="submit">
                     Create Account
                   </Button>
@@ -87,4 +74,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default Login;

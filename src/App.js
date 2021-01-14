@@ -1,6 +1,7 @@
 import React from "react";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import SignUp from "./components/SignUp";
+import Login from "./components/Login";
 import Profile from "./components/Profile";
 import "./App.css";
 
@@ -10,21 +11,22 @@ function App() {
   };
 
   return (
-    <div>
-      <button className="button" onClick={handleLogout}>
+    <Router>
+      <Link className="btn btn-secondary " onClick={handleLogout} to="/">
         Logout
-      </button>
-      <Router>
-        <Switch>
-          <Route exact path="/profile">
-            <Profile />
-          </Route>
-          <Route exact path="/">
-            <SignUp />
-          </Route>
-        </Switch>
-      </Router>
-    </div>
+      </Link>
+      <Switch>
+        <Route exact path="/profile">
+          <Profile />
+        </Route>
+        <Route exact path="/signup">
+          <SignUp />
+        </Route>
+        <Route exact path="/">
+          <Login />
+        </Route>
+      </Switch>
+    </Router>
   );
 }
 
