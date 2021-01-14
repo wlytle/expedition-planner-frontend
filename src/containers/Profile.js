@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
+import { Container, Row, Col } from "react-bootstrap";
 
 const Profile = () => {
-  const [user, setUser] = useState(null);
   useEffect(() => {
-    if (user) return null;
+    if (!localStorage.getItem("user")) return null;
+    const id = localStorage.getItem("user").id;
     const token = localStorage.getItem("jwt");
-    fetch("http://localhost:3000/users", {
+    fetch(`http://localhost:3000/users/${id}`, {
       method: "GET",
       headers: {
         Authorization: `bearer ${token}`,
@@ -13,16 +14,20 @@ const Profile = () => {
     })
       .then((r) => r.json())
       .then((user) => {
-        setUser(user);
         console.log(user);
       })
       .catch(console.log);
   });
 
   return (
-    <div>
-      <h1>{"Profile"}</h1>
-    </div>
+    <Container>
+      <Row>
+        <Col>{"Edit profile stuff"}</Col>
+        <Col>
+          <h1>{"My Trips"}</h1>
+        </Col>
+      </Row>
+    </Container>
   );
 };
 

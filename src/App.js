@@ -1,26 +1,27 @@
 import React from "react";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import SignUp from "./components/SignUp";
 import Login from "./components/Login";
-import Profile from "./components/Profile";
+import Profile from "./containers/Profile";
+import NavBar from "./components/NavBar";
+import MapContainer from "./containers/MapContainer";
 import "./App.css";
 
 function App() {
-  const handleLogout = () => {
-    localStorage.clear();
-  };
-
   return (
     <Router>
-      <Link className="btn btn-secondary " onClick={handleLogout} to="/">
-        Logout
-      </Link>
+      <Route path="/">
+        <NavBar />
+      </Route>
       <Switch>
         <Route exact path="/profile">
           <Profile />
         </Route>
         <Route exact path="/signup">
           <SignUp />
+        </Route>
+        <Route exact path="/trip">
+          <MapContainer />
         </Route>
         <Route exact path="/">
           <Login />

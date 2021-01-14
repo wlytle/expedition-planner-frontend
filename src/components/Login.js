@@ -25,6 +25,7 @@ const Login = () => {
       .then((r) => r.json())
       .then((user) => {
         localStorage.setItem("jwt", user.jwt);
+        localStorage.setItem("user", user);
         history.push("/profile");
       });
   };
