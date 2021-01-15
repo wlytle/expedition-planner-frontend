@@ -4,7 +4,7 @@ import { Button, Col, Row, Container, Form, Card } from "react-bootstrap";
 import { connect } from "react-redux";
 import { signedIn } from "../actions/UserActions";
 
-const SignUp = () => {
+const EditProfile = ({ user }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
@@ -12,11 +12,14 @@ const SignUp = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    fetch("http://localhost:3000/users", {
-      method: "POST",
+    const id = user.id;
+    const token = localStorage.getItem("jwt");
+    fetch(`http://localhost:3000/users/${id}`, {
+      method: "PATCH",
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
+        Authorization: `bearer ${token}`,
       },
       body: JSON.stringify({
         user: {
@@ -34,11 +37,26 @@ const SignUp = () => {
       });
   };
 
+  const handleDelete = () => {
+    const id = user.id;
+    const token = localStorage.getItem("jwt");
+    fetch(`http://localhost:3000/users/${id}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `bearer ${token}`,
+      },
+    }).then(() => {
+      localStorage.clear();
+      signedIn(user);
+      history.push("/");
+    });
+  };
+
   return (
     <section>
       <Container className="min-vh-100">
         <Row className="align-items-center min-vh-100">
-          <Col md={{ span: 3, offset: 5 }}>
+          <Col>
             <Card>
               <Card.Body>
                 <Form onSubmit={handleSubmit}>
@@ -55,31 +73,34 @@ const SignUp = () => {
                   </Form.Group>
 
                   <Form.Group controlId="formBasicPassword">
-                    <Form.Label>Password</Form.Label>
+                    <Form.Label>New Password</Form.Label>
                     <Form.Control
                       className="input"
                       type="password"
-                      name="password"
-                      placeholder="Password"
+                      name="Password"
+                      placeholder="New Password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                     />
                   </Form.Group>
 
                   <Form.Group controlId="formBasicPasswordConfirmation">
-                    <Form.Label>Confirm Passowrd</Form.Label>
+                    <Form.Label>Confirm New Password</Form.Label>
                     <Form.Control
                       className="input"
                       type="password"
-                      name="password_confirmation"
-                      placeholder="Confirm Password"
+                      name="passwordConfirmation"
+                      placeholder="Password"
                       value={passwordConfirmation}
                       onChange={(e) => setPasswordConfirmation(e.target.value)}
                     />
                   </Form.Group>
 
                   <Button variant="primary" type="submit">
-                    Create Account
+                    Edit Account
+                  </Button>
+                  <Button variant="danger" type="button" onClick={handleDelete}>
+                    Delete Account
                   </Button>
                 </Form>
               </Card.Body>
@@ -91,4 +112,6 @@ const SignUp = () => {
   );
 };
 
-export default connect(null, { signedIn })(SignUp);
+export default connect((state) => ({ user: state.UserReducer.user }), {
+  signedIn,
+})(EditProfile);

@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { Button, Col, Row, Container, Form, Card } from "react-bootstrap";
+import { connect } from "react-redux";
+import { signedIn } from "../actions/UserActions";
 
-const Login = () => {
+const Login = ({ signedIn }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   let history = useHistory();
@@ -24,12 +26,13 @@ const Login = () => {
     })
       .then((r) => r.json())
       .then((user) => {
+        console.log(user);
         localStorage.setItem("jwt", user.jwt);
         localStorage.setItem("user", user);
+        signedIn(user.user);
         history.push("/profile");
       });
   };
-
   return (
     <section>
       <Container className="min-vh-100">
@@ -75,4 +78,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default connect(null, { signedIn })(Login);

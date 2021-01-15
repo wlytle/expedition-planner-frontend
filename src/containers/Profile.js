@@ -1,28 +1,23 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
+import { connect } from "react-redux";
 import { Container, Row, Col } from "react-bootstrap";
+import EditProfile from "../components/EditProfile";
+import { Edit } from "leaflet";
+import { signedIn } from "../actions/UserActions";
 
-const Profile = () => {
+const Profile = ({ user }) => {
+  console.log(user);
   useEffect(() => {
-    if (!localStorage.getItem("user")) return null;
-    const id = localStorage.getItem("user").id;
-    const token = localStorage.getItem("jwt");
-    fetch(`http://localhost:3000/users/${id}`, {
-      method: "GET",
-      headers: {
-        Authorization: `bearer ${token}`,
-      },
-    })
-      .then((r) => r.json())
-      .then((user) => {
-        console.log(user);
-      })
-      .catch(console.log);
+    signedIn(localStorage.getItem("user"));
   });
-
   return (
     <Container>
       <Row>
-        <Col>{"Edit profile stuff"}</Col>
+        <Col>
+          {"Edit profile stuff"}
+          <h1>{user?.user_name}</h1>
+          <EditProfile />
+        </Col>
         <Col>
           <h1>{"My Trips"}</h1>
         </Col>
@@ -31,4 +26,8 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+const mapStateToProps = (state) => {
+  return { user: state.UserReducer.user };
+};
+
+export default connect(mapStateToProps, signedIn)(Profile);

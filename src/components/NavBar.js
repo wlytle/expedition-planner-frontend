@@ -30,7 +30,9 @@ const NavBar = () => {
             <NavDropdown.Item href="/trips">My Trips</NavDropdown.Item>
             <NavDropdown.Item href="/profile">My Profile</NavDropdown.Item>
             <NavDropdown.Divider />
-            <NavDropdown.Item href="#action/3.4">Logout</NavDropdown.Item>
+            <NavDropdown.Item href="/" onClick={handleLogout}>
+              Logout
+            </NavDropdown.Item>
           </NavDropdown>
           <ion-icon name="person-outline"></ion-icon>
         </Nav>
