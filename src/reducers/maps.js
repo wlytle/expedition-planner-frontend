@@ -1,12 +1,12 @@
-export default (state = [], action) => {
-  let index;
-  let quote;
+// export default (state = [], action) => {
+//   let index;
+//   let quote;
 
-  switch (action.type) {
-    case "ADD_QUOTE":
-      return state.concat(action.quote);
+//   switch (action.type) {
+//     case "ADD_QUOTE":
+//       return state.concat(action.quote);
 
-    default:
-      return state;
-  }
-};
+//     default:
+//       return state;
+//   }
+// };

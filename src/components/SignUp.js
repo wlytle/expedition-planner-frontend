@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { Button, Col, Row, Container, Form, Card } from "react-bootstrap";
 import { connect } from "react-redux";
-import { signedIn } from "../actions/UserActions";
+import { signUp } from "../actions/UserActions";
 
-const SignUp = () => {
+const SignUp = ({ signUp, user, fetching }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
@@ -12,27 +12,14 @@ const SignUp = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    fetch("http://localhost:3000/users", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: JSON.stringify({
-        user: {
-          user_name: username,
-          password: password,
-        },
-      }),
-    })
-      .then((r) => r.json())
-      .then((user) => {
-        localStorage.setItem("jwt", user.jwt);
-        localStorage.setItem("user", user);
-        signedIn(user);
-        history.push("/profile");
-      });
+    signUp(username, password);
   };
+
+  useEffect(() => {
+    if (user.id) {
+      history.push("/profile");
+    }
+  });
 
   return (
     <section>
@@ -91,4 +78,11 @@ const SignUp = () => {
   );
 };
 
-export default connect(null, { signedIn })(SignUp);
+const mapStateToProps = (state) => {
+  return {
+    user: state.UserReducer.user,
+    fetching: state.UserReducer.fetching,
+  };
+};
+
+export default connect(mapStateToProps, { signUp })(SignUp);
