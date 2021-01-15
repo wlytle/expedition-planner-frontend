@@ -3,6 +3,7 @@ import { useHistory } from "react-router-dom";
 import { Button, Col, Row, Container, Form, Card } from "react-bootstrap";
 import { connect } from "react-redux";
 import { signUp } from "../actions/UserActions";
+import SubmitButton from "./SubmitButton";
 
 const SignUp = ({ signUp, user, fetching }) => {
   const [username, setUsername] = useState("");
@@ -42,7 +43,7 @@ const SignUp = ({ signUp, user, fetching }) => {
                   </Form.Group>
 
                   <Form.Group controlId="formBasicPassword">
-                    <Form.Label>Password</Form.Label>
+                    <Form.Label className="form-label">Password</Form.Label>
                     <Form.Control
                       className="input"
                       type="password"
@@ -54,7 +55,9 @@ const SignUp = ({ signUp, user, fetching }) => {
                   </Form.Group>
 
                   <Form.Group controlId="formBasicPasswordConfirmation">
-                    <Form.Label>Confirm Passowrd</Form.Label>
+                    <Form.Label className="form-label">
+                      Confirm Passowrd
+                    </Form.Label>
                     <Form.Control
                       className="input"
                       type="password"
@@ -64,10 +67,7 @@ const SignUp = ({ signUp, user, fetching }) => {
                       onChange={(e) => setPasswordConfirmation(e.target.value)}
                     />
                   </Form.Group>
-
-                  <Button variant="primary" type="submit">
-                    Create Account
-                  </Button>
+                  <SubmitButton btnTxt={"Create Account"} />
                 </Form>
               </Card.Body>
             </Card>

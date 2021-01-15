@@ -1,16 +1,19 @@
-import { SIGNED_IN, SIGNING_IN } from "../actions/types";
+import { SIGNED_IN, FETCHING, FAILED_LOGIN } from "../actions/types";
 
 const initialState = {
   user: {},
   fetching: false,
+  error: "",
 };
 
 const UserReducer = (state = initialState, action) => {
   switch (action.type) {
-    case SIGNING_IN:
+    case FETCHING:
       return { ...state, fetching: true };
     case SIGNED_IN:
-      return { ...state, user: action.payload, fetching: false };
+      return { ...state, user: action.payload, fetching: false, error: "" };
+    case FAILED_LOGIN:
+      return { ...state, error: action.payload, fetching: false };
     default:
       return state;
   }

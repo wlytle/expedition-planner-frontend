@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import { Button, Col, Row, Container, Form, Card } from "react-bootstrap";
+import { Col, Row, Container, Form, Card } from "react-bootstrap";
 import { connect } from "react-redux";
 import { signIn } from "../actions/UserActions";
+import SubmitButton from "./SubmitButton";
 
-const Login = ({ signIn, user }) => {
+const Login = ({ signIn, user, fetching, error }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   let history = useHistory();
@@ -20,6 +21,7 @@ const Login = ({ signIn, user }) => {
     }
   });
 
+  const inputClass = error ? "is-invalid" : "";
   return (
     <section>
       <Container className="min-vh-100">
@@ -29,9 +31,9 @@ const Login = ({ signIn, user }) => {
               <Card.Body>
                 <Form onSubmit={handleSubmit}>
                   <Form.Group controlId="formBasicUsername">
-                    <Form.Label>Username</Form.Label>
+                    <Form.Label className="form-label">Username</Form.Label>
                     <Form.Control
-                      className="input"
+                      className={inputClass}
                       type="text"
                       name="username"
                       placeholder="UserName"
@@ -43,18 +45,17 @@ const Login = ({ signIn, user }) => {
                   <Form.Group controlId="formBasicPassword">
                     <Form.Label>Password</Form.Label>
                     <Form.Control
-                      className="input"
+                      className={inputClass}
                       type="password"
                       name="password"
                       placeholder="Password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                     />
+                    <div className="invalid-feedback">{error}</div>
                   </Form.Group>
 
-                  <Button variant="primary" type="submit">
-                    Create Account
-                  </Button>
+                  <SubmitButton fetching={fetching} btnTxt={"Log In"} />
                 </Form>
               </Card.Body>
             </Card>
@@ -69,6 +70,7 @@ const mapStateToProps = (state) => {
   return {
     user: state.UserReducer.user,
     fetching: state.UserReducer.fetching,
+    error: state.UserReducer.error,
   };
 };
 
