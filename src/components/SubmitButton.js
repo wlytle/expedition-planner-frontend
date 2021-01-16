@@ -6,11 +6,11 @@ const SubmitButton = ({ fetching, btnTxt }) => {
   return (
     <>
       {!fetching ? (
-        <Button className="submit-btn" variant="outline-success" type="submit">
+        <Button className="form-btn" variant="outline-success" type="submit">
           {btnTxt}
         </Button>
       ) : (
-        <Button className="submit-btn" variant="outline-success" disabled>
+        <Button className="form-btn" variant="outline-success" disabled>
           <Spinner
             as="span"
             animation="border"

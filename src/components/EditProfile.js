@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { Button, Col, Row, Container, Form, Card } from "react-bootstrap";
 import { connect } from "react-redux";
-import { signedIn, editUser } from "../actions/UserActions";
+import { signedIn, editUser, failedAuth } from "../actions/UserActions";
 import SubmitButton from "./SubmitButton";
 
-const EditProfile = ({ user }) => {
+const EditProfile = ({ user, editUser, failedAuth, error }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
@@ -13,30 +13,12 @@ const EditProfile = ({ user }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const id = user.id;
-    editUser(id, username, password);
-    // const token = localStorage.getItem("jwt");
-    // fetch(`http://localhost:3000/users/${id}`, {
-    //   method: "PATCH",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //     Accept: "application/json",
-    //     Authorization: `bearer ${token}`,
-    //   },
-    //   body: JSON.stringify({
-    //     user: {
-    //       user_name: username,
-    //       password: password,
-    //     },
-    //   }),
-    // })
-    //   .then((r) => r.json())
-    //   .then((user) => {
-    //     localStorage.setItem("jwt", user.jwt);
-    //     localStorage.setItem("user", user);
-    //     signedIn(user);
-    //     history.push("/profile");
-    //   });
+    if (password === passwordConfirmation) {
+      const id = user.id;
+      editUser(id, username, password);
+    } else {
+      failedAuth("Passords must match!");
+    }
   };
 
   const handleDelete = () => {
@@ -54,6 +36,7 @@ const EditProfile = ({ user }) => {
     });
   };
 
+  const inputClass = error ? "is-invalid" : "";
   return (
     <section>
       <Container className="min-vh-100">
@@ -65,7 +48,7 @@ const EditProfile = ({ user }) => {
                   <Form.Group controlId="formBasicUsername">
                     <Form.Label>Username</Form.Label>
                     <Form.Control
-                      className="input"
+                      className={inputClass}
                       type="text"
                       name="username"
                       placeholder="UserName"
@@ -77,7 +60,7 @@ const EditProfile = ({ user }) => {
                   <Form.Group controlId="formBasicPassword">
                     <Form.Label className="form-label">New Password</Form.Label>
                     <Form.Control
-                      className="input"
+                      className={inputClass}
                       type="password"
                       name="Password"
                       placeholder="New Password"
@@ -91,17 +74,22 @@ const EditProfile = ({ user }) => {
                       Confirm New Password
                     </Form.Label>
                     <Form.Control
-                      className="input"
+                      className={inputClass}
                       type="password"
                       name="passwordConfirmation"
                       placeholder="Password"
                       value={passwordConfirmation}
                       onChange={(e) => setPasswordConfirmation(e.target.value)}
                     />
+                    <div className="invalid-feedback">{error}</div>
                   </Form.Group>
 
                   <SubmitButton btnTxt={"Update Profile"} />
-                  <Button variant="danger" type="button" onClick={handleDelete}>
+                  <Button
+                    variant="outline-danger form-btn"
+                    type="button"
+                    onClick={handleDelete}
+                  >
                     Delete Account
                   </Button>
                 </Form>
@@ -113,8 +101,16 @@ const EditProfile = ({ user }) => {
     </section>
   );
 };
+const mapStateToProps = (state) => {
+  return {
+    user: state.UserReducer.user,
+    fetching: state.UserReducer.fetching,
+    error: state.UserReducer.error,
+  };
+};
 
-export default connect((state) => ({ user: state.UserReducer.user }), {
+export default connect(mapStateToProps, {
   signedIn,
   editUser,
+  failedAuth,
 })(EditProfile);

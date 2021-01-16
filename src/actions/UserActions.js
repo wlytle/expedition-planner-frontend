@@ -1,5 +1,31 @@
 import { FETCHING, SIGNED_IN, FAILED_LOGIN } from "./types";
 
+// put signed in user into state
+export const signedIn = (user) => {
+  return { type: SIGNED_IN, payload: user };
+};
+
+//set Error message on failed auth
+export const failedAuth = (error) => {
+  return { type: FAILED_LOGIN, payload: error };
+};
+
+//helper function for dispatching actions based on user auth return
+const handleAuthReturn = (data, dispatch) => {
+  if (data.user) {
+    const { user } = data;
+
+    localStorage.setItem("jwt", data.jwt);
+    localStorage.setItem("username", user.user_name);
+    localStorage.setItem("userId", user.id);
+    //set the user in state
+    dispatch(signedIn({ id: user.id, username: user.user_name }));
+  } else {
+    //set an error message in state
+    dispatch(failedAuth(data.error));
+  }
+};
+
 //Sign a user in
 export const signIn = (username, password) => {
   return (dispatch) => {
@@ -13,33 +39,20 @@ export const signIn = (username, password) => {
       body: JSON.stringify({
         auth: {
           user_name: username,
-          password: password,
+          password,
         },
       }),
     })
       .then((r) => r.json())
       .then((data) => {
-        if (data.user) {
-          const { user } = data;
-          localStorage.setItem("jwt", user.jwt);
-          localStorage.setItem("user", user);
-          dispatch({
-            type: SIGNED_IN,
-            payload: user,
-          });
-        } else {
-          dispatch({
-            type: FAILED_LOGIN,
-            payload: data.error,
-          });
-        }
+        handleAuthReturn(data, dispatch);
       })
       .catch((e) => console.log(e));
   };
 };
 
 // create a new user account
-export const signUp = (username, password) => {
+export const signUp = (username, password, passwordConfirmation) => {
   return (dispatch) => {
     dispatch({ type: FETCHING });
     fetch("http://localhost:3000/users", {
@@ -52,28 +65,26 @@ export const signUp = (username, password) => {
       body: JSON.stringify({
         user: {
           user_name: username,
-          password: password,
+          password,
+          password_confirmation: passwordConfirmation,
         },
       }),
     })
       .then((r) => r.json())
-      .then((user) => {
-        localStorage.setItem("jwt", user.jwt);
-        localStorage.setItem("user", user);
-        dispatch({
-          type: SIGNED_IN,
-          payload: user.user,
-        });
-      });
+      .then((data) => {
+        handleAuthReturn(data, dispatch);
+      })
+      .catch((e) => console.log(e));
   };
 };
 
 // Edit User
-export const editUser = (id, username, password) => {
+export const editUser = (id, username, password, passwordConfirmartion) => {
   console.log("EDITING");
   return (dispatch) => {
     dispatch({ type: FETCHING });
     const token = localStorage.getItem("jwt");
+    console.log(token);
     fetch(`http://localhost:3000/users/${id}`, {
       method: "PATCH",
       headers: {
@@ -84,20 +95,15 @@ export const editUser = (id, username, password) => {
       body: JSON.stringify({
         user: {
           user_name: username,
-          password: password,
+          password,
+          password_confirmation: passwordConfirmartion,
         },
       }),
     })
       .then((r) => r.json())
-      .then((user) => {
-        localStorage.setItem("jwt", user.jwt);
-        localStorage.setItem("user", user);
-        signedIn(user);
-      });
+      .then((data) => {
+        handleAuthReturn(data, dispatch);
+      })
+      .catch((e) => console.log(e));
   };
-};
-
-// put signed in user into state
-export const signedIn = (user) => {
-  return { type: SIGNED_IN, payload: user };
 };

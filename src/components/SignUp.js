@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import { Button, Col, Row, Container, Form, Card } from "react-bootstrap";
+import { Col, Row, Container, Form, Card } from "react-bootstrap";
 import { connect } from "react-redux";
-import { signUp } from "../actions/UserActions";
+import { signUp, failedAuth } from "../actions/UserActions";
 import SubmitButton from "./SubmitButton";
 
-const SignUp = ({ signUp, user, fetching }) => {
+const SignUp = ({ signUp, user, failedAuth, error }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
@@ -13,7 +13,11 @@ const SignUp = ({ signUp, user, fetching }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    signUp(username, password);
+    if (password === passwordConfirmation) {
+      signUp(username, password, passwordConfirmation);
+    } else {
+      failedAuth("Passords must match!");
+    }
   };
 
   useEffect(() => {
@@ -22,6 +26,7 @@ const SignUp = ({ signUp, user, fetching }) => {
     }
   });
 
+  const inputClass = error ? "is-invalid" : "";
   return (
     <section>
       <Container className="min-vh-100">
@@ -33,7 +38,6 @@ const SignUp = ({ signUp, user, fetching }) => {
                   <Form.Group controlId="formBasicUsername">
                     <Form.Label>Username</Form.Label>
                     <Form.Control
-                      className="input"
                       type="text"
                       name="username"
                       placeholder="UserName"
@@ -45,7 +49,7 @@ const SignUp = ({ signUp, user, fetching }) => {
                   <Form.Group controlId="formBasicPassword">
                     <Form.Label className="form-label">Password</Form.Label>
                     <Form.Control
-                      className="input"
+                      className={inputClass}
                       type="password"
                       name="password"
                       placeholder="Password"
@@ -59,13 +63,14 @@ const SignUp = ({ signUp, user, fetching }) => {
                       Confirm Passowrd
                     </Form.Label>
                     <Form.Control
-                      className="input"
+                      className={inputClass}
                       type="password"
                       name="password_confirmation"
                       placeholder="Confirm Password"
                       value={passwordConfirmation}
                       onChange={(e) => setPasswordConfirmation(e.target.value)}
                     />
+                    <div className="invalid-feedback">{error}</div>
                   </Form.Group>
                   <SubmitButton btnTxt={"Create Account"} />
                 </Form>
@@ -82,7 +87,8 @@ const mapStateToProps = (state) => {
   return {
     user: state.UserReducer.user,
     fetching: state.UserReducer.fetching,
+    error: state.UserReducer.error,
   };
 };
 
-export default connect(mapStateToProps, { signUp })(SignUp);
+export default connect(mapStateToProps, { signUp, failedAuth })(SignUp);

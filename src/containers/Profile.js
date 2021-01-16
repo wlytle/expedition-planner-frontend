@@ -1,20 +1,35 @@
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
+import { useHistory } from "react-router-dom";
 import { Container, Row, Col } from "react-bootstrap";
 import EditProfile from "../components/EditProfile";
 import { signedIn } from "../actions/UserActions";
 
 const Profile = ({ user }) => {
-  console.log(user);
+  let history = useHistory();
+
+  // if the user prop isn't declared check local storage
+  user = user.id
+    ? user
+    : {
+        id: localStorage.getItem("userId"),
+        username: localStorage.getItem("username"),
+      };
+
   useEffect(() => {
-    signedIn(localStorage.getItem("user"));
+    if (user.id) {
+      signedIn(user);
+    } else {
+      history.push("/");
+    }
   });
+
   return (
     <Container>
       <Row>
         <Col>
           {"Edit profile stuff"}
-          <h1>{user?.user_name}</h1>
+          <h1>{user?.username}</h1>
           <EditProfile />
         </Col>
         <Col>
