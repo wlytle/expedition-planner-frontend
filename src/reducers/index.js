@@ -1,8 +1,8 @@
 import { combineReducers } from "redux";
-import maps from "./maps";
+import TripReducer from "./TripReducer";
 import UserReducer from "./UserReducer";
 
 export default combineReducers({
-  maps,
+  TripReducer,
   UserReducer,
 });

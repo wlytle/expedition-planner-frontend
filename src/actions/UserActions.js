@@ -1,4 +1,5 @@
 import { FETCHING, SIGNED_IN, FAILED_LOGIN } from "./types";
+import { API } from "../constants";
 
 // put signed in user into state
 export const signedIn = (user) => {
@@ -7,7 +8,6 @@ export const signedIn = (user) => {
 
 //set Error message on failed auth
 export const failedAuth = (error) => {
-  console.log("FAiled Auth!", error);
   return { type: FAILED_LOGIN, payload: error };
 };
 
@@ -31,7 +31,7 @@ const handleAuthReturn = (data, dispatch) => {
 export const signIn = (username, password) => {
   return (dispatch) => {
     dispatch({ type: FETCHING });
-    fetch("http://localhost:3000/login", {
+    fetch(API + "/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -56,7 +56,7 @@ export const signIn = (username, password) => {
 export const signUp = (username, password, passwordConfirmation) => {
   return (dispatch) => {
     dispatch({ type: FETCHING });
-    fetch("http://localhost:3000/users", {
+    fetch(API + "/users", {
       method: "POST",
 
       headers: {
@@ -82,12 +82,10 @@ export const signUp = (username, password, passwordConfirmation) => {
 
 // Edit User
 export const editUser = (id, username, password, passwordConfirmartion) => {
-  console.log("EDITING");
   return (dispatch) => {
     dispatch({ type: FETCHING });
     const token = localStorage.getItem("jwt");
-    console.log(token);
-    fetch(`http://localhost:3000/users/${id}`, {
+    fetch(`${API}/users/${id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",

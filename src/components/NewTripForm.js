@@ -1,14 +1,17 @@
 import React, { useState } from "react";
+import { connect } from "react-redux";
 import { Row, Col, Card, Form, Container } from "react-bootstrap";
+import { createTrip } from "../actions/TripActions";
 import SubmitButton from "./SubmitButton";
 
-const NewTripForm = () => {
+const NewTripForm = ({ user, createTrip }) => {
   const [tripName, setTripName] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    createTrip(user, tripName, startDate, endDate);
   };
 
   return (
@@ -60,4 +63,6 @@ const NewTripForm = () => {
   );
 };
 
-export default NewTripForm;
+export default connect((state) => ({ user: state.UserReducer.user }), {
+  createTrip,
+})(NewTripForm);

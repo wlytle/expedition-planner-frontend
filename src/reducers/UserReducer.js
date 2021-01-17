@@ -9,7 +9,7 @@ const initialState = {
 const UserReducer = (state = initialState, action) => {
   switch (action.type) {
     case FETCHING:
-      return { ...state, fetching: true };
+      return { ...state, fetching: !state.fetching };
     case SIGNED_IN:
       console.log(action.payload);
       return { ...state, user: action.payload, fetching: false, error: "" };
