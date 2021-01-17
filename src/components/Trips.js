@@ -1,5 +1,6 @@
 import React from "react";
 import { Tab, ListGroup, Col, Row } from "react-bootstrap";
+import NewTripForm from "./NewTripForm";
 
 const Trips = () => {
   return (
@@ -7,7 +8,7 @@ const Trips = () => {
       <Tab.Container id="list-group-trips" defaultActiveKey="#link1">
         <Row>
           <Col sm={4}>
-            <ListGroup className="trip-list" variant="flush">
+            <ListGroup className="trip-list">
               <ListGroup.Item action href="#link1">
                 New Trip
               </ListGroup.Item>
@@ -21,7 +22,9 @@ const Trips = () => {
           </Col>
           <Col sm={8}>
             <Tab.Content>
-              <Tab.Pane eventKey="#link1">{"trip deets"}</Tab.Pane>
+              <Tab.Pane eventKey="#link1">
+                <NewTripForm />
+              </Tab.Pane>
               <Tab.Pane eventKey="#link2">{"Trip deets"}</Tab.Pane>
             </Tab.Content>
           </Col>
