@@ -19,7 +19,15 @@ ion-icon {
 .form-btn {
   margin-top: 10px;
 }
-
+/* space out form labels */
 .form-label {
   margin-top: 10px;
+}
+/*  */
+.trip-list .list-group-item.active {
+  background-color: green;
+}
+
+.trip-list .list-group-item:hover {
+  background-color:rgba(0, 128, 0, 0.3);
 }

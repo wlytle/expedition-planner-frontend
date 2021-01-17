@@ -7,6 +7,7 @@ export const signedIn = (user) => {
 
 //set Error message on failed auth
 export const failedAuth = (error) => {
+  console.log("FAiled Auth!", error);
   return { type: FAILED_LOGIN, payload: error };
 };
 
@@ -72,6 +73,7 @@ export const signUp = (username, password, passwordConfirmation) => {
     })
       .then((r) => r.json())
       .then((data) => {
+        console.log(data);
         handleAuthReturn(data, dispatch);
       })
       .catch((e) => console.log(e));

@@ -31,7 +31,6 @@ const EditProfile = ({ user, editUser, failedAuth, error }) => {
       },
     }).then(() => {
       localStorage.clear();
-      signedIn(user);
       history.push("/");
     });
   };

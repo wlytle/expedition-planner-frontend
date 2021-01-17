@@ -11,6 +11,7 @@ const UserReducer = (state = initialState, action) => {
     case FETCHING:
       return { ...state, fetching: true };
     case SIGNED_IN:
+      console.log(action.payload);
       return { ...state, user: action.payload, fetching: false, error: "" };
     case FAILED_LOGIN:
       return { ...state, error: action.payload, fetching: false };
