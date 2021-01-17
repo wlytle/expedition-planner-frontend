@@ -2,6 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { Tab, ListGroup, Col, Row } from "react-bootstrap";
 import NewTripForm from "./NewTripForm";
+import TripDetails from "./TripDetails";
 
 const Trips = ({ allTrips }) => {
   return (
@@ -15,7 +16,7 @@ const Trips = ({ allTrips }) => {
               </ListGroup.Item>
               {allTrips.map((trip) => {
                 return (
-                  <ListGroup.Item action href={`#${trip.id}`}>
+                  <ListGroup.Item action key={trip.id} href={`#${trip.id}`}>
                     {" "}
                     {trip.name}
                   </ListGroup.Item>
@@ -30,8 +31,8 @@ const Trips = ({ allTrips }) => {
               </Tab.Pane>
               {allTrips.map((trip) => {
                 return (
-                  <Tab.Pane eventKey={`#${trip.id}`}>
-                    {trip.start_date}
+                  <Tab.Pane key={trip.id} eventKey={`#${trip.id}`}>
+                    <TripDetails trip={trip} />
                   </Tab.Pane>
                 );
               })}

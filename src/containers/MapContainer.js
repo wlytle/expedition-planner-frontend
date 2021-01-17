@@ -1,10 +1,13 @@
 import React, { useState, useRef } from "react";
+import { connect } from "react-redux";
+import { useParams } from "react-router-dom";
 import { TileLayer, Map, FeatureGroup, LayersControl } from "react-leaflet";
 import { EditControl } from "react-leaflet-draw";
 import "leaflet/dist/leaflet.css";
 import "leaflet-draw/dist/leaflet.draw.css";
+import { addLeg } from "../actions/TripActions";
 
-const MapContainer = () => {
+const MapContainer = ({ addLeg }) => {
   const center = [34, -110.0];
 
   const [mapLayers, setMapLayers] = useState([]);
@@ -13,20 +16,38 @@ const MapContainer = () => {
 
   const editRef = useRef();
 
+  let { id } = useParams();
+
+  //calcualte distance of polyline
+  const getDistance = (locs) => {
+    let distance = 0;
+    for (let i = 0; i < locs.length - 1; i++) {
+      distance += locs[i].distanceTo(locs[i + 1]);
+    }
+    return distance;
+  };
+
   const _onCreate = (e) => {
     console.log(e);
     onShapeDrawn(e);
     const { layerType, layer } = e;
-    if (layerType == "marker") {
-      debugger;
+    if (layerType === "marker") {
     }
     if (layerType === "polyline") {
       const { _leaflet_id } = layer;
+      // calculate distance of polyline
+      const distance = getDistance(layer.getLatLngs());
       setMapLayers((layers) => [
         ...layers,
         { id: _leaflet_id, sport: sport.sport, latlngs: layer.getLatLngs() },
       ]);
       setTrack(e.layer._latlngs);
+      addLeg(id, {
+        id: _leaflet_id,
+        sport: sport.sport,
+        latlngs: layer.getLatLngs(),
+        distance,
+      });
     }
   };
 
@@ -113,4 +134,4 @@ const MapContainer = () => {
   );
 };
 
-export default MapContainer;
+export default connect(null, { addLeg })(MapContainer);
