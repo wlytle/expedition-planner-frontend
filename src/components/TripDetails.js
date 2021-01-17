@@ -21,7 +21,7 @@ const TripDetails = ({ trip }) => {
       </h5>
       <h5>Completed: {completed}</h5>
       <Link to={`/trip/${id}`}>
-        <SubmitButton btnTxt={"Edit Trip"} />
+        <SubmitButton btnTxt={"Map"} />
       </Link>
     </div>
   );

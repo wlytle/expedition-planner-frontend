@@ -46,8 +46,29 @@ export const getTrips = () => {
     })
       .then((r) => r.json())
       .then((trips) => {
-        console.log(trips);
         dispatch({ type: ALL_TRIPS, payload: trips });
+      })
+      .catch(console.log);
+  };
+};
+
+// Get a sepcific trip and load it into state
+export const getTrip = (id) => {
+  return (dispatch) => {
+    const token = localStorage.getItem("jwt");
+
+    fetch(API + "/trips/" + id, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `bearer ${token}`,
+      },
+    })
+      .then((r) => r.json())
+      .then((trip) => {
+        console.log(trip);
+        dispatch({ type: LOAD_TRIP, payload: trip });
       })
       .catch(console.log);
   };

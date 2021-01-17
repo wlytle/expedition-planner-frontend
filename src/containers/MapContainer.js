@@ -1,13 +1,14 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { connect } from "react-redux";
 import { useParams } from "react-router-dom";
 import { TileLayer, Map, FeatureGroup, LayersControl } from "react-leaflet";
 import { EditControl } from "react-leaflet-draw";
 import "leaflet/dist/leaflet.css";
 import "leaflet-draw/dist/leaflet.draw.css";
-import { addLeg } from "../actions/TripActions";
+import { addLeg, getTrip } from "../actions/TripActions";
+import TripLeg from "../components/TripLeg";
 
-const MapContainer = ({ addLeg }) => {
+const MapContainer = ({ addLeg, getTrip, trip }) => {
   const center = [34, -110.0];
 
   const [mapLayers, setMapLayers] = useState([]);
@@ -92,6 +93,11 @@ const MapContainer = ({ addLeg }) => {
     });
   };
 
+  useEffect(() => {
+    if (trip.id) return;
+    getTrip(id);
+  });
+
   return (
     <Map id="mapid" center={center} zoom={13} scrollWheelZoom={true}>
       <LayersControl>
@@ -128,10 +134,30 @@ const MapContainer = ({ addLeg }) => {
               marker: true,
             }}
           />
+          {/* add in all of the existing trip legs */}
+          {trip.legs
+            ? trip.legs.map((leg) => (
+                <TripLeg
+                  key={leg.id}
+                  id={leg.id}
+                  sport={leg.sport}
+                  locs={trip.locations.filter((loc) => {
+                    if (loc.leg_id === leg.id) {
+                      return [loc.lat, loc.lng];
+                    }
+                  })}
+                />
+              ))
+            : null}
         </FeatureGroup>
       </LayersControl>
     </Map>
   );
 };
+const mapStateToProps = (state) => {
+  return {
+    trip: state.TripReducer.trip,
+  };
+};
 
-export default connect(null, { addLeg })(MapContainer);
+export default connect(mapStateToProps, { addLeg, getTrip })(MapContainer);
