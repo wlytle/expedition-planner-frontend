@@ -1,12 +1,13 @@
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { Container, Row, Col, Button } from "react-bootstrap";
+import { Container, Row, Col } from "react-bootstrap";
 import EditProfile from "../components/EditProfile";
 import Trips from "../components/Trips";
 import { signedIn } from "../actions/UserActions";
+import { getTrips } from "../actions/TripActions";
 
-const Profile = ({ user, signedIn }) => {
+const Profile = ({ user, signedIn, getTrips }) => {
   let history = useHistory();
 
   useEffect(() => {
@@ -16,6 +17,8 @@ const Profile = ({ user, signedIn }) => {
         id: localStorage.getItem("userId"),
         username: localStorage.getItem("username"),
       });
+      // Load all the user's trips into state
+      getTrips();
       //no user or session rdirect to login page
     } else if (!user.id && !localStorage.getItem("userId")) {
       history.push("/");
@@ -43,4 +46,4 @@ const mapStateToProps = (state) => {
   return { user: state.UserReducer.user };
 };
 
-export default connect(mapStateToProps, { signedIn })(Profile);
+export default connect(mapStateToProps, { signedIn, getTrips })(Profile);

@@ -11,7 +11,8 @@ const NewTripForm = ({ user, createTrip }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    createTrip(user, tripName, startDate, endDate);
+    //create a new trip
+    createTrip(tripName, startDate, endDate);
   };
 
   return (
