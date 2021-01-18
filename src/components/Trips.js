@@ -4,6 +4,7 @@ import { Tab, ListGroup, Col, Row } from "react-bootstrap";
 import NewTripForm from "./NewTripForm";
 import TripDetails from "./TripDetails";
 
+//Render a list of alll a users trips with a pop up tab to show trip details
 const Trips = ({ allTrips }) => {
   return (
     <div>

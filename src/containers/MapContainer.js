@@ -5,10 +5,10 @@ import { TileLayer, Map, FeatureGroup, LayersControl } from "react-leaflet";
 import { EditControl } from "react-leaflet-draw";
 import "leaflet/dist/leaflet.css";
 import "leaflet-draw/dist/leaflet.draw.css";
-import { addLeg, getTrip } from "../actions/TripActions";
+import { addLeg, getTrip, editLeg } from "../actions/TripActions";
 import TripLeg from "../components/TripLeg";
 
-const MapContainer = ({ addLeg, getTrip, trip }) => {
+const MapContainer = ({ addLeg, getTrip, trip, editLeg }) => {
   const center = [34, -110.0];
 
   const [mapLayers, setMapLayers] = useState([]);
@@ -38,13 +38,12 @@ const MapContainer = ({ addLeg, getTrip, trip }) => {
       const { _leaflet_id } = layer;
       // calculate distance of polyline
       const distance = getDistance(layer.getLatLngs());
-      setMapLayers((layers) => [
-        ...layers,
-        { id: _leaflet_id, sport: sport.sport, latlngs: layer.getLatLngs() },
-      ]);
-      setTrack(e.layer._latlngs);
+      // setMapLayers((layers) => [
+      //   ...layers,
+      //   { id: _leaflet_id, sport: sport.sport, latlngs: layer.getLatLngs() },
+      // ]);
+      // setTrack(e.layer._latlngs);
       addLeg(id, {
-        id: _leaflet_id,
         sport: sport.sport,
         latlngs: layer.getLatLngs(),
         distance,
@@ -54,7 +53,6 @@ const MapContainer = ({ addLeg, getTrip, trip }) => {
 
   const onShapeDrawn = (e) => {
     e.layer.on("click", () => {
-      debugger;
       editRef.current.leafletElement._toolbars.edit._modes.edit.handler.enable();
     });
     e.layer.on("contextmenu", () => {
@@ -68,21 +66,23 @@ const MapContainer = ({ addLeg, getTrip, trip }) => {
     });
   };
 
+  //Handle editing path
   const _onEdit = (e) => {
     console.log(e);
     const {
       layers: { _layers },
     } = e;
-    Object.values(_layers).map(({ _leaflet_id, editing }) => {
-      setMapLayers((layers) =>
-        layers.map((l) =>
-          l.id === _leaflet_id
-            ? { ...l, latlngs: { ...editing.latlngs[0] } }
-            : l
-        )
-      );
+    Object.values(_layers).forEach((layer) => {
+      // get the id of the leg beign edited
+      const id = layer.options.legId;
+      //get the distances between each point
+      const distance = getDistance(layer.getLatLngs());
+      //Check if points wre just edited or if the number of points has changed
+      // Come back and optimize this
+      editLeg(id, layer._latlngs, distance);
     });
   };
+
   const _onDelete = (e) => {
     console.log(e);
     const {
@@ -141,6 +141,7 @@ const MapContainer = ({ addLeg, getTrip, trip }) => {
                   key={leg.id}
                   id={leg.id}
                   sport={leg.sport}
+                  editRef={editRef}
                   locs={trip.locations.filter((loc) => {
                     if (loc.leg_id === leg.id) {
                       return [loc.lat, loc.lng];
@@ -160,4 +161,6 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, { addLeg, getTrip })(MapContainer);
+export default connect(mapStateToProps, { addLeg, getTrip, editLeg })(
+  MapContainer
+);
