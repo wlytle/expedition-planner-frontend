@@ -5,10 +5,10 @@ import { TileLayer, Map, FeatureGroup, LayersControl } from "react-leaflet";
 import { EditControl } from "react-leaflet-draw";
 import "leaflet/dist/leaflet.css";
 import "leaflet-draw/dist/leaflet.draw.css";
-import { addLeg, getTrip, editLeg } from "../actions/TripActions";
+import { addLeg, getTrip, editLeg, deleteLeg } from "../actions/TripActions";
 import TripLeg from "../components/TripLeg";
 
-const MapContainer = ({ addLeg, getTrip, trip, editLeg }) => {
+const MapContainer = ({ addLeg, getTrip, trip, editLeg, deleteLeg }) => {
   const center = [34, -110.0];
 
   const [mapLayers, setMapLayers] = useState([]);
@@ -28,9 +28,10 @@ const MapContainer = ({ addLeg, getTrip, trip, editLeg }) => {
     return distance;
   };
 
+  //update the backend and state on confirmation of leg created
   const _onCreate = (e) => {
     console.log(e);
-    onShapeDrawn(e);
+    // onShapeDrawn(e);
     const { layerType, layer } = e;
     if (layerType === "marker") {
     }
@@ -38,11 +39,11 @@ const MapContainer = ({ addLeg, getTrip, trip, editLeg }) => {
       const { _leaflet_id } = layer;
       // calculate distance of polyline
       const distance = getDistance(layer.getLatLngs());
-      // setMapLayers((layers) => [
-      //   ...layers,
-      //   { id: _leaflet_id, sport: sport.sport, latlngs: layer.getLatLngs() },
-      // ]);
-      // setTrack(e.layer._latlngs);
+      setMapLayers((layers) => [
+        ...layers,
+        { id: _leaflet_id, sport: sport.sport, latlngs: layer.getLatLngs() },
+      ]);
+      setTrack(e.layer._latlngs);
       addLeg(id, {
         sport: sport.sport,
         latlngs: layer.getLatLngs(),
@@ -51,22 +52,22 @@ const MapContainer = ({ addLeg, getTrip, trip, editLeg }) => {
     }
   };
 
-  const onShapeDrawn = (e) => {
-    e.layer.on("click", () => {
-      editRef.current.leafletElement._toolbars.edit._modes.edit.handler.enable();
-    });
-    e.layer.on("contextmenu", () => {
-      console.log("You right clicked!");
-    });
-    e.layer.bindTooltip("Text", {
-      className:
-        "leaflet-draw-tooltip:before leaflet-draw-tooltip leaflet-draw-tooltip-visible",
-      sticky: true,
-      direction: "right",
-    });
-  };
+  // const onShapeDrawn = (e) => {
+  //   e.layer.on("click", () => {
+  //     editRef.current.leafletElement._toolbars.edit._modes.edit.handler.enable();
+  //   });
+  //   e.layer.on("contextmenu", () => {
+  //     console.log("You right clicked!");
+  //   });
+  //   e.layer.bindTooltip("Text", {
+  //     className:
+  //       "leaflet-draw-tooltip:before leaflet-draw-tooltip leaflet-draw-tooltip-visible",
+  //     sticky: true,
+  //     direction: "right",
+  //   });
+  // };
 
-  //Handle editing path
+  ////update the backend and state on confirmation of leg edited
   const _onEdit = (e) => {
     console.log(e);
     const {
@@ -83,16 +84,21 @@ const MapContainer = ({ addLeg, getTrip, trip, editLeg }) => {
     });
   };
 
+  //update the backend and state on confirmation of leg deleted
   const _onDelete = (e) => {
     console.log(e);
     const {
       layers: { _layers },
     } = e;
-    Object.values(_layers).map((_leaflet_id) => {
-      setMapLayers((layers) => layers.filter((l) => l.id !== _leaflet_id));
+    Object.values(_layers).forEach((layer) => {
+      //get the id of the leg being deleted
+      const id = layer.options.legId;
+      //Update the database and state with delete leg
+      deleteLeg(id);
     });
   };
 
+  // Reload current trip from database incase of page load
   useEffect(() => {
     if (trip.id) return;
     getTrip(id);
@@ -161,6 +167,9 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, { addLeg, getTrip, editLeg })(
-  MapContainer
-);
+export default connect(mapStateToProps, {
+  deleteLeg,
+  addLeg,
+  getTrip,
+  editLeg,
+})(MapContainer);

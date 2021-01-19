@@ -1,4 +1,10 @@
-import { LOAD_TRIP, ALL_TRIPS, UPDATE_LEG, FETCHING } from "./types";
+import {
+  LOAD_TRIP,
+  ALL_TRIPS,
+  UPDATE_LEG,
+  DELETE_LEG,
+  FETCHING,
+} from "./types";
 import { API } from "../constants";
 
 //Update a leg of the trip
@@ -102,23 +108,32 @@ export const addLeg = (id, leg) => {
 
 // Get all trips asociated with a user and add them to state
 export const editLeg = (leg_id, locs, distance) => {
+  const headers = makeHeader();
+
+  fetch(API + "/legs/" + leg_id, {
+    method: "PATCH",
+    headers,
+    body: JSON.stringify({
+      leg_id,
+      locs,
+      distance,
+    }),
+  })
+    .then((r) => r.json())
+    .then((leg) => updateLeg(leg))
+    .catch(console.log);
+};
+
+//Delete a leg
+export const deleteLeg = (leg_id) => {
+  console.log("Woot");
   return (dispatch) => {
     const headers = makeHeader();
-
     fetch(API + "/legs/" + leg_id, {
-      method: "PATCH",
+      method: "DELETE",
       headers,
-      body: JSON.stringify({
-        leg_id,
-        locs,
-        distance,
-      }),
     })
-      .then((r) => r.json())
-      .then((leg) => {
-        console.log(leg);
-        updateLeg(leg);
-      })
+      .then(dispatch({ type: DELETE_LEG, payload: leg_id }))
       .catch(console.log);
   };
 };

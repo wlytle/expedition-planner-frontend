@@ -6,7 +6,7 @@ const TripLeg = ({ id, sport, locs, editRef }) => {
   const enableEdit = (e) => {
     editRef.current.leafletElement._toolbars.edit._modes.edit.handler.enable();
   };
-  return <Polyline legId={id} positions={locs} onClick={enableEdit} />;
+  return <Polyline legId={id} positions={locs} />;
 };
 
 export default TripLeg;
