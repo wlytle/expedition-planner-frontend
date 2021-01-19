@@ -26,7 +26,7 @@ const TripReducer = (state = initialState, action) => {
         trip: {
           ...state.trip,
           legs: [...state.trip.legs, action.payload.leg],
-          locations: [...state.trip.locations, action.payload.locations],
+          locations: [...state.trip.locations, ...action.payload.locations],
         },
       };
     case UPDATE_LEG:

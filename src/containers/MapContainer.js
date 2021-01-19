@@ -1,6 +1,7 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useMemo } from "react";
 import { connect } from "react-redux";
 import { useParams } from "react-router-dom";
+import { latLngBounds } from "leaflet";
 import { TileLayer, Map, FeatureGroup, LayersControl } from "react-leaflet";
 import { EditControl } from "react-leaflet-draw";
 import "leaflet/dist/leaflet.css";
@@ -9,12 +10,22 @@ import { addLeg, getTrip, editLeg, deleteLeg } from "../actions/TripActions";
 import TripLeg from "../components/TripLeg";
 
 const MapContainer = ({ trip, addLeg, getTrip, editLeg, deleteLeg }) => {
-  const center = [34, -110.0];
   const [sport, setSport] = useState({ sport: "hike", color: "teal" });
-
+  // initialize ref to edit controls
   const editRef = useRef();
-
+  const mapRef = useRef();
+  const groupRef = useRef();
+  const legsRef = useRef();
+  // Get id of trip from route
   let { id } = useParams();
+  //set up map bounds
+
+  // const bounds = useMemo(() => {
+  //   let x = latLngBounds();
+  //   const group = groupRef?.current?.leafletElement;
+  //   return group ? group.getBounds() : null;
+  // }, trip.locations);
+  const center = [34, -110.0];
 
   //calcualte distance of polyline
   const getDistance = (locs) => {
@@ -35,11 +46,13 @@ const MapContainer = ({ trip, addLeg, getTrip, editLeg, deleteLeg }) => {
     if (layerType === "polyline") {
       // calculate distance of polyline
       const distance = getDistance(layer.getLatLngs());
+      // Add new leg to db and to state
       addLeg(id, {
         sport: sport.sport,
         latlngs: layer.getLatLngs(),
         distance,
       });
+      //remove the layer from the drawn functional group it will be rerendered from state to allow fo identical access controls for all paaths newly created and laoded in
       const fg = editRef.current.leafletElement.options.edit.featureGroup;
       fg.removeLayer(fg._layers[e.layer._leaflet_id]);
     }
@@ -93,13 +106,22 @@ const MapContainer = ({ trip, addLeg, getTrip, editLeg, deleteLeg }) => {
 
   // Reload current trip from database incase of page load
   useEffect(() => {
+    console.log("using Effect!");
     if (trip.id) return;
     getTrip(id);
-    console.log("Using effects");
+    // const bounds = latLngBounds();
+    // trip.locations.forEach((loc) => bounds.extend([loc.lat, loc.lng]));
   });
 
   return (
-    <Map id="mapid" center={center} zoom={13} scrollWheelZoom={true}>
+    <Map
+      id="mapid"
+      // bounds={trip.locations && bounds}
+      center={!trip.locations && center}
+      zoom={13}
+      scrollWheelZoom={true}
+      ref={mapRef}
+    >
       <LayersControl>
         <LayersControl.BaseLayer name="Street">
           <TileLayer
@@ -141,7 +163,6 @@ const MapContainer = ({ trip, addLeg, getTrip, editLeg, deleteLeg }) => {
                   key={leg.id}
                   id={leg.id}
                   sport={leg.sport}
-                  editRef={editRef}
                   locs={trip.locations.filter((loc) => {
                     if (loc.leg_id === leg.id) {
                       return [loc.lat, loc.lng];
