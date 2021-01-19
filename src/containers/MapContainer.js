@@ -8,11 +8,8 @@ import "leaflet-draw/dist/leaflet.draw.css";
 import { addLeg, getTrip, editLeg, deleteLeg } from "../actions/TripActions";
 import TripLeg from "../components/TripLeg";
 
-const MapContainer = ({ addLeg, getTrip, trip, editLeg, deleteLeg }) => {
+const MapContainer = ({ trip, addLeg, getTrip, editLeg, deleteLeg }) => {
   const center = [34, -110.0];
-
-  const [mapLayers, setMapLayers] = useState([]);
-  const [track, setTrack] = useState([]);
   const [sport, setSport] = useState({ sport: "hike", color: "teal" });
 
   const editRef = useRef();
@@ -36,19 +33,15 @@ const MapContainer = ({ addLeg, getTrip, trip, editLeg, deleteLeg }) => {
     if (layerType === "marker") {
     }
     if (layerType === "polyline") {
-      const { _leaflet_id } = layer;
       // calculate distance of polyline
       const distance = getDistance(layer.getLatLngs());
-      setMapLayers((layers) => [
-        ...layers,
-        { id: _leaflet_id, sport: sport.sport, latlngs: layer.getLatLngs() },
-      ]);
-      setTrack(e.layer._latlngs);
       addLeg(id, {
         sport: sport.sport,
         latlngs: layer.getLatLngs(),
         distance,
       });
+      const fg = editRef.current.leafletElement.options.edit.featureGroup;
+      fg.removeLayer(fg._layers[e.layer._leaflet_id]);
     }
   };
 
@@ -102,6 +95,7 @@ const MapContainer = ({ addLeg, getTrip, trip, editLeg, deleteLeg }) => {
   useEffect(() => {
     if (trip.id) return;
     getTrip(id);
+    console.log("Using effects");
   });
 
   return (

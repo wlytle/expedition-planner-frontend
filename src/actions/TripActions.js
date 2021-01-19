@@ -1,6 +1,7 @@
 import {
   LOAD_TRIP,
   ALL_TRIPS,
+  ADD_LEG,
   UPDATE_LEG,
   DELETE_LEG,
   FETCHING,
@@ -99,8 +100,10 @@ export const addLeg = (id, leg) => {
       }),
     })
       .then((r) => r.json())
-      .then((leg) => {
-        console.log(leg);
+      .then((data) => {
+        const { aeg, distance, id, notes, sport, locations } = data;
+        const leg = { id, aeg, distance, notes, sport };
+        dispatch({ type: ADD_LEG, payload: { leg, locations } });
       })
       .catch(console.log);
   };

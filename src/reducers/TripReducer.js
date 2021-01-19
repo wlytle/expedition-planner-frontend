@@ -1,4 +1,10 @@
-import { LOAD_TRIP, ALL_TRIPS, UPDATE_LEG, DELETE_LEG } from "../actions/types";
+import {
+  LOAD_TRIP,
+  ALL_TRIPS,
+  ADD_LEG,
+  UPDATE_LEG,
+  DELETE_LEG,
+} from "../actions/types";
 
 const initialState = {
   trip: {},
@@ -12,6 +18,17 @@ const TripReducer = (state = initialState, action) => {
       return { ...state, trip: action.payload };
     case ALL_TRIPS:
       return { ...state, allTrips: action.payload };
+    case ADD_LEG:
+      // Push newly created leg into the trip legs array
+      //Seriously though come back and refactor this to have a trip reducer and a elg reducer and a location reducer to avoid this avoiding mutation madness
+      return {
+        ...state,
+        trip: {
+          ...state.trip,
+          legs: [...state.trip.legs, action.payload.leg],
+          locations: [...state.trip.locations, action.payload.locations],
+        },
+      };
     case UPDATE_LEG:
       // update legs of trip
       trip = { ...state.trip };
