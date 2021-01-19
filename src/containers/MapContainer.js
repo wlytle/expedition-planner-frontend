@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useMemo } from "react";
 import { connect } from "react-redux";
 import { useParams } from "react-router-dom";
-import { latLngBounds } from "leaflet";
+import L, { latLngBounds } from "leaflet";
 import { TileLayer, Map, FeatureGroup, LayersControl } from "react-leaflet";
 import { EditControl } from "react-leaflet-draw";
 import "leaflet/dist/leaflet.css";
@@ -11,12 +11,11 @@ import TripLeg from "../components/TripLeg";
 
 const MapContainer = ({ trip, addLeg, getTrip, editLeg, deleteLeg }) => {
   const [sport, setSport] = useState({ sport: "hike", color: "teal" });
-  const [bounds, setBounds] = useState(null);
+  const [center, setCenter] = useState(null);
   // initialize ref to edit controls
   const editRef = useRef();
   const mapRef = useRef();
-  const groupRef = useRef();
-  const legsRef = useRef();
+  const boundsRef = useRef();
   // Get id of trip from route
   let { id } = useParams();
   //set up map bounds
@@ -29,7 +28,7 @@ const MapContainer = ({ trip, addLeg, getTrip, editLeg, deleteLeg }) => {
   //   const bounds = latLngBounds();
   //   trip.locations.forEach((loc) => bounds.extend([loc.lat, loc.lng]));
   // }, [trip]);
-  const center = [34, -110.0];
+  const c = [34, -110.0];
 
   //calcualte distance of polyline
   const getDistance = (locs) => {
@@ -88,8 +87,7 @@ const MapContainer = ({ trip, addLeg, getTrip, editLeg, deleteLeg }) => {
       const id = layer.options.legId;
       //get the distances between each point
       const distance = getDistance(layer.getLatLngs());
-      //Check if points wre just edited or if the number of points has changed
-      // Come back and optimize this
+      //update track in the backend and re-render the updated trip
       editLeg(id, layer._latlngs, distance);
     });
   };
@@ -108,14 +106,34 @@ const MapContainer = ({ trip, addLeg, getTrip, editLeg, deleteLeg }) => {
     });
   };
 
+  const handleOnLocationFound = (e) => {
+    const { current = {} } = mapRef;
+    const { leafletElement: map } = current;
+    const latlng = e.latlng;
+    // setCenter([latlng.lat, latlng.lng]);
+    console.log([latlng.lat, latlng.lng]);
+    const radius = e.accuracy;
+    const circle = L.circle(latlng, radius);
+    circle.addTo(map);
+  };
+
   // Reload current trip from database incase of page load
   useEffect(() => {
-    console.log("using Effect!");
-    if (trip.id && !bounds) {
+    if (trip.id && !boundsRef.current) {
+      // if a trip is loaded into state app state and componenet state has no bounds, get the bounds
       const mapBounds = latLngBounds();
       trip.locations.forEach((loc) => mapBounds.extend([loc.lat, loc.lng]));
-      setBounds(mapBounds.pad(0.1));
+      // if there are legs to get bounds from set them in state
+      if (mapBounds._southWest) boundsRef.current = mapBounds.pad(0.1);
     } else if (!trip.id) {
+      // destructre map oiut of ref
+      const { current = {} } = mapRef;
+      const { leafletElement: map } = current;
+      //get lcoation of browser
+      map.locate();
+      //set center and add circle with accuracy radius
+      map.on("locationfound", handleOnLocationFound);
+      // get the current trip from the backend and load it into app state
       getTrip(id);
     }
   });
@@ -123,8 +141,9 @@ const MapContainer = ({ trip, addLeg, getTrip, editLeg, deleteLeg }) => {
   return (
     <Map
       id="mapid"
-      bounds={trip.locations && bounds}
-      center={!trip.locations && center}
+      // bounds={bounds?._southWest && bounds}
+      // center={!bounds?._southWest && center}
+      center={c}
       zoom={13}
       scrollWheelZoom={true}
       ref={mapRef}

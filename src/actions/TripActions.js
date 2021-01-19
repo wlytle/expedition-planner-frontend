@@ -111,20 +111,26 @@ export const addLeg = (id, leg) => {
 
 // Get all trips asociated with a user and add them to state
 export const editLeg = (leg_id, locs, distance) => {
-  const headers = makeHeader();
+  return (dispatch) => {
+    const headers = makeHeader();
 
-  fetch(API + "/legs/" + leg_id, {
-    method: "PATCH",
-    headers,
-    body: JSON.stringify({
-      leg_id,
-      locs,
-      distance,
-    }),
-  })
-    .then((r) => r.json())
-    .then((leg) => updateLeg(leg))
-    .catch(console.log);
+    fetch(API + "/legs/" + leg_id, {
+      method: "PATCH",
+      headers,
+      body: JSON.stringify({
+        leg_id,
+        locs,
+        distance,
+      }),
+    })
+      .then((r) => r.json())
+      .then((data) => {
+        const { aeg, distance, id, notes, sport, locations } = data;
+        const leg = { id, aeg, distance, notes, sport };
+        dispatch({ type: UPDATE_LEG, payload: { leg, locations } });
+      })
+      .catch(console.log);
+  };
 };
 
 //Delete a leg
