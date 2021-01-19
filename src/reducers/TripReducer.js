@@ -11,7 +11,7 @@ const initialState = {
   allTrips: [],
 };
 
-let trip;
+let newLegs, newLocs;
 const TripReducer = (state = initialState, action) => {
   switch (action.type) {
     case LOAD_TRIP:
@@ -31,19 +31,19 @@ const TripReducer = (state = initialState, action) => {
       };
     case UPDATE_LEG:
       const { leg, locations } = action.payload;
-      const newLegs = state.trip.legs.filter((l) => l.id !== leg.id).push(leg);
+      newLegs = state.trip.legs.filter((l) => l.id !== leg.id).push(leg);
       const temp = state.trip.locations.filter((loc) => loc.leg_id !== leg.id);
-      const newLocs = [...temp, locations];
+      newLocs = [...temp, ...locations];
       return { ...state, trip: action.payload };
     case DELETE_LEG:
       // Remove deleted leg of trip from state
-      trip = { ...state.trip };
-      trip.legs.filter((leg) => leg.id !== action.payload);
+      newLegs = state.trip.legs.filter((l) => l.id !== action.payload);
+      newLocs = state.trip.locations.filter(
+        (loc) => loc.leg_id !== action.payload
+      );
       return {
         ...state,
-        trip: { ...state.trip },
-        legs: newLegs,
-        locations: newLocs,
+        trip: { ...state.trip, legs: newLegs, lcoations: newLocs },
       };
     default:
       return state;

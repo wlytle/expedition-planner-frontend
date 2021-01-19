@@ -11,11 +11,11 @@ import TripLeg from "../components/TripLeg";
 
 const MapContainer = ({ trip, addLeg, getTrip, editLeg, deleteLeg }) => {
   const [sport, setSport] = useState({ sport: "hike", color: "teal" });
-  const [center, setCenter] = useState(null);
   // initialize ref to edit controls
   const editRef = useRef();
   const mapRef = useRef();
   const boundsRef = useRef();
+  const centerRef = useRef();
   // Get id of trip from route
   let { id } = useParams();
   //set up map bounds
@@ -110,8 +110,8 @@ const MapContainer = ({ trip, addLeg, getTrip, editLeg, deleteLeg }) => {
     const { current = {} } = mapRef;
     const { leafletElement: map } = current;
     const latlng = e.latlng;
-    // setCenter([latlng.lat, latlng.lng]);
-    console.log([latlng.lat, latlng.lng]);
+    centerRef.current = [latlng.lat, latlng.lng];
+    console.log("center", centerRef.current);
     const radius = e.accuracy;
     const circle = L.circle(latlng, radius);
     circle.addTo(map);
@@ -119,34 +119,40 @@ const MapContainer = ({ trip, addLeg, getTrip, editLeg, deleteLeg }) => {
 
   // Reload current trip from database incase of page load
   useEffect(() => {
-    if (trip.id && !boundsRef.current) {
-      // if a trip is loaded into state app state and componenet state has no bounds, get the bounds
-      const mapBounds = latLngBounds();
-      trip.locations.forEach((loc) => mapBounds.extend([loc.lat, loc.lng]));
-      // if there are legs to get bounds from set them in state
-      if (mapBounds._southWest) boundsRef.current = mapBounds.pad(0.1);
-    } else if (!trip.id) {
-      // destructre map oiut of ref
-      const { current = {} } = mapRef;
-      const { leafletElement: map } = current;
-      //get lcoation of browser
-      map.locate();
-      //set center and add circle with accuracy radius
-      map.on("locationfound", handleOnLocationFound);
-      // get the current trip from the backend and load it into app state
-      getTrip(id);
-    }
+    (async () => {
+      if (trip.id && !boundsRef.current) {
+        // if a trip is loaded into state app state and componenet state has no bounds, get the bounds
+        const mapBounds = latLngBounds();
+        trip.locations.forEach((loc) => mapBounds.extend([loc.lat, loc.lng]));
+        // if there are legs to get bounds from set them in state
+        console.log(mapBounds);
+        if (mapBounds._southWest) boundsRef.current = mapBounds.pad(0.1);
+        console.log(boundsRef);
+      } else if (!trip.id) {
+        // debugger;
+        // destructre map oiut of ref
+        const { current = {} } = mapRef;
+        const { leafletElement: map } = current;
+        //get lcoation of browser
+        await map.locate();
+        //set center and add circle with accuracy radius
+        map.on("locationfound", handleOnLocationFound);
+        // get the current trip from the backend and load it into app state
+
+        getTrip(id);
+      }
+    })();
   });
 
   return (
     <Map
       id="mapid"
-      // bounds={bounds?._southWest && bounds}
-      // center={!bounds?._southWest && center}
-      center={c}
+      ref={mapRef}
+      bounds={!!trip.id && boundsRef.current}
+      center={!trip.id && centerRef.current}
+      // center={c}
       zoom={13}
       scrollWheelZoom={true}
-      ref={mapRef}
     >
       <LayersControl>
         <LayersControl.BaseLayer name="Street">
