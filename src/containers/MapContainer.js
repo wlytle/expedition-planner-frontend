@@ -11,6 +11,7 @@ import TripLeg from "../components/TripLeg";
 
 const MapContainer = ({ trip, addLeg, getTrip, editLeg, deleteLeg }) => {
   const [sport, setSport] = useState({ sport: "hike", color: "teal" });
+  const [bounds, setBounds] = useState(null);
   // initialize ref to edit controls
   const editRef = useRef();
   const mapRef = useRef();
@@ -21,10 +22,13 @@ const MapContainer = ({ trip, addLeg, getTrip, editLeg, deleteLeg }) => {
   //set up map bounds
 
   // const bounds = useMemo(() => {
-  //   let x = latLngBounds();
-  //   const group = groupRef?.current?.leafletElement;
-  //   return group ? group.getBounds() : null;
-  // }, trip.locations);
+  //   // let x = latLngBounds();
+  //   // const group = groupRef?.current?.leafletElement;
+  //   // return group ? group.getBounds() : null;
+  //   if ()
+  //   const bounds = latLngBounds();
+  //   trip.locations.forEach((loc) => bounds.extend([loc.lat, loc.lng]));
+  // }, [trip]);
   const center = [34, -110.0];
 
   //calcualte distance of polyline
@@ -107,16 +111,19 @@ const MapContainer = ({ trip, addLeg, getTrip, editLeg, deleteLeg }) => {
   // Reload current trip from database incase of page load
   useEffect(() => {
     console.log("using Effect!");
-    if (trip.id) return;
-    getTrip(id);
-    // const bounds = latLngBounds();
-    // trip.locations.forEach((loc) => bounds.extend([loc.lat, loc.lng]));
+    if (trip.id && !bounds) {
+      const mapBounds = latLngBounds();
+      trip.locations.forEach((loc) => mapBounds.extend([loc.lat, loc.lng]));
+      setBounds(mapBounds.pad(0.1));
+    } else if (!trip.id) {
+      getTrip(id);
+    }
   });
 
   return (
     <Map
       id="mapid"
-      // bounds={trip.locations && bounds}
+      bounds={trip.locations && bounds}
       center={!trip.locations && center}
       zoom={13}
       scrollWheelZoom={true}
