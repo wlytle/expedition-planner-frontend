@@ -12,7 +12,7 @@ const NavBar = () => {
     //     Logout
     //   </Link>
     // </div>
-    <Navbar bg="light" expand="lg">
+    <Navbar bg="light" expand="lg" sticky="top">
       <img
         className="compass"
         src={process.env.PUBLIC_URL + "images/compass.png"}

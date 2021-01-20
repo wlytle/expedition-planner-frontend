@@ -4,7 +4,10 @@
 }
 
 /* Set map size */
-#mapid { height: 75vh; }
+#mapid { 
+  height: 87vh;
+  bottom: 0;
+ }
 
 /* nabar image */
 .compass {
@@ -43,4 +46,8 @@ map {
   transition: transform 0.5s;
   will-change: transform;
   margin-left: 0px;
+}
+
+.slide-pane .slide-pane__title {
+  font-size: 16px;
 }

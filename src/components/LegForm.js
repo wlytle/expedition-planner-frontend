@@ -29,7 +29,7 @@ const LegForm = ({ leg, editLegMeta }) => {
   return (
     <section>
       <Container className="min-vh-100">
-        <Row className="align-items-center min-vh-100">
+        <Row className="min-vh-100">
           <Col>
             <Card>
               <Card.Body>
@@ -76,7 +76,7 @@ const LegForm = ({ leg, editLegMeta }) => {
                     />
                   </Form.Group>
 
-                  <SubmitButton btnTxt={"Update Profile"} />
+                  <SubmitButton btnTxt={"Update Leg"} />
                   <Button
                     variant="outline-danger form-btn"
                     type="button"

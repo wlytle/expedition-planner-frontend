@@ -177,7 +177,7 @@ const MapContainer = ({
   return (
     <>
       <SlidingPane
-        closeIcon={<div>X</div>}
+        closeIcon={<p>X</p>}
         isOpen={pane}
         title={`Distance: ${(selectedLeg.distance / 1000).toFixed(2)} km AEG: ${
           selectedLeg.aeg
