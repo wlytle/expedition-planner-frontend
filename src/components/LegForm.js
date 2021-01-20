@@ -14,6 +14,7 @@ const LegForm = ({ leg, editLegMeta }) => {
 
   const handleSubmit = (e) => {
     editLegMeta({
+      id: leg.id,
       start_date: startDate,
       end_date: endDate,
       sport: formSport,

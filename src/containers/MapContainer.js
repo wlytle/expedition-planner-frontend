@@ -24,10 +24,6 @@ const MapContainer = ({
   togglePane,
   openPane,
 }) => {
-  const [sport, setSport] = useState({ sport: "hike", color: "teal" });
-  // const [open, setOpen] = useState(false);
-  const [editingLeg, setEditingLeg] = useState({});
-  const [test, setTest] = useState(true);
   // initialize ref to edit controls
   const editRef = useRef();
   const mapRef = useRef();
@@ -68,7 +64,7 @@ const MapContainer = ({
       const distance = getDistance(layer.getLatLngs());
       // Add new leg to db and to state
       addLeg(id, {
-        sport: sport.sport,
+        sport: "Hike",
         latlngs: layer.getLatLngs(),
         distance,
       });
@@ -146,8 +142,13 @@ const MapContainer = ({
       return;
     const leg = trip.legs.find((leg) => leg.id === e.target.options.legId);
     openPane(leg);
-    // setEditingLeg(leg);
   };
+
+  //close edit pane on close button click
+  const closePane = () => {
+    togglePane();
+  };
+
   // Reload current trip from database incase of page load
   useEffect(() => {
     console.log(trip, boundsRef.current);
@@ -179,12 +180,12 @@ const MapContainer = ({
         closeIcon={<div>X</div>}
         isOpen={pane}
         title={`Distance: ${(selectedLeg.distance / 1000).toFixed(2)} km AEG: ${
-          editingLeg.aeg
+          selectedLeg.aeg
         } m`}
         from="left"
         width="400px"
         className="pane-overlay"
-        onRequestClose={() => togglePane()}
+        onRequestClose={() => closePane()}
       >
         <LegForm leg={selectedLeg} />
       </SlidingPane>
@@ -253,7 +254,6 @@ const MapContainer = ({
           </FeatureGroup>
         </LayersControl>
       </Map>
-      <button onClick={() => setTest(!test)}>do the thing</button>
     </>
   );
 };

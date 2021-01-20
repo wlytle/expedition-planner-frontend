@@ -145,9 +145,10 @@ export const editLeg = (leg_id, locs, distance) => {
 // Edit leg info that is not locations
 export const editLegMeta = (leg) => {
   return (dispatch) => {
+    dispatch({ type: FETCHING });
     const headers = makeHeader();
 
-    fetch(API + "/legs/meta" + leg.id, {
+    fetch(API + "/legs/meta/" + leg.id, {
       method: "PATCH",
       headers,
       body: JSON.stringify({
