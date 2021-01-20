@@ -4,7 +4,7 @@
 }
 
 /* Set map size */
-#mapid { height: 100vh; }
+#mapid { height: 75vh; }
 
 /* nabar image */
 .compass {
@@ -30,4 +30,17 @@ ion-icon {
 
 .trip-list .list-group-item:hover {
   background-color:rgba(0, 128, 0, 0.3);
+}
+
+/* Drawer stuff */
+.map-respond {
+  transition: transform 0.5s;
+  will-change: transform;
+  margin-left: 400px;
+}
+
+map {
+  transition: transform 0.5s;
+  will-change: transform;
+  margin-left: 0px;
 }
