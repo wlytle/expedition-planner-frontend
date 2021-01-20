@@ -9,13 +9,25 @@ import "react-sliding-pane/dist/react-sliding-pane.css";
 import "leaflet/dist/leaflet.css";
 import "leaflet-draw/dist/leaflet.draw.css";
 import { addLeg, getTrip, editLeg, deleteLeg } from "../actions/TripActions";
+import { togglePane, openPane } from "../actions/MapActions";
 import TripLeg from "../components/TripLeg";
 import LegForm from "..//components/LegForm";
 
-const MapContainer = ({ trip, addLeg, getTrip, editLeg, deleteLeg }) => {
+const MapContainer = ({
+  trip,
+  pane,
+  selectedLeg,
+  addLeg,
+  getTrip,
+  editLeg,
+  deleteLeg,
+  togglePane,
+  openPane,
+}) => {
   const [sport, setSport] = useState({ sport: "hike", color: "teal" });
-  const [open, setOpen] = useState(false);
-  const [noEdit, setNoEdit] = useState(false);
+  // const [open, setOpen] = useState(false);
+  const [editingLeg, setEditingLeg] = useState({});
+  const [test, setTest] = useState(true);
   // initialize ref to edit controls
   const editRef = useRef();
   const mapRef = useRef();
@@ -126,13 +138,15 @@ const MapContainer = ({ trip, addLeg, getTrip, editLeg, deleteLeg }) => {
     await map.locate();
   };
 
-  const toggleEdit = () => {
-    // Dont open the model if the delete button is currently selected
+  const toggleEdit = (e) => {
+    // Dont open the edit pane if the delete button is currently selected
     if (
       editRef.current.leafletElement._toolbars.edit._modes.remove.handler.enabled()
     )
       return;
-    setOpen(true);
+    const leg = trip.legs.find((leg) => leg.id === e.target.options.legId);
+    openPane(leg);
+    // setEditingLeg(leg);
   };
   // Reload current trip from database incase of page load
   useEffect(() => {
@@ -163,18 +177,20 @@ const MapContainer = ({ trip, addLeg, getTrip, editLeg, deleteLeg }) => {
     <>
       <SlidingPane
         closeIcon={<div>X</div>}
-        isOpen={open}
-        title="Hey, it is optional pane title.  I can be React component too."
+        isOpen={pane}
+        title={`Distance: ${(selectedLeg.distance / 1000).toFixed(2)} km AEG: ${
+          editingLeg.aeg
+        } m`}
         from="left"
         width="400px"
         className="pane-overlay"
-        onRequestClose={() => setOpen(false)}
+        onRequestClose={() => togglePane()}
       >
-        <LegForm />
+        <LegForm leg={selectedLeg} />
       </SlidingPane>
       <Map
         id="mapid"
-        className={open ? "map-respond" : "map"}
+        className={pane ? "map-respond" : "map"}
         ref={mapRef}
         bounds={trip.locations && boundsRef.current}
         // center={!trip.locations && centerRef.current}
@@ -209,7 +225,7 @@ const MapContainer = ({ trip, addLeg, getTrip, editLeg, deleteLeg }) => {
                 rectangle: false,
                 polyline: {
                   shapeOptions: {
-                    color: sport.color,
+                    color: "green",
                   },
                 },
                 circle: false,
@@ -237,13 +253,15 @@ const MapContainer = ({ trip, addLeg, getTrip, editLeg, deleteLeg }) => {
           </FeatureGroup>
         </LayersControl>
       </Map>
-      <button onClick={() => setOpen(true)}>do the thing</button>
+      <button onClick={() => setTest(!test)}>do the thing</button>
     </>
   );
 };
 const mapStateToProps = (state) => {
   return {
     trip: state.TripReducer.trip,
+    pane: state.MapReducer.pane,
+    selectedLeg: state.MapReducer.selectedLeg,
   };
 };
 
@@ -252,4 +270,6 @@ export default connect(mapStateToProps, {
   addLeg,
   getTrip,
   editLeg,
+  togglePane,
+  openPane,
 })(MapContainer);

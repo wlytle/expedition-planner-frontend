@@ -9,3 +9,7 @@ export const ALL_TRIPS = "ALL_TRIPS";
 export const ADD_LEG = "ADD_LEG";
 export const UPDATE_LEG = "UPDATE_LEG";
 export const DELETE_LEG = "DELETE_LEG";
+
+//MapActions
+export const TOGGLE_PANE = "TOGGLE_PANE";
+export const OPEN_PANE = "OPEN_PANE";

@@ -101,8 +101,17 @@ export const addLeg = (id, leg) => {
     })
       .then((r) => r.json())
       .then((data) => {
-        const { aeg, distance, id, notes, sport, locations } = data;
-        const leg = { id, aeg, distance, notes, sport };
+        const {
+          aeg,
+          distance,
+          id,
+          notes,
+          sport,
+          start_date,
+          end_date,
+          locations,
+        } = data;
+        const leg = { id, aeg, distance, notes, sport, start_date, end_date };
         dispatch({ type: ADD_LEG, payload: { leg, locations } });
       })
       .catch(console.log);
@@ -121,6 +130,28 @@ export const editLeg = (leg_id, locs, distance) => {
         leg_id,
         locs,
         distance,
+      }),
+    })
+      .then((r) => r.json())
+      .then((data) => {
+        const { aeg, distance, id, notes, sport, locations } = data;
+        const leg = { id, aeg, distance, notes, sport };
+        dispatch({ type: UPDATE_LEG, payload: { leg, locations } });
+      })
+      .catch(console.log);
+  };
+};
+
+// Edit leg info that is not locations
+export const editLegMeta = (leg) => {
+  return (dispatch) => {
+    const headers = makeHeader();
+
+    fetch(API + "/legs/meta" + leg.id, {
+      method: "PATCH",
+      headers,
+      body: JSON.stringify({
+        leg,
       }),
     })
       .then((r) => r.json())
