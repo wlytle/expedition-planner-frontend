@@ -30,8 +30,10 @@ const Profile = ({ user, fetched, allTrips, signedIn, getTrips }) => {
 
   return (
     <Container>
-      <Row className="align-items-center">
-        <h1>{"My Trips"}</h1>
+      <Row>
+        <h1 className="d-flex align-items-center justify-content-center">
+          {"My Trips"}
+        </h1>
       </Row>
       <Row>
         <Col sm={4}>{user.id ? <EditProfile /> : null}</Col>

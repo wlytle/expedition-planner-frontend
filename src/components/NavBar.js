@@ -1,13 +1,23 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { connect } from "react-redux";
+import { signedIn } from "../actions/UserActions";
 import { Navbar, Nav, NavDropdown } from "react-bootstrap";
-import userEvent from "@testing-library/user-event";
 
-const NavBar = ({ user }) => {
+const NavBar = ({ user, signedIn }) => {
   const handleLogout = () => {
     localStorage.clear();
   };
-  console.log(user);
+
+  useEffect(() => {
+    //No user signd in but session in local storage sign user in
+    if (!user.id && localStorage.getItem("userId")) {
+      signedIn({
+        id: localStorage.getItem("userId"),
+        username: localStorage.getItem("username"),
+      });
+    }
+  });
+
   return (
     <Navbar bg="light" expand="lg" sticky="top">
       <img
@@ -36,4 +46,6 @@ const NavBar = ({ user }) => {
   );
 };
 
-export default connect((state) => ({ user: state.UserReducer.user }))(NavBar);
+export default connect((state) => ({ user: state.UserReducer.user }), {
+  signedIn,
+})(NavBar);

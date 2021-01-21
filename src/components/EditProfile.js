@@ -9,11 +9,13 @@ import {
   handleLogOut,
 } from "../actions/UserActions";
 import SubmitButton from "./SubmitButton";
+import DeleteAlert from "../components/DeleteAlert";
 
 const EditProfile = ({ user, editUser, failedAuth, error, handleLogOut }) => {
   const [username, setUsername] = useState(user.username);
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
+  const [show, setShow] = useState(false);
   let history = useHistory();
 
   const handleSubmit = (e) => {
@@ -24,6 +26,10 @@ const EditProfile = ({ user, editUser, failedAuth, error, handleLogOut }) => {
     } else {
       failedAuth("Passords must match!");
     }
+  };
+
+  const deleteClicked = () => {
+    setShow(true);
   };
 
   const handleDelete = () => {
@@ -45,6 +51,12 @@ const EditProfile = ({ user, editUser, failedAuth, error, handleLogOut }) => {
   return (
     <section>
       <Container className="min-vh-100">
+        <DeleteAlert
+          show={show}
+          item={"profile"}
+          deleteAction={handleDelete}
+          closeAction={setShow}
+        />
         <Row className="min-vh-100">
           <Col>
             <Card>
@@ -93,7 +105,7 @@ const EditProfile = ({ user, editUser, failedAuth, error, handleLogOut }) => {
                   <Button
                     variant="outline-danger form-btn"
                     type="button"
-                    onClick={handleDelete}
+                    onClick={deleteClicked}
                   >
                     Delete Account
                   </Button>

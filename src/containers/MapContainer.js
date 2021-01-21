@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState } from "react";
 import { connect } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import L, { latLngBounds } from "leaflet";
 import { TileLayer, Map, FeatureGroup, LayersControl } from "react-leaflet";
 import { EditControl } from "react-leaflet-draw";
@@ -17,6 +17,7 @@ const MapContainer = ({
   trip,
   pane,
   selectedLeg,
+  user,
   addLeg,
   getTrip,
   editLeg,
@@ -30,7 +31,7 @@ const MapContainer = ({
   const centerRef = useRef();
 
   const [bounds, setBounds] = useState(false);
-
+  let history = useHistory();
   // Get id of trip from route
   let { id } = useParams();
 
@@ -131,6 +132,10 @@ const MapContainer = ({
 
   // Reload current trip from database incase of page load
   useEffect(() => {
+    //Prevent not logged in users form seeing the map
+    if (!user.id && !localStorage.getItem("userId")) {
+      history.push("/");
+    }
     if (trip.id && !bounds && !centerRef.current) {
       // if a trip is loaded into state app state and componenet state has no bounds, get the bounds
       if (trip?.locations?.length) {
@@ -239,6 +244,7 @@ const mapStateToProps = (state) => {
     trip: state.TripReducer.trip,
     pane: state.MapReducer.pane,
     selectedLeg: state.MapReducer.selectedLeg,
+    user: state.UserReducer.user,
   };
 };
 
