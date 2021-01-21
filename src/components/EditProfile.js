@@ -2,10 +2,15 @@ import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { Button, Col, Row, Container, Form, Card } from "react-bootstrap";
 import { connect } from "react-redux";
-import { signedIn, editUser, failedAuth } from "../actions/UserActions";
+import {
+  signedIn,
+  editUser,
+  failedAuth,
+  handleLogOut,
+} from "../actions/UserActions";
 import SubmitButton from "./SubmitButton";
 
-const EditProfile = ({ user, editUser, failedAuth, error }) => {
+const EditProfile = ({ user, editUser, failedAuth, error, handleLogOut }) => {
   const [username, setUsername] = useState(user.username);
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
@@ -31,6 +36,7 @@ const EditProfile = ({ user, editUser, failedAuth, error }) => {
       },
     }).then(() => {
       localStorage.clear();
+      handleLogOut();
       history.push("/");
     });
   };
@@ -112,4 +118,5 @@ export default connect(mapStateToProps, {
   signedIn,
   editUser,
   failedAuth,
+  handleLogOut,
 })(EditProfile);

@@ -1,4 +1,4 @@
-import { FETCHING, SIGNED_IN, FAILED_LOGIN } from "./types";
+import { FETCHING, SIGNED_IN, FAILED_LOGIN, FETCHED, LOG_OUT } from "./types";
 import { API } from "../constants";
 
 // put signed in user into state
@@ -9,6 +9,11 @@ export const signedIn = (user) => {
 //set Error message on failed auth
 export const failedAuth = (error) => {
   return { type: FAILED_LOGIN, payload: error };
+};
+
+//remove user from state
+export const handleLogOut = () => {
+  return { type: LOG_OUT };
 };
 
 //helper function for dispatching actions based on user auth return
@@ -47,6 +52,7 @@ export const signIn = (username, password) => {
       .then((r) => r.json())
       .then((data) => {
         handleAuthReturn(data, dispatch);
+        dispatch({ type: FETCHED, payload: false });
       })
       .catch((e) => console.log(e));
   };

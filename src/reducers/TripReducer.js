@@ -7,12 +7,14 @@ import {
   ADD_LEG,
   UPDATE_LEG,
   DELETE_LEG,
+  FETCHED,
 } from "../actions/types";
 
 const initialState = {
   trip: { legs: [] },
   allTrips: [],
   newId: null,
+  fetched: false,
 };
 
 let newLegs, newLocs, newTrips;
@@ -21,7 +23,7 @@ const TripReducer = (state = initialState, action) => {
     case LOAD_TRIP:
       return { ...state, trip: action.payload, newId: null };
     case ALL_TRIPS:
-      return { ...state, allTrips: action.payload };
+      return { ...state, allTrips: action.payload, fetched: true };
     case UPDATE_TRIPS:
       //replace the updated trip with older version
       newTrips = state.allTrips.filter((trip) => trip.id !== action.payload.id);
@@ -66,6 +68,8 @@ const TripReducer = (state = initialState, action) => {
         ...state,
         trip: { ...state.trip, legs: newLegs, lcoations: newLocs },
       };
+    case FETCHED:
+      return { ...state, fetched: action.payload };
     default:
       return state;
   }

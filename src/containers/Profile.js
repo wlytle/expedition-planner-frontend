@@ -7,7 +7,7 @@ import Trips from "../components/Trips";
 import { signedIn } from "../actions/UserActions";
 import { getTrips } from "../actions/TripActions";
 
-const Profile = ({ user, allTrips, signedIn, getTrips }) => {
+const Profile = ({ user, fetched, allTrips, signedIn, getTrips }) => {
   let history = useHistory();
 
   useEffect(() => {
@@ -22,7 +22,7 @@ const Profile = ({ user, allTrips, signedIn, getTrips }) => {
       //no user or session rdirect to login page
     } else if (!user.id && !localStorage.getItem("userId")) {
       history.push("/");
-    } else if (user.id && !allTrips.length) {
+    } else if (!fetched) {
       // Load all the user's trips into state
       getTrips();
     }
@@ -47,6 +47,7 @@ const mapStateToProps = (state) => {
   return {
     user: state.UserReducer.user,
     allTrips: state.TripReducer.allTrips,
+    fetched: state.TripReducer.fetched,
   };
 };
 
