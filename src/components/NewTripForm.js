@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { Row, Col, Card, Form, Container } from "react-bootstrap";
@@ -16,8 +16,13 @@ const NewTripForm = ({ user, trip, createTrip }) => {
     e.preventDefault();
     //create a new trip
     createTrip(tripName, startDate, endDate);
-    history.push("/trip/" + trip.id);
   };
+
+  useEffect(() => {
+    if (trip.id) {
+      history.push("/trip/" + trip.id);
+    }
+  });
 
   return (
     <>

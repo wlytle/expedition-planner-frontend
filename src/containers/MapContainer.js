@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useMemo } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { useParams } from "react-router-dom";
 import L, { latLngBounds } from "leaflet";
@@ -29,6 +29,10 @@ const MapContainer = ({
   const mapRef = useRef();
   const boundsRef = useRef();
   const centerRef = useRef();
+
+  const [bounds, setBounds] = useState(false);
+  const [center, setCenter] = useState(false);
+
   // Get id of trip from route
   let { id } = useParams();
   //set up map bounds
@@ -123,8 +127,7 @@ const MapContainer = ({
     const { current = {} } = mapRef;
     const { leafletElement: map } = current;
     const latlng = e.latlng;
-    centerRef.current = [latlng.lat, latlng.lng];
-    console.log("center", centerRef.current);
+    map.flyTo(latlng, 14, { duration: 2 });
     const radius = e.accuracy;
     const circle = L.circle(latlng, radius);
     circle.addTo(map);
@@ -151,28 +154,34 @@ const MapContainer = ({
 
   // Reload current trip from database incase of page load
   useEffect(() => {
-    console.log(trip, boundsRef.current);
-    if (trip.id && !boundsRef.current) {
+    if (trip.id && !bounds) {
+      console.log("HETERE");
+      const { current = {} } = mapRef;
+      const { leafletElement: map } = current;
       // if a trip is loaded into state app state and componenet state has no bounds, get the bounds
       const mapBounds = latLngBounds();
       trip.locations.forEach((loc) => mapBounds.extend([loc.lat, loc.lng]));
       // if there are legs to get bounds from set them in state
       console.log(mapBounds);
-      if (mapBounds._southWest)
-        localStorage.setItem("bounds", mapBounds.pad(0.1));
+      if (mapBounds._southWest) {
+        setBounds(mapBounds.pad(0.1));
+      } else {
+        getMapLoc(map);
+        map.on("locationfound", handleOnLocationFound);
+      }
+      // localStorage.setItem("bounds", mapBounds.pad(0.1));
     } else if (!trip.id) {
-      // debugger;
-      // destructre map oiut of ref
-      const { current = {} } = mapRef;
-      const { leafletElement: map } = current;
-      //get lcoation of browser
-      getMapLoc(map);
-      //set center and add circle with accuracy radius
-      map.on("locationfound", handleOnLocationFound);
-      // get the current trip from the backend and load it into app state
       getTrip(id);
     }
   });
+
+  const findCenter = () => {
+    if (!trip.locations && center) {
+      return center;
+    } else if (!trip.locations && !center) {
+      return [34, -110.0];
+    }
+  };
 
   return (
     <>
@@ -193,10 +202,10 @@ const MapContainer = ({
         id="mapid"
         className={pane ? "map-respond" : "map"}
         ref={mapRef}
-        bounds={trip.locations && boundsRef.current}
-        // center={!trip.locations && centerRef.current}
+        bounds={trip.locations && bounds}
+        // center={!trip.locations && center}
         // center={!trip.locations && centerRef.current ? centerRef.current : c}
-        center={!trip.locations && c}
+        center={c}
         zoom={13}
         scrollWheelZoom={true}
       >
@@ -215,7 +224,6 @@ const MapContainer = ({
           </LayersControl.BaseLayer>
           <FeatureGroup>
             <EditControl
-              onClick={(e) => console.log(e)}
               ref={editRef}
               position="topright"
               onCreated={_onCreate}

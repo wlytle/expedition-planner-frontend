@@ -30,7 +30,6 @@ export const createTrip = (name, start_date, end_date, notes) => {
   return (dispatch) => {
     dispatch({ type: FETCHING });
     const headers = makeHeader();
-
     fetch(API + "/trips", {
       method: "POST",
       headers,
