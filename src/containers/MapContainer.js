@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useMemo } from "react";
+import React, { useRef, useEffect, useMemo } from "react";
 import { connect } from "react-redux";
 import { useParams } from "react-router-dom";
 import L, { latLngBounds } from "leaflet";
@@ -226,7 +226,7 @@ const MapContainer = ({
                 rectangle: false,
                 polyline: {
                   shapeOptions: {
-                    color: "green",
+                    color: "red",
                   },
                 },
                 circle: false,

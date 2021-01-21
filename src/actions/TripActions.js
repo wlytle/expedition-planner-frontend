@@ -2,6 +2,7 @@ import {
   LOAD_TRIP,
   ALL_TRIPS,
   UPDATE_TRIPS,
+  DELETE_TRIP,
   ADD_LEG,
   UPDATE_LEG,
   DELETE_LEG,
@@ -89,7 +90,6 @@ export const editTrip = (name, start_date, end_date, notes, completed, id) => {
     })
       .then((r) => r.json())
       .then((trip) => {
-        console.log(trip, "SOOOOW");
         dispatch({ type: FETCHING });
         dispatch({ type: UPDATE_TRIPS, payload: trip });
       })
@@ -111,6 +111,20 @@ export const getTrip = (id) => {
         console.log(trip);
         dispatch({ type: LOAD_TRIP, payload: trip });
       })
+      .catch(console.log);
+  };
+};
+
+//Delete a leg
+export const deleteTrip = (trip_id) => {
+  console.log("Woot");
+  return (dispatch) => {
+    const headers = makeHeader();
+    fetch(API + "/trips/" + trip_id, {
+      method: "DELETE",
+      headers,
+    })
+      .then(dispatch({ type: DELETE_TRIP, payload: trip_id }))
       .catch(console.log);
   };
 };
