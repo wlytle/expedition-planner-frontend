@@ -7,7 +7,7 @@ import Trips from "../components/Trips";
 import { signedIn } from "../actions/UserActions";
 import { getTrips } from "../actions/TripActions";
 
-const Profile = ({ user, signedIn, getTrips }) => {
+const Profile = ({ user, allTrips, signedIn, getTrips }) => {
   let history = useHistory();
 
   useEffect(() => {
@@ -22,19 +22,20 @@ const Profile = ({ user, signedIn, getTrips }) => {
       //no user or session rdirect to login page
     } else if (!user.id && !localStorage.getItem("userId")) {
       history.push("/");
+    } else if (user.id && !allTrips.length) {
+      // Load all the user's trips into state
+      getTrips();
     }
   });
 
   return (
     <Container>
+      <Row className="align-items-center">
+        <h1>{"My Trips"}</h1>
+      </Row>
       <Row>
-        <Col sm={4}>
-          {"Edit profile stuff"}
-          <h1>{user?.username}</h1>
-          <EditProfile />
-        </Col>
+        <Col sm={4}>{user.id ? <EditProfile /> : null}</Col>
         <Col>
-          <h1>{"My Trips"}</h1>
           <Trips />
         </Col>
       </Row>
@@ -43,7 +44,10 @@ const Profile = ({ user, signedIn, getTrips }) => {
 };
 
 const mapStateToProps = (state) => {
-  return { user: state.UserReducer.user };
+  return {
+    user: state.UserReducer.user,
+    allTrips: state.TripReducer.allTrips,
+  };
 };
 
 export default connect(mapStateToProps, { signedIn, getTrips })(Profile);

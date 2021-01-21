@@ -1,6 +1,7 @@
 import {
   LOAD_TRIP,
   ALL_TRIPS,
+  UPDATE_TRIPS,
   ADD_LEG,
   UPDATE_LEG,
   DELETE_LEG,
@@ -24,7 +25,7 @@ const makeHeader = () => {
 };
 
 //Create a new trip with the current user being added to db as the creator
-export const createTrip = (name, start_date, end_date) => {
+export const createTrip = (name, start_date, end_date, notes) => {
   return (dispatch) => {
     dispatch({ type: FETCHING });
     const headers = makeHeader();
@@ -37,6 +38,7 @@ export const createTrip = (name, start_date, end_date) => {
           name,
           start_date,
           end_date,
+          notes,
         },
       }),
     })
@@ -61,6 +63,35 @@ export const getTrips = () => {
       .then((r) => r.json())
       .then((trips) => {
         dispatch({ type: ALL_TRIPS, payload: trips });
+      })
+      .catch(console.log);
+  };
+};
+
+//Update a trip
+export const editTrip = (name, start_date, end_date, notes, completed, id) => {
+  return (dispatch) => {
+    dispatch({ type: FETCHING });
+    const headers = makeHeader();
+
+    fetch(API + "/trips/" + id, {
+      method: "PATCH",
+      headers,
+      body: JSON.stringify({
+        trip: {
+          name,
+          start_date,
+          end_date,
+          notes,
+          completed,
+        },
+      }),
+    })
+      .then((r) => r.json())
+      .then((trip) => {
+        console.log(trip, "SOOOOW");
+        dispatch({ type: FETCHING });
+        dispatch({ type: UPDATE_TRIPS, payload: trip });
       })
       .catch(console.log);
   };

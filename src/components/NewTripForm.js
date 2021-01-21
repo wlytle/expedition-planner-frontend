@@ -9,6 +9,7 @@ const NewTripForm = ({ user, trip, createTrip }) => {
   const [tripName, setTripName] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
+  const [formNotes, setFormNotes] = useState("");
   let history = useHistory();
 
   const handleSubmit = (e) => {
@@ -21,7 +22,7 @@ const NewTripForm = ({ user, trip, createTrip }) => {
   return (
     <>
       <Container className="min-vh-100">
-        <Row className="align-items-center min-vh-100">
+        <Row className="min-vh-100">
           <Col>
             <Card>
               <Card.Body>
@@ -38,7 +39,7 @@ const NewTripForm = ({ user, trip, createTrip }) => {
                   </Form.Group>
 
                   <Form.Group controlId="formBasicStartDate">
-                    <Form.Label className="form-label">StartDate</Form.Label>
+                    <Form.Label className="form-label">Start Date</Form.Label>
                     <Form.Control
                       type="date"
                       name="startDate"
@@ -48,12 +49,22 @@ const NewTripForm = ({ user, trip, createTrip }) => {
                   </Form.Group>
 
                   <Form.Group controlId="formBasicEndDate">
-                    <Form.Label className="form-label">EndDate</Form.Label>
+                    <Form.Label className="form-label">End Date</Form.Label>
                     <Form.Control
                       type="date"
                       name="endDate"
                       value={endDate}
                       onChange={(e) => setEndDate(e.target.value)}
+                    />
+                  </Form.Group>
+
+                  <Form.Group controlId="ControlTextarea">
+                    <Form.Label>Notes</Form.Label>
+                    <Form.Control
+                      as="textarea"
+                      rows={3}
+                      value={formNotes}
+                      onChange={(e) => setFormNotes(e.target.value)}
                     />
                   </Form.Group>
                   <SubmitButton btnTxt="Create Trip" />

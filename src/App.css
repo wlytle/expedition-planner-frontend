@@ -51,3 +51,7 @@ map {
 .slide-pane .slide-pane__title {
   font-size: 16px;
 }
+
+.pane-overlay {
+  margin-top: 6.28%
+}
