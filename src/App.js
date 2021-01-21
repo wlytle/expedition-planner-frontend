@@ -10,9 +10,8 @@ import "./App.css";
 function App() {
   return (
     <Router>
-      <Route path="/">
-        <NavBar />
-      </Route>
+      <NavBar />
+
       <Switch>
         <Route exact path="/profile">
           <Profile />
@@ -26,6 +25,7 @@ function App() {
         <Route exact path="/">
           <Login />
         </Route>
+        <Route path="/trip/:id" children={<MapContainer />} />
       </Switch>
     </Router>
   );

@@ -6,7 +6,7 @@ import { signedIn, editUser, failedAuth } from "../actions/UserActions";
 import SubmitButton from "./SubmitButton";
 
 const EditProfile = ({ user, editUser, failedAuth, error }) => {
-  const [username, setUsername] = useState("");
+  const [username, setUsername] = useState(user.username);
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
   let history = useHistory();
@@ -39,7 +39,7 @@ const EditProfile = ({ user, editUser, failedAuth, error }) => {
   return (
     <section>
       <Container className="min-vh-100">
-        <Row className="align-items-center min-vh-100">
+        <Row className="min-vh-100">
           <Col>
             <Card>
               <Card.Body>
