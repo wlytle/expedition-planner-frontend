@@ -9,11 +9,6 @@ const NavBar = ({ user }) => {
   };
   console.log(user);
   return (
-    // <div>
-    //   <Link className="btn btn-secondary " onClick={handleLogout} to="/">
-    //     Logout
-    //   </Link>
-    // </div>
     <Navbar bg="light" expand="lg" sticky="top">
       <img
         className="compass"

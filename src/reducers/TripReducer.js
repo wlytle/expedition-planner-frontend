@@ -3,6 +3,7 @@ import {
   ALL_TRIPS,
   DELETE_TRIP,
   UPDATE_TRIPS,
+  SET_TRIP_ID,
   ADD_LEG,
   UPDATE_LEG,
   DELETE_LEG,
@@ -11,13 +12,14 @@ import {
 const initialState = {
   trip: { legs: [] },
   allTrips: [],
+  newId: null,
 };
 
 let newLegs, newLocs, newTrips;
 const TripReducer = (state = initialState, action) => {
   switch (action.type) {
     case LOAD_TRIP:
-      return { ...state, trip: action.payload };
+      return { ...state, trip: action.payload, newId: null };
     case ALL_TRIPS:
       return { ...state, allTrips: action.payload };
     case UPDATE_TRIPS:
@@ -34,6 +36,9 @@ const TripReducer = (state = initialState, action) => {
         ...state,
         allTrips: newTrips,
       };
+    case SET_TRIP_ID:
+      // set a trip idea after creation for navigation purposes
+      return { ...state, newId: action.payload };
     case ADD_LEG:
       // Push newly created leg into the trip legs array
       //Seriously though come back and refactor this to have a trip reducer and a elg reducer and a location reducer to avoid this avoiding mutation madness

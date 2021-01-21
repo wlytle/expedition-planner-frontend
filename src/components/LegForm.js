@@ -7,6 +7,7 @@ import { sports } from "../constants";
 
 const LegForm = ({ leg, editLegMeta }) => {
   const { start_date, end_date, sport, notes } = leg;
+  console.log(start_date);
   const [startDate, setStartDate] = useState(start_date.slice(0, 10));
   const [endDate, setEndDate] = useState(end_date.slice(0, 10));
   const [formSport, setFormSport] = useState(sport);
