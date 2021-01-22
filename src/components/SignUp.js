@@ -41,8 +41,21 @@ const SignUp = ({ signUp, user, failedAuth, error }) => {
   return (
     <section>
       <Container className="min-vh-100">
-        <Row className="align-items-center min-vh-100">
-          <Col md={{ span: 3, offset: 5 }}>
+        <Row className="min-vh-100">
+          <Col
+            id="login"
+            md={{ span: 6, offset: 0 }}
+            style={{ marginTop: "40px" }}
+          >
+            {" "}
+            <Card>
+              <Card.Img
+                src={process.env.PUBLIC_URL + "images/citadel-crop.jpg"}
+                alt="Nevada Sajama"
+              />
+            </Card>{" "}
+          </Col>
+          <Col md={{ span: 4, offset: 1 }} style={{ marginTop: "40px" }}>
             <Card>
               <Card.Body>
                 <Form noValidate onSubmit={handleSubmit}>

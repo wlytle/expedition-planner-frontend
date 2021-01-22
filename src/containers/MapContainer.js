@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState } from "react";
 import { connect } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import L, { latLngBounds } from "leaflet";
 import { TileLayer, Map, FeatureGroup, LayersControl } from "react-leaflet";
 import { EditControl } from "react-leaflet-draw";
@@ -17,6 +17,7 @@ const MapContainer = ({
   trip,
   pane,
   selectedLeg,
+  user,
   addLeg,
   getTrip,
   editLeg,
@@ -27,25 +28,15 @@ const MapContainer = ({
   // initialize ref to edit controls
   const editRef = useRef();
   const mapRef = useRef();
-  const boundsRef = useRef();
   const centerRef = useRef();
 
   const [bounds, setBounds] = useState(false);
-  const [center, setCenter] = useState(false);
-
+  let history = useHistory();
   // Get id of trip from route
   let { id } = useParams();
-  //set up map bounds
 
-  // const bounds = useMemo(() => {
-  //   // let x = latLngBounds();
-  //   // const group = groupRef?.current?.leafletElement;
-  //   // return group ? group.getBounds() : null;
-  //   if ()
-  //   const bounds = latLngBounds();
-  //   trip.locations.forEach((loc) => bounds.extend([loc.lat, loc.lng]));
-  // }, [trip]);
-  const c = [34, -110.0];
+  //set temporary default cetner at Upset Rapid
+  const c = [36.355308, -112.695433];
 
   //calcualte distance of polyline
   const getDistance = (locs) => {
@@ -78,21 +69,6 @@ const MapContainer = ({
     }
   };
 
-  // const onShapeDrawn = (e) => {
-  //   e.layer.on("click", () => {
-  //     editRef.current.leafletElement._toolbars.edit._modes.edit.handler.enable();
-  //   });
-  //   e.layer.on("contextmenu", () => {
-  //     console.log("You right clicked!");
-  //   });
-  //   e.layer.bindTooltip("Text", {
-  //     className:
-  //       "leaflet-draw-tooltip:before leaflet-draw-tooltip leaflet-draw-tooltip-visible",
-  //     sticky: true,
-  //     direction: "right",
-  //   });
-  // };
-
   ////update the backend and state on confirmation of leg edited
   const _onEdit = (e) => {
     console.log(e);
@@ -123,10 +99,12 @@ const MapContainer = ({
     });
   };
 
+  // fly map to current lcoation and add circle showing accuracy of location
   const handleOnLocationFound = (e) => {
     const { current = {} } = mapRef;
     const { leafletElement: map } = current;
     const latlng = e.latlng;
+    centerRef.current = latlng;
     map.flyTo(latlng, 14, { duration: 2 });
     const radius = e.accuracy;
     const circle = L.circle(latlng, radius);
@@ -154,35 +132,31 @@ const MapContainer = ({
 
   // Reload current trip from database incase of page load
   useEffect(() => {
-    if (trip.id && !bounds) {
-      console.log("HETERE");
-      const { current = {} } = mapRef;
-      const { leafletElement: map } = current;
+    //Prevent not logged in users form seeing the map
+    if (!user.id && !localStorage.getItem("userId")) {
+      history.push("/login");
+    }
+    if (trip.id && !bounds && !centerRef.current) {
       // if a trip is loaded into state app state and componenet state has no bounds, get the bounds
-      const mapBounds = latLngBounds();
-      trip.locations.forEach((loc) => mapBounds.extend([loc.lat, loc.lng]));
-      // if there are legs to get bounds from set them in state
-      console.log(mapBounds);
-      if (mapBounds._southWest) {
+      if (trip?.locations?.length) {
+        const mapBounds = latLngBounds();
+        trip.locations.forEach((loc) => mapBounds.extend([loc.lat, loc.lng]));
+        // if there are legs to get bounds from set them in state
         setBounds(mapBounds.pad(0.1));
-      } else {
+      } else if (mapRef.current) {
+        const { current = {} } = mapRef;
+        const { leafletElement: map } = current;
+        //Get current location if no legs yet and fly screen there.
         getMapLoc(map);
         map.on("locationfound", handleOnLocationFound);
       }
-      // localStorage.setItem("bounds", mapBounds.pad(0.1));
     } else if (!trip.id) {
+      // load trip into state if it's not there yet
       getTrip(id);
     }
   });
 
-  const findCenter = () => {
-    if (!trip.locations && center) {
-      return center;
-    } else if (!trip.locations && !center) {
-      return [34, -110.0];
-    }
-  };
-
+  console.log(trip?.locations?.length, trip);
   return (
     <>
       <SlidingPane
@@ -202,7 +176,7 @@ const MapContainer = ({
         id="mapid"
         className={pane ? "map-respond" : "map"}
         ref={mapRef}
-        bounds={trip.locations && bounds}
+        bounds={trip?.locations?.length && bounds}
         // center={!trip.locations && center}
         // center={!trip.locations && centerRef.current ? centerRef.current : c}
         center={c}
@@ -270,6 +244,7 @@ const mapStateToProps = (state) => {
     trip: state.TripReducer.trip,
     pane: state.MapReducer.pane,
     selectedLeg: state.MapReducer.selectedLeg,
+    user: state.UserReducer.user,
   };
 };
 

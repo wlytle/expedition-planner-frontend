@@ -14,7 +14,7 @@ function App() {
 
       <Switch>
         <Route exact path="/profile">
-          <Profile />
+          {<Profile />}
         </Route>
         <Route exact path="/signup">
           <SignUp />
@@ -22,7 +22,7 @@ function App() {
         <Route exact path="/trip">
           <MapContainer />
         </Route>
-        <Route exact path="/">
+        <Route exact path="/login">
           <Login />
         </Route>
         <Route path="/trip/:id" children={<MapContainer />} />

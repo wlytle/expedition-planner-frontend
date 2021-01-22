@@ -3,6 +3,7 @@ import {
   ALL_TRIPS,
   UPDATE_TRIPS,
   DELETE_TRIP,
+  SET_TRIP_ID,
   ADD_LEG,
   UPDATE_LEG,
   DELETE_LEG,
@@ -45,7 +46,7 @@ export const createTrip = (name, start_date, end_date, notes) => {
       .then((r) => r.json())
       .then((trip) => {
         dispatch({ type: FETCHING });
-        dispatch({ type: LOAD_TRIP, payload: trip });
+        dispatch({ type: SET_TRIP_ID, payload: trip.id });
       })
       .catch(console.log);
   };
@@ -116,7 +117,6 @@ export const getTrip = (id) => {
 
 //Delete a leg
 export const deleteTrip = (trip_id) => {
-  console.log("Woot");
   return (dispatch) => {
     const headers = makeHeader();
     fetch(API + "/trips/" + trip_id, {

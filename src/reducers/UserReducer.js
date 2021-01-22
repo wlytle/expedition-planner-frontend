@@ -1,4 +1,4 @@
-import { SIGNED_IN, FETCHING, FAILED_LOGIN } from "../actions/types";
+import { SIGNED_IN, FETCHING, FAILED_LOGIN, LOG_OUT } from "../actions/types";
 
 const initialState = {
   user: {},
@@ -15,6 +15,8 @@ const UserReducer = (state = initialState, action) => {
       return { ...state, user: action.payload, fetching: false, error: "" };
     case FAILED_LOGIN:
       return { ...state, error: action.payload, fetching: false };
+    case LOG_OUT:
+      return { ...state, user: {} };
     default:
       return state;
   }

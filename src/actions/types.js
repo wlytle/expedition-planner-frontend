@@ -2,6 +2,7 @@
 export const SIGNED_IN = "SIGNED_IN";
 export const FETCHING = "FETCHING";
 export const FAILED_LOGIN = "FAILED_LOGIN";
+export const LOG_OUT = "LOG_OUT";
 
 //TripActions
 export const LOAD_TRIP = "LOAD_TRIP";
@@ -11,6 +12,8 @@ export const UPDATE_LEG = "UPDATE_LEG";
 export const DELETE_LEG = "DELETE_LEG";
 export const UPDATE_TRIPS = "UPDATE_TRIPS";
 export const DELETE_TRIP = "DELETE_TRIP";
+export const SET_TRIP_ID = "SET_TRIP_ID";
+export const FETCHED = "FETCHED";
 
 //MapActions
 export const TOGGLE_PANE = "TOGGLE_PANE";

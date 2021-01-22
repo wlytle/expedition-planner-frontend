@@ -5,10 +5,15 @@ import { Row, Col, Card, Form, Container } from "react-bootstrap";
 import { createTrip } from "../actions/TripActions";
 import SubmitButton from "./SubmitButton";
 
-const NewTripForm = ({ user, trip, createTrip }) => {
+const NewTripForm = ({ user, trip, newId, createTrip }) => {
+  const date = new Date();
+  const today = date.toJSON().slice(0, 10);
+
   const [tripName, setTripName] = useState("");
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
+  //Set default new trip start and end dats today
+  const [startDate, setStartDate] = useState(today);
+  const [endDate, setEndDate] = useState(today);
+  const [collabs, setCollabs] = useState("");
   const [formNotes, setFormNotes] = useState("");
   let history = useHistory();
 
@@ -19,8 +24,8 @@ const NewTripForm = ({ user, trip, createTrip }) => {
   };
 
   useEffect(() => {
-    if (trip.id) {
-      history.push("/trip/" + trip.id);
+    if (newId) {
+      history.push("/trip/" + newId);
     }
   });
 
@@ -47,9 +52,9 @@ const NewTripForm = ({ user, trip, createTrip }) => {
                     <Form.Label className="form-label">Start Date</Form.Label>
                     <Form.Control
                       type="date"
-                      name="startDate"
-                      value={startDate}
-                      onChange={(e) => setStartDate(e.target.value)}
+                      name="endDate"
+                      value={endDate}
+                      onChange={(e) => setEndDate(e.target.value)}
                     />
                   </Form.Group>
 
@@ -60,6 +65,19 @@ const NewTripForm = ({ user, trip, createTrip }) => {
                       name="endDate"
                       value={endDate}
                       onChange={(e) => setEndDate(e.target.value)}
+                    />
+                  </Form.Group>
+
+                  <Form.Group controlId="formBasicCollaborators">
+                    <Form.Label className="form-label">
+                      Collaborators
+                    </Form.Label>
+                    <Form.Control
+                      placeholder="collaborators"
+                      type="text"
+                      name="collabs"
+                      value={collabs}
+                      onChange={(e) => setCollabs(e.target.value)}
                     />
                   </Form.Group>
 
@@ -87,6 +105,7 @@ const mapStateToProps = (state) => {
   return {
     user: state.UserReducer.user,
     trip: state.TripReducer.trip,
+    newId: state.TripReducer.newId,
   };
 };
 

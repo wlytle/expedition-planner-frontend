@@ -2,13 +2,20 @@ import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { Button, Col, Row, Container, Form, Card } from "react-bootstrap";
 import { connect } from "react-redux";
-import { signedIn, editUser, failedAuth } from "../actions/UserActions";
+import {
+  signedIn,
+  editUser,
+  failedAuth,
+  handleLogOut,
+} from "../actions/UserActions";
 import SubmitButton from "./SubmitButton";
+import DeleteAlert from "../components/DeleteAlert";
 
-const EditProfile = ({ user, editUser, failedAuth, error }) => {
+const EditProfile = ({ user, editUser, failedAuth, error, handleLogOut }) => {
   const [username, setUsername] = useState(user.username);
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
+  const [show, setShow] = useState(false);
   let history = useHistory();
 
   const handleSubmit = (e) => {
@@ -21,6 +28,10 @@ const EditProfile = ({ user, editUser, failedAuth, error }) => {
     }
   };
 
+  const deleteClicked = () => {
+    setShow(true);
+  };
+
   const handleDelete = () => {
     const id = user.id;
     const token = localStorage.getItem("jwt");
@@ -31,6 +42,7 @@ const EditProfile = ({ user, editUser, failedAuth, error }) => {
       },
     }).then(() => {
       localStorage.clear();
+      handleLogOut();
       history.push("/");
     });
   };
@@ -39,6 +51,12 @@ const EditProfile = ({ user, editUser, failedAuth, error }) => {
   return (
     <section>
       <Container className="min-vh-100">
+        <DeleteAlert
+          show={show}
+          item={"profile"}
+          deleteAction={handleDelete}
+          closeAction={setShow}
+        />
         <Row className="min-vh-100">
           <Col>
             <Card>
@@ -87,7 +105,7 @@ const EditProfile = ({ user, editUser, failedAuth, error }) => {
                   <Button
                     variant="outline-danger form-btn"
                     type="button"
-                    onClick={handleDelete}
+                    onClick={deleteClicked}
                   >
                     Delete Account
                   </Button>
@@ -112,4 +130,5 @@ export default connect(mapStateToProps, {
   signedIn,
   editUser,
   failedAuth,
+  handleLogOut,
 })(EditProfile);

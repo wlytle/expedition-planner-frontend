@@ -1,12 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import { connect } from "react-redux";
 import pluralize from "pluralize";
 import { Link } from "react-router-dom";
 import { Button, ListGroup } from "react-bootstrap";
 import { deleteTrip } from "../actions/TripActions";
 import SubmitButton from "./SubmitButton";
+import DeleteAlert from "./DeleteAlert";
 
 const TripDetails = ({ trip, edit, deleteTrip }) => {
+  const [show, setShow] = useState(false);
+
   const { name, start_date, end_date, completed, id, legs, notes } = trip;
   const distance = legs.reduce((accum, { distance }) => accum + distance, 0);
   const aeg = legs.reduce((accum, { aeg }) => accum + aeg, 0);
@@ -19,6 +22,11 @@ const TripDetails = ({ trip, edit, deleteTrip }) => {
     curPane.setAttribute("aria-hidden", true);
     curPane.className = "fade tab-pane";
     edit(trip);
+  };
+
+  //Open Alert
+  const deleteClicked = () => {
+    setShow(true);
   };
 
   //Delete trip_id
@@ -53,6 +61,12 @@ const TripDetails = ({ trip, edit, deleteTrip }) => {
 
   return (
     <div>
+      <DeleteAlert
+        show={show}
+        item={"Trip"}
+        deleteAction={handleDelete}
+        closeAction={setShow}
+      />
       <h3>{name}</h3>
       {/* Convert start and end to simple dd/mm/yy format */}
       {presentDates(start_date, end_date)}
@@ -73,7 +87,7 @@ const TripDetails = ({ trip, edit, deleteTrip }) => {
       <Button
         className="form-btn"
         variant="outline-danger"
-        onClick={handleDelete}
+        onClick={deleteClicked}
       >
         Delete
       </Button>
