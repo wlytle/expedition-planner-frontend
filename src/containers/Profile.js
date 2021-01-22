@@ -21,7 +21,7 @@ const Profile = ({ user, fetched, allTrips, signedIn, getTrips }) => {
       getTrips();
       //no user or session rdirect to login page
     } else if (!user.id && !localStorage.getItem("userId")) {
-      history.push("/");
+      history.push("/login");
     } else if (!fetched) {
       // Load all the user's trips into state
       getTrips();

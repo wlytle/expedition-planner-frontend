@@ -25,8 +25,21 @@ const Login = ({ signIn, user, fetching, error }) => {
   return (
     <section>
       <Container className="min-vh-100">
-        <Row className="align-items-center min-vh-100">
-          <Col md={{ span: 3, offset: 5 }}>
+        <Row className=" min-vh-100">
+          <Col
+            id="login"
+            md={{ span: 6, offset: 0 }}
+            style={{ marginTop: "40px" }}
+          >
+            {" "}
+            <Card>
+              <Card.Img
+                src={process.env.PUBLIC_URL + "images/sajama.jpg"}
+                alt="Nevada Sajama"
+              />
+            </Card>{" "}
+          </Col>
+          <Col md={{ span: 4, offset: 1 }} style={{ marginTop: "40px" }}>
             <Card>
               <Card.Body>
                 <Form onSubmit={handleSubmit}>
@@ -56,13 +69,6 @@ const Login = ({ signIn, user, fetching, error }) => {
                   </Form.Group>
 
                   <SubmitButton fetching={fetching} btnTxt={"Log In"} />
-                  <Button
-                    className="form-btn"
-                    variant="outline-primary"
-                    onClick={() => history.push("/signup")}
-                  >
-                    Sign up
-                  </Button>
                 </Form>
               </Card.Body>
             </Card>

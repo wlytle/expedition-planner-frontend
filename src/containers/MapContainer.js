@@ -134,7 +134,7 @@ const MapContainer = ({
   useEffect(() => {
     //Prevent not logged in users form seeing the map
     if (!user.id && !localStorage.getItem("userId")) {
-      history.push("/");
+      history.push("/login");
     }
     if (trip.id && !bounds && !centerRef.current) {
       // if a trip is loaded into state app state and componenet state has no bounds, get the bounds

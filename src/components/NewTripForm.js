@@ -13,6 +13,7 @@ const NewTripForm = ({ user, trip, newId, createTrip }) => {
   //Set default new trip start and end dats today
   const [startDate, setStartDate] = useState(today);
   const [endDate, setEndDate] = useState(today);
+  const [collabs, setCollabs] = useState("");
   const [formNotes, setFormNotes] = useState("");
   let history = useHistory();
 
@@ -51,9 +52,9 @@ const NewTripForm = ({ user, trip, newId, createTrip }) => {
                     <Form.Label className="form-label">Start Date</Form.Label>
                     <Form.Control
                       type="date"
-                      name="startDate"
-                      value={startDate}
-                      onChange={(e) => setStartDate(e.target.value)}
+                      name="endDate"
+                      value={endDate}
+                      onChange={(e) => setEndDate(e.target.value)}
                     />
                   </Form.Group>
 
@@ -64,6 +65,19 @@ const NewTripForm = ({ user, trip, newId, createTrip }) => {
                       name="endDate"
                       value={endDate}
                       onChange={(e) => setEndDate(e.target.value)}
+                    />
+                  </Form.Group>
+
+                  <Form.Group controlId="formBasicCollaborators">
+                    <Form.Label className="form-label">
+                      Collaborators
+                    </Form.Label>
+                    <Form.Control
+                      placeholder="collaborators"
+                      type="text"
+                      name="collabs"
+                      value={collabs}
+                      onChange={(e) => setCollabs(e.target.value)}
                     />
                   </Form.Group>
 
