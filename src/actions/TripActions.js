@@ -17,7 +17,7 @@ export const updateLeg = (leg) => {
 };
 
 //set up the headers
-const makeHeader = () => {
+export const makeHeader = () => {
   const token = localStorage.getItem("jwt");
   return {
     "Content-Type": "application/json",
@@ -27,7 +27,7 @@ const makeHeader = () => {
 };
 
 //Create a new trip with the current user being added to db as the creator
-export const createTrip = (name, start_date, end_date, notes) => {
+export const createTrip = (name, start_date, end_date, notes, collabs) => {
   return (dispatch) => {
     dispatch({ type: FETCHING });
     const headers = makeHeader();
@@ -40,6 +40,7 @@ export const createTrip = (name, start_date, end_date, notes) => {
           start_date,
           end_date,
           notes,
+          collabs,
         },
       }),
     })
