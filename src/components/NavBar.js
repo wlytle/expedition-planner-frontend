@@ -2,16 +2,10 @@ import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { useLocation } from "react-router-dom";
 import { signedIn } from "../actions/UserActions";
-import {
-  Navbar,
-  Nav,
-  NavDropdown,
-  Button,
-  DropdownButton,
-} from "react-bootstrap";
-import DropdownMenu from "react-bootstrap/esm/DropdownMenu";
+import { getInvites } from "../actions/TripActions";
+import { Navbar, Nav, NavDropdown, Button } from "react-bootstrap";
 
-const NavBar = ({ user, signedIn }) => {
+const NavBar = ({ user, signedIn, getInvites, invites }) => {
   const handleLogout = () => {
     localStorage.clear();
   };
@@ -25,8 +19,9 @@ const NavBar = ({ user, signedIn }) => {
         id: localStorage.getItem("userId"),
         username: localStorage.getItem("username"),
       });
+      getInvites();
     }
-  });
+  }, [invites, getInvites, signedIn, user.id]);
 
   // sett the far right of  the nav bar bassed on location
   const setNavEnd = () => {
@@ -46,6 +41,18 @@ const NavBar = ({ user, signedIn }) => {
       default:
         return (
           <Nav className="mr-auto">
+            {invites.length ? (
+              <span className="fa-stack" data-count={invites.length}>
+                <ion-icon id="notification" name="notifications-outline">
+                  {" "}
+                </ion-icon>
+              </span>
+            ) : (
+              <ion-icon id="notification" name="notifications-outline">
+                {" "}
+              </ion-icon>
+            )}
+
             <strong>
               <NavDropdown
                 title={user.username ? user.username : "menu"}
@@ -59,7 +66,7 @@ const NavBar = ({ user, signedIn }) => {
                 </NavDropdown.Item>
               </NavDropdown>
             </strong>
-            <ion-icon className="dropdown" name="person-outline"></ion-icon>
+            <ion-icon name="person-outline"></ion-icon>
           </Nav>
         );
     }
@@ -76,6 +83,7 @@ const NavBar = ({ user, signedIn }) => {
         Bushwhacker!
       </Navbar.Brand>
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
+
       <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
         {setNavEnd()}
       </Navbar.Collapse>
@@ -83,6 +91,14 @@ const NavBar = ({ user, signedIn }) => {
   );
 };
 
-export default connect((state) => ({ user: state.UserReducer.user }), {
+const mapStateToProps = (state) => {
+  return {
+    user: state.UserReducer.user,
+    invites: state.TripReducer.invites,
+  };
+};
+
+export default connect(mapStateToProps, {
   signedIn,
+  getInvites,
 })(NavBar);

@@ -23,6 +23,30 @@ div#basic-navbar-nav {
   margin-right: 40px;
 }
 
+.fa-stack[data-count]:after{
+  position:absolute;
+  right:0%;
+  top:1%;
+  content: attr(data-count);
+  font-size:50%;
+  padding:.6em;
+  border-radius:999px;
+  line-height:.75em;
+  color: white;
+  background:rgba(255,0,0,.85);
+  text-align:center;
+  min-width:2em;
+  font-weight:bold;
+  margin-right: 160px;
+  margin-top: 15px;
+}
+
+/* padd out the notification icon */
+  #notification {
+    margin-right: 10px;
+  }
+
+
 /* Card styling */
 .card {
   box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);

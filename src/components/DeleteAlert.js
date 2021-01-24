@@ -2,7 +2,6 @@ import React from "react";
 import { Alert, Button } from "react-bootstrap";
 
 const DeleteAlert = ({ show, item, deleteAction, closeAction }) => {
-  console.log("show", show);
   return (
     <>
       <Alert show={show} variant="danger">

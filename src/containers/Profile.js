@@ -5,9 +5,16 @@ import { Container, Row, Col } from "react-bootstrap";
 import EditProfile from "../components/EditProfile";
 import Trips from "../components/Trips";
 import { signedIn } from "../actions/UserActions";
-import { getTrips } from "../actions/TripActions";
+import { getInvites, getTrips } from "../actions/TripActions";
 
-const Profile = ({ user, fetched, allTrips, signedIn, getTrips }) => {
+const Profile = ({
+  user,
+  fetched,
+  allTrips,
+  signedIn,
+  getTrips,
+  getInvites,
+}) => {
   let history = useHistory();
 
   useEffect(() => {
@@ -18,13 +25,17 @@ const Profile = ({ user, fetched, allTrips, signedIn, getTrips }) => {
         username: localStorage.getItem("username"),
       });
       // Load all the user's trips into state
-      getTrips();
+      if (!fetched) {
+        getTrips();
+        getInvites();
+      }
       //no user or session rdirect to login page
     } else if (!user.id && !localStorage.getItem("userId")) {
       history.push("/login");
     } else if (!fetched) {
       // Load all the user's trips into state
       getTrips();
+      getInvites();
     }
   });
 
@@ -53,4 +64,6 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, { signedIn, getTrips })(Profile);
+export default connect(mapStateToProps, { signedIn, getTrips, getInvites })(
+  Profile
+);

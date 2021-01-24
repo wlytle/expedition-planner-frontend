@@ -1,6 +1,7 @@
 import {
   LOAD_TRIP,
   ALL_TRIPS,
+  INVITES,
   DELETE_TRIP,
   UPDATE_TRIPS,
   SET_TRIP_ID,
@@ -15,6 +16,7 @@ const initialState = {
   allTrips: [],
   newId: null,
   fetched: false,
+  invites: [],
 };
 
 let newLegs, newLocs, newTrips;
@@ -24,6 +26,8 @@ const TripReducer = (state = initialState, action) => {
       return { ...state, trip: action.payload, newId: null };
     case ALL_TRIPS:
       return { ...state, allTrips: action.payload, fetched: true };
+    case INVITES:
+      return { ...state, invites: action.payload };
     case UPDATE_TRIPS:
       //replace the updated trip with older version
       newTrips = state.allTrips.filter((trip) => trip.id !== action.payload.id);

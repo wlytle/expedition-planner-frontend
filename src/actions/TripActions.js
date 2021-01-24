@@ -1,6 +1,7 @@
 import {
   LOAD_TRIP,
   ALL_TRIPS,
+  INVITES,
   UPDATE_TRIPS,
   DELETE_TRIP,
   SET_TRIP_ID,
@@ -65,6 +66,24 @@ export const getTrips = () => {
       .then((r) => r.json())
       .then((trips) => {
         dispatch({ type: ALL_TRIPS, payload: trips });
+        // dispatch({ type: INVITES, payload: pending });
+      })
+      .catch(console.log);
+  };
+};
+
+//Get all trips with pendign invitiations
+export const getInvites = () => {
+  return (dispatch) => {
+    const headers = makeHeader();
+
+    fetch(API + "/invites", {
+      method: "GET",
+      headers,
+    })
+      .then((r) => r.json())
+      .then((trips) => {
+        dispatch({ type: INVITES, payload: trips });
       })
       .catch(console.log);
   };
