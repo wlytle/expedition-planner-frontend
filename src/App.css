@@ -23,12 +23,41 @@ div#basic-navbar-nav {
   margin-right: 40px;
 }
 
+/* Configure drop down over icons */
+ .dropdown-toggle{
+  background-color: rgba(0,0,0,0);
+  border-color: rgba(0,0,0,0);
+  box-shadow: rgba(0,0,0,0);
+  color: black;
+ }
+ /*Overwrite css default colors for buttons */
+ #invites-dropdown:active, #profile-dropdown:active {
+  background-color: rgba(0,0,0,0);
+  border-color: rgba(0,0,0,0);
+  box-shadow: 0 0 0 0.25rem rgba(0,0,0,0);
+  color: black;
+ }
+ #invites-dropdown:focus, #profile-dropdown:focus {
+  background-color: rgba(0,0,0,0);
+  border-color: rgba(0,0,0,0);
+  box-shadow: 0 0 0 0.25rem rgba(0,0,0,0);
+  color: black;
+ }
+
+ #invites-dropdown:hover, #profile-dropdown:hover {
+  background-color: rgba(0,0,0,0);
+  border-color: rgba(0,0,0,0);
+  box-shadow: 0 0 0 0.25rem rgba(0,0,0,0);
+  color: black;
+ }
+
+/* add invites bage to bell icon */
 .fa-stack[data-count]:after{
   position:absolute;
   right:0%;
   top:1%;
   content: attr(data-count);
-  font-size:50%;
+  font-size:55%;
   padding:.6em;
   border-radius:999px;
   line-height:.75em;
@@ -37,8 +66,8 @@ div#basic-navbar-nav {
   text-align:center;
   min-width:2em;
   font-weight:bold;
-  margin-right: 160px;
-  margin-top: 15px;
+  margin-right: 50px;
+  margin-top: 10px;
 }
 
 /* padd out the notification icon */

@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { useLocation } from "react-router-dom";
 import { signedIn } from "../actions/UserActions";
 import { getInvites } from "../actions/TripActions";
-import { Navbar, Nav, NavDropdown, Button } from "react-bootstrap";
+import { Navbar, Nav, NavDropdown, Button, Dropdown } from "react-bootstrap";
 
 const NavBar = ({ user, signedIn, getInvites, invites }) => {
   const handleLogout = () => {
@@ -42,31 +42,48 @@ const NavBar = ({ user, signedIn, getInvites, invites }) => {
         return (
           <Nav className="mr-auto">
             {invites.length ? (
-              <span className="fa-stack" data-count={invites.length}>
-                <ion-icon id="notification" name="notifications-outline">
-                  {" "}
-                </ion-icon>
-              </span>
+              <Dropdown>
+                <Dropdown.Toggle
+                  roll="menu"
+                  id="invites-dropdown"
+                  className="dropdown-toggle"
+                  menuAlign="right"
+                >
+                  <span className="fa-stack" data-count={invites.length}>
+                    <ion-icon id="notification" name="notifications-outline">
+                      {" "}
+                    </ion-icon>
+                  </span>
+                </Dropdown.Toggle>
+                <Dropdown.Menu>
+                  {invites.map((i) => (
+                    <Dropdown.Item key={i.id}>{i.name}</Dropdown.Item>
+                  ))}
+                </Dropdown.Menu>
+              </Dropdown>
             ) : (
               <ion-icon id="notification" name="notifications-outline">
                 {" "}
               </ion-icon>
             )}
 
-            <strong>
-              <NavDropdown
-                title={user.username ? user.username : "menu"}
-                id="basic-nav-dropdown"
-                align="right"
+            <Dropdown>
+              <Dropdown.Toggle
+                roll="menu"
+                id="profile-dropdown"
+                className="dropdown-toggle"
               >
+                <strong>{user.username}</strong>
+                <ion-icon name="person-outline"></ion-icon>
+              </Dropdown.Toggle>
+              <Dropdown.Menu>
                 <NavDropdown.Item href="/profile">My Profile</NavDropdown.Item>
                 <NavDropdown.Divider />
                 <NavDropdown.Item href="/login" onClick={handleLogout}>
                   Logout
                 </NavDropdown.Item>
-              </NavDropdown>
-            </strong>
-            <ion-icon name="person-outline"></ion-icon>
+              </Dropdown.Menu>
+            </Dropdown>
           </Nav>
         );
     }
