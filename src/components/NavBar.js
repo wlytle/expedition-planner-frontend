@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
-import { useLocation, Link, useHistory } from "react-router-dom";
+import { useLocation, useHistory } from "react-router-dom";
 import { signedIn, handleLogOut } from "../actions/UserActions";
 import { getInvites } from "../actions/TripActions";
 import { Navbar, Nav, NavDropdown, Button, Dropdown } from "react-bootstrap";
@@ -77,7 +77,10 @@ const NavBar = ({
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
                   {invites.map((i) => (
-                    <Dropdown.Item key={i.id} onClick={() => console.log(i)}>
+                    <Dropdown.Item
+                      key={i.id}
+                      onClick={() => handleNavClick(`/invites#${i.id}`)}
+                    >
                       {i.name}
                     </Dropdown.Item>
                   ))}

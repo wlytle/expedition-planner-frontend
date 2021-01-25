@@ -1,20 +1,24 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { connect } from "react-redux";
+import { useLocation } from "react-router-dom";
 import { Tab, ListGroup, Col, Row } from "react-bootstrap";
 import NewTripForm from "./NewTripForm";
 import EditTripForm from "./EditTripForm";
 import TripDetails from "./TripDetails";
 
 //Render a list of alll a users trips with a pop up tab to show trip details
-const Trips = ({ allTrips }) => {
+const Trips = ({ allTrips, invites }) => {
   const formRef = useRef();
   const [selectedTrip, setSelectedTrip] = useState(false);
+
+  let location = useLocation();
+  // set trips based on if we are on the profile page or the invitioans page
+  let trips = location.pathname === "/profile" ? allTrips : invites;
 
   //open Edit Form
   const triggerForm = (trip) => {
     formRef.current.setAttribute("aria-hidden", false);
     formRef.current.className = "fade tab-pane active show";
-    console.log(trip);
     setSelectedTrip(trip);
   };
   //Close Edit Form
@@ -24,6 +28,23 @@ const Trips = ({ allTrips }) => {
       formRef.current.className = "fade tab-pane";
     }
   };
+
+  // open trip detail
+  const openDetail = (id) => {
+    const curPane = document.getElementById(`list-group-trips-tabpane-#${id}`);
+    curPane.setAttribute("aria-hidden", false);
+    curPane.className = "fade tab-pane active show";
+  };
+
+  useEffect(() => {
+    // check if we hav ebeen directed here from the invites link and if so get the has value and open the correspodnign trip detail
+    if (location?.pathname === "/invites" && location?.hash.length) {
+      // Get selected invite id
+      const id = location.hash.slice(1);
+      openDetail(id);
+    }
+  });
+
   return (
     <div>
       <Tab.Container id="list-group-trips" defaultActiveKey="#link1">
@@ -33,7 +54,7 @@ const Trips = ({ allTrips }) => {
               <ListGroup.Item action href="#newTrip">
                 New Trip
               </ListGroup.Item>
-              {allTrips.map((trip) => {
+              {trips.map((trip) => {
                 return (
                   <ListGroup.Item
                     action
@@ -58,7 +79,7 @@ const Trips = ({ allTrips }) => {
                   <EditTripForm trip={selectedTrip} closeEdit={closeEdit} />
                 ) : null}
               </Tab.Pane>
-              {allTrips.map((trip) => {
+              {trips.map((trip) => {
                 return (
                   <Tab.Pane key={trip.id} eventKey={`#${trip.id}`}>
                     <TripDetails trip={trip} edit={triggerForm} />
@@ -72,7 +93,11 @@ const Trips = ({ allTrips }) => {
     </div>
   );
 };
+const mapStateToProps = (state) => {
+  return {
+    allTrips: state.TripReducer.allTrips,
+    invites: state.TripReducer.invites,
+  };
+};
 
-export default connect((state) => ({ allTrips: state.TripReducer.allTrips }))(
-  Trips
-);
+export default connect(mapStateToProps)(Trips);

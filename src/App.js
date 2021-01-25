@@ -17,6 +17,9 @@ function App() {
         <Route exact path="/profile">
           <Profile />
         </Route>
+        <Route exact path="/invites">
+          <Profile />
+        </Route>
         <Route exact path="/profile/edit">
           <EditProfile />
         </Route>

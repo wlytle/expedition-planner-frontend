@@ -74,8 +74,8 @@ const EditProfile = ({ user, editUser, failedAuth, error, handleLogOut }) => {
             {" "}
             <Card>
               <Card.Img
-                src={process.env.PUBLIC_URL + "images/sajama.jpg"}
-                alt="Nevada Sajama"
+                src={process.env.PUBLIC_URL + "images/grand-canyon.jpg"}
+                alt="Grand Canyon"
               />
             </Card>{" "}
           </Col>

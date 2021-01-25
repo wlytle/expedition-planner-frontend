@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
+import { useLocation } from "react-router-dom";
 import pluralize from "pluralize";
 import { Link } from "react-router-dom";
 import { Button, ListGroup } from "react-bootstrap";
@@ -9,6 +10,7 @@ import DeleteAlert from "./DeleteAlert";
 
 const TripDetails = ({ trip, edit, deleteTrip }) => {
   const [show, setShow] = useState(false);
+  const location = useLocation();
 
   const { name, start_date, end_date, completed, id, legs, notes } = trip;
   const distance = legs.reduce((accum, { distance }) => accum + distance, 0);
@@ -32,6 +34,16 @@ const TripDetails = ({ trip, edit, deleteTrip }) => {
   //Delete trip_id
   const handleDelete = () => {
     deleteTrip(trip.id);
+  };
+
+  //Accept trip invitation
+  const handleAccept = () => {
+    console.log("Accept");
+  };
+
+  //Decline trip invitation
+  const handleDecline = () => {
+    console.log("Decline");
   };
 
   //make datetime objects
@@ -73,24 +85,46 @@ const TripDetails = ({ trip, edit, deleteTrip }) => {
       <h6>{`Distance: ${(distance / 1000).toFixed(2)} kilometers`}</h6>
       <h6>{`Accumulated Elevation Gain: ${aeg.toFixed(2)} meters`}</h6>
       <p>{notes}</p>
-      <Link to={`/trip/${id}`}>
-        <SubmitButton btnTxt={"Map"} />
-      </Link>
-      <Button
-        className="form-btn"
-        variant="outline-success"
-        href="#editTrip"
-        onClick={handleEdit}
-      >
-        Edit
-      </Button>
-      <Button
-        className="form-btn"
-        variant="outline-danger"
-        onClick={deleteClicked}
-      >
-        Delete
-      </Button>
+      {location.pathname === "/profile" ? (
+        <>
+          <Link to={`/trip/${id}`}>
+            <SubmitButton btnTxt={"Map"} />
+          </Link>
+          <Button
+            className="form-btn"
+            variant="outline-success"
+            href="#editTrip"
+            onClick={handleEdit}
+          >
+            Edit
+          </Button>
+          <Button
+            className="form-btn"
+            variant="outline-danger"
+            onClick={deleteClicked}
+          >
+            Delete
+          </Button>
+        </>
+      ) : (
+        <>
+          <Button
+            className="form-btn"
+            variant="outline-success"
+            href="#editTrip"
+            onClick={handleAccept}
+          >
+            Accept
+          </Button>
+          <Button
+            className="form-btn"
+            variant="outline-danger"
+            onClick={handleDecline}
+          >
+            Decline
+          </Button>
+        </>
+      )}
       {completed ? <h6>Trip Complete! Nice work!</h6> : null}
       <ListGroup>
         {legs

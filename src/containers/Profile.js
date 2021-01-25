@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import { Container, Row, Col } from "react-bootstrap";
 import EditProfile from "../components/EditProfile";
 import Trips from "../components/Trips";
@@ -16,6 +16,7 @@ const Profile = ({
   getInvites,
 }) => {
   let history = useHistory();
+  let location = useLocation();
 
   useEffect(() => {
     //No user signd in but session in local storage sign user in
@@ -44,7 +45,7 @@ const Profile = ({
       {/* <EditProfile /> */}
       <Row>
         <h1 className="d-flex align-items-center justify-content-center">
-          {"My Trips"}
+          {location.pathname === "/profile" ? "My Trips" : "My Invitations"}
         </h1>
       </Row>
       <Row>
