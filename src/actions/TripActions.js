@@ -9,6 +9,7 @@ import {
   UPDATE_LEG,
   DELETE_LEG,
   FETCHING,
+  ACCEPT_INVITATION,
 } from "./types";
 import { API } from "../constants";
 
@@ -231,7 +232,6 @@ export const editLegMeta = (leg) => {
 
 //Delete a leg
 export const deleteLeg = (leg_id) => {
-  console.log("Woot");
   return (dispatch) => {
     const headers = makeHeader();
     fetch(API + "/legs/" + leg_id, {
@@ -239,6 +239,20 @@ export const deleteLeg = (leg_id) => {
       headers,
     })
       .then(dispatch({ type: DELETE_LEG, payload: leg_id }))
+      .catch(console.log);
+  };
+};
+
+//except invitation
+export const acceptInvitation = (id) => {
+  return (dispatch) => {
+    const headers = makeHeader();
+    fetch(API + "/user_trips/" + id, {
+      method: "PATCH",
+      headers,
+    })
+      .then((r) => r.json())
+      .then((trip) => dispatch({ type: ACCEPT_INVITATION, payload: trip }))
       .catch(console.log);
   };
 };

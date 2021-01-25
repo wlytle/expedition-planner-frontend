@@ -4,6 +4,7 @@ import { useLocation, useHistory } from "react-router-dom";
 import { signedIn, handleLogOut } from "../actions/UserActions";
 import { getInvites } from "../actions/TripActions";
 import { Navbar, Nav, NavDropdown, Button, Dropdown } from "react-bootstrap";
+import compass from "../images/compass.png";
 
 const NavBar = ({
   user,
@@ -145,11 +146,7 @@ const NavBar = ({
   return (
     <Navbar id="nav-bar" bg="light" expand="lg" sticky="top">
       <Navbar.Brand href="/profile">
-        <img
-          className="compass"
-          src={process.env.PUBLIC_URL + "images/compass.png"}
-          alt="Compass Rose"
-        />
+        <img className="compass" src={compass} alt="Compass Rose" />
         Bushwhacker!
       </Navbar.Brand>
       <Navbar.Toggle aria-controls="basic-navbar-nav" />

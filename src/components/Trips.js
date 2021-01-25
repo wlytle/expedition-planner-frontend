@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import { connect } from "react-redux";
-import { useLocation } from "react-router-dom";
+import { useLocation, useHistory } from "react-router-dom";
 import { Tab, ListGroup, Col, Row } from "react-bootstrap";
 import NewTripForm from "./NewTripForm";
 import EditTripForm from "./EditTripForm";
@@ -12,6 +12,7 @@ const Trips = ({ allTrips, invites }) => {
   const [selectedTrip, setSelectedTrip] = useState(false);
 
   let location = useLocation();
+  let history = useHistory();
   // set trips based on if we are on the profile page or the invitioans page
   let trips = location.pathname === "/profile" ? allTrips : invites;
 
@@ -41,7 +42,9 @@ const Trips = ({ allTrips, invites }) => {
     if (location?.pathname === "/invites" && location?.hash.length) {
       // Get selected invite id
       const id = location.hash.slice(1);
-      openDetail(id);
+      invites.find((i) => i.id === id)
+        ? openDetail(id)
+        : history.push("/invites");
     }
   });
 
@@ -51,22 +54,30 @@ const Trips = ({ allTrips, invites }) => {
         <Row>
           <Col sm={4}>
             <ListGroup className="trip-list">
-              <ListGroup.Item action href="#newTrip">
-                New Trip
-              </ListGroup.Item>
-              {trips.map((trip) => {
-                return (
-                  <ListGroup.Item
-                    action
-                    key={trip.id}
-                    href={`#${trip.id}`}
-                    onClick={closeEdit}
-                  >
-                    {" "}
-                    {trip.name}
-                  </ListGroup.Item>
-                );
-              })}
+              {location.pathname === "/profile" ? (
+                <ListGroup.Item action href="#newTrip">
+                  New Trip
+                </ListGroup.Item>
+              ) : null}
+              {trips.length ? (
+                trips.map((trip) => {
+                  return (
+                    <ListGroup.Item
+                      action
+                      key={trip.id}
+                      href={`#${trip.id}`}
+                      onClick={closeEdit}
+                    >
+                      {" "}
+                      {trip.name}
+                    </ListGroup.Item>
+                  );
+                })
+              ) : (
+                <ListGroup.Item>
+                  You don't have any invitations right now.
+                </ListGroup.Item>
+              )}
             </ListGroup>
           </Col>
           <Col sm={8}>

@@ -10,6 +10,7 @@ import {
 } from "../actions/UserActions";
 import SubmitButton from "./SubmitButton";
 import DeleteAlert from "../components/DeleteAlert";
+import canyon from "../images/grand-canyon.JPG";
 
 const EditProfile = ({ user, editUser, failedAuth, error, handleLogOut }) => {
   const [username, setUsername] = useState(user.username);
@@ -56,6 +57,7 @@ const EditProfile = ({ user, editUser, failedAuth, error, handleLogOut }) => {
     }
   });
   const inputClass = error ? "is-invalid" : "";
+  console.log(process.env.PUBLIC_URL + "images/grand-canyon.jpg");
   return (
     <section>
       <Container className="min-vh-100">
@@ -73,10 +75,7 @@ const EditProfile = ({ user, editUser, failedAuth, error, handleLogOut }) => {
           >
             {" "}
             <Card>
-              <Card.Img
-                src={process.env.PUBLIC_URL + "images/grand-canyon.jpg"}
-                alt="Grand Canyon"
-              />
+              <Card.Img src={canyon} alt="Grand Canyon" />
             </Card>{" "}
           </Col>
           <Col md={{ span: 4, offset: 1 }} style={{ marginTop: "40px" }}>

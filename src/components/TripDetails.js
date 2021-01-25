@@ -4,11 +4,11 @@ import { useLocation } from "react-router-dom";
 import pluralize from "pluralize";
 import { Link } from "react-router-dom";
 import { Button, ListGroup } from "react-bootstrap";
-import { deleteTrip } from "../actions/TripActions";
+import { deleteTrip, acceptInvitation } from "../actions/TripActions";
 import SubmitButton from "./SubmitButton";
 import DeleteAlert from "./DeleteAlert";
 
-const TripDetails = ({ trip, edit, deleteTrip }) => {
+const TripDetails = ({ trip, edit, deleteTrip, acceptInvitation }) => {
   const [show, setShow] = useState(false);
   const location = useLocation();
 
@@ -38,7 +38,7 @@ const TripDetails = ({ trip, edit, deleteTrip }) => {
 
   //Accept trip invitation
   const handleAccept = () => {
-    console.log("Accept");
+    acceptInvitation(trip.id);
   };
 
   //Decline trip invitation
@@ -57,7 +57,7 @@ const TripDetails = ({ trip, edit, deleteTrip }) => {
     return Intl.DateTimeFormat("en-US").format(date);
   };
 
-  //Set dates up to be presented nicels with number of days
+  //Set dates up to be presented nicely with number of days
   const presentDates = (start, end) => {
     start = makeDate(start);
     end = makeDate(end);
@@ -111,7 +111,6 @@ const TripDetails = ({ trip, edit, deleteTrip }) => {
           <Button
             className="form-btn"
             variant="outline-success"
-            href="#editTrip"
             onClick={handleAccept}
           >
             Accept
@@ -149,4 +148,4 @@ const TripDetails = ({ trip, edit, deleteTrip }) => {
   );
 };
 
-export default connect(null, { deleteTrip })(TripDetails);
+export default connect(null, { deleteTrip, acceptInvitation })(TripDetails);

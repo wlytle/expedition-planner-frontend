@@ -9,6 +9,7 @@ import {
   UPDATE_LEG,
   DELETE_LEG,
   FETCHED,
+  ACCEPT_INVITATION,
 } from "../actions/types";
 
 const initialState = {
@@ -19,7 +20,7 @@ const initialState = {
   invites: [],
 };
 
-let newLegs, newLocs, newTrips;
+let newLegs, newLocs, newTrips, newTrip, newInvites;
 const TripReducer = (state = initialState, action) => {
   switch (action.type) {
     case LOAD_TRIP:
@@ -71,6 +72,19 @@ const TripReducer = (state = initialState, action) => {
       return {
         ...state,
         trip: { ...state.trip, legs: newLegs, lcoations: newLocs },
+      };
+    case ACCEPT_INVITATION:
+      //move accepted trip from invites into trips
+      newTrip = state.invites.find(
+        (trip) => trip.id === action.payload.trip_id
+      );
+      newInvites = state.invites.filter(
+        (trip) => trip.id !== action.payload.trip_id
+      );
+      return {
+        ...state,
+        allTrips: [...state.allTrips, newTrip],
+        invites: newInvites,
       };
     case FETCHED:
       return { ...state, fetched: action.payload };
