@@ -131,3 +131,8 @@ map {
 .pane-overlay {
   margin-top: 6.28%
 }
+
+/* Unstyle links */
+a.nav-link {
+  text-decoration: none;
+}

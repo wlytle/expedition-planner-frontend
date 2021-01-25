@@ -41,13 +41,13 @@ const Profile = ({
 
   return (
     <Container>
+      {/* <EditProfile /> */}
       <Row>
         <h1 className="d-flex align-items-center justify-content-center">
           {"My Trips"}
         </h1>
       </Row>
       <Row>
-        <Col sm={4}>{user.id ? <EditProfile /> : null}</Col>
         <Col>
           <Trips />
         </Col>

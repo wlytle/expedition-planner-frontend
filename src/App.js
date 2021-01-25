@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import SignUp from "./components/SignUp";
 import Login from "./components/Login";
 import Profile from "./containers/Profile";
+import EditProfile from "./components/EditProfile";
 import NavBar from "./components/NavBar";
 import MapContainer from "./containers/MapContainer";
 import "./App.css";
@@ -14,7 +15,10 @@ function App() {
 
       <Switch>
         <Route exact path="/profile">
-          {<Profile />}
+          <Profile />
+        </Route>
+        <Route exact path="/profile/edit">
+          <EditProfile />
         </Route>
         <Route exact path="/signup">
           <SignUp />

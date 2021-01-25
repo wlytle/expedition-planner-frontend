@@ -1,16 +1,36 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
-import { useLocation } from "react-router-dom";
-import { signedIn } from "../actions/UserActions";
+import { useLocation, Link, useHistory } from "react-router-dom";
+import { signedIn, handleLogOut } from "../actions/UserActions";
 import { getInvites } from "../actions/TripActions";
 import { Navbar, Nav, NavDropdown, Button, Dropdown } from "react-bootstrap";
 
-const NavBar = ({ user, signedIn, getInvites, invites }) => {
+const NavBar = ({
+  user,
+  signedIn,
+  getInvites,
+  invites,
+  handleLogOut: logout,
+}) => {
   const handleLogout = () => {
     localStorage.clear();
+    logout();
+    history.push("/login");
   };
-
+  // get the end point of the url
   const location = useLocation();
+
+  //set up hsitroy items
+  let history = useHistory();
+
+  //set state for showind nav dropdown
+  const [show, setShow] = useState(false);
+
+  //Handle lcikcs to the navigatin dropdown
+  const handleNavClick = (route) => {
+    history.push(route);
+    setShow(!show);
+  };
 
   useEffect(() => {
     //No user signd in but session in local storage sign user in
@@ -41,13 +61,13 @@ const NavBar = ({ user, signedIn, getInvites, invites }) => {
       default:
         return (
           <Nav className="mr-auto">
+            {/* if ther are invites render a badge and add invites to drop down */}
             {invites.length ? (
               <Dropdown>
                 <Dropdown.Toggle
                   roll="menu"
                   id="invites-dropdown"
                   className="dropdown-toggle"
-                  menuAlign="right"
                 >
                   <span className="fa-stack" data-count={invites.length}>
                     <ion-icon id="notification" name="notifications-outline">
@@ -57,14 +77,27 @@ const NavBar = ({ user, signedIn, getInvites, invites }) => {
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
                   {invites.map((i) => (
-                    <Dropdown.Item key={i.id}>{i.name}</Dropdown.Item>
+                    <Dropdown.Item key={i.id} onClick={() => console.log(i)}>
+                      {i.name}
+                    </Dropdown.Item>
                   ))}
                 </Dropdown.Menu>
               </Dropdown>
             ) : (
-              <ion-icon id="notification" name="notifications-outline">
-                {" "}
-              </ion-icon>
+              <Dropdown>
+                <Dropdown.Toggle
+                  roll="menu"
+                  id="invites-dropdown"
+                  className="dropdown-toggle"
+                >
+                  <ion-icon id="notification" name="notifications-outline">
+                    {" "}
+                  </ion-icon>
+                </Dropdown.Toggle>
+                <Dropdown.Menu>
+                  <Dropdown.Item>You don't have any invites</Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
             )}
 
             <Dropdown>
@@ -77,11 +110,28 @@ const NavBar = ({ user, signedIn, getInvites, invites }) => {
                 <ion-icon name="person-outline"></ion-icon>
               </Dropdown.Toggle>
               <Dropdown.Menu>
-                <NavDropdown.Item href="/profile">My Profile</NavDropdown.Item>
+                <Dropdown.Item
+                  className="dropdown-item"
+                  onClick={() => handleNavClick("/profile")}
+                >
+                  My Profile
+                </Dropdown.Item>
+
+                <Dropdown.Item
+                  className="nav-Dropdown.Item"
+                  onClick={() => handleNavClick("/profile/edit")}
+                >
+                  Edit Profile
+                </Dropdown.Item>
+
                 <NavDropdown.Divider />
-                <NavDropdown.Item href="/login" onClick={handleLogout}>
+                <Dropdown.Item
+                  className="nav-link"
+                  to="/login"
+                  onClick={handleLogout}
+                >
                   Logout
-                </NavDropdown.Item>
+                </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
           </Nav>
@@ -118,4 +168,5 @@ const mapStateToProps = (state) => {
 export default connect(mapStateToProps, {
   signedIn,
   getInvites,
+  handleLogOut,
 })(NavBar);
