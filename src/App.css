@@ -138,3 +138,8 @@ map {
 a.nav-link {
   text-decoration: none;
 }
+
+/* style trip details */
+.tab {
+  margin-left: 40px;
+}

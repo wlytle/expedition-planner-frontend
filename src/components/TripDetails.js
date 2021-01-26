@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { useLocation } from "react-router-dom";
 import pluralize from "pluralize";
 import { Link } from "react-router-dom";
-import { Button, ListGroup } from "react-bootstrap";
+import { Button, ListGroup, ListGroupItem } from "react-bootstrap";
 import {
   deleteTrip,
   acceptInvitation,
@@ -26,16 +26,8 @@ const TripDetails = ({
   const distance = legs.reduce((accum, { distance }) => accum + distance, 0);
   const aeg = legs.reduce((accum, { aeg }) => accum + aeg, 0);
 
-  //close current pane
-  const closePane = (id) => {
-    const curPane = document.getElementById(`list-group-trips-tabpane-#${id}`);
-    curPane.setAttribute("aria-hidden", true);
-    curPane.className = "fade tab-pane";
-  };
-
   //close this pane and open the edit form
   const handleEdit = () => {
-    closePane(trip.id);
     edit(trip);
   };
 
@@ -47,13 +39,11 @@ const TripDetails = ({
   //Delete trip_id
   const handleDelete = () => {
     deleteTrip(trip.id);
-    closePane(trip.id);
   };
 
   //Accept trip invitation
   const handleAccept = () => {
     acceptInvitation(trip.id);
-    closePane(trip.id);
   };
 
   //Decline trip invitation
@@ -79,13 +69,33 @@ const TripDetails = ({
     // get trip duration add 1 to account for the first day
     const duration = (end - start) / 1000 / 3600 / 24 + 1;
     return (
-      <h6>
+      <h6 className="tab">
         {pluralize("day", duration, true)} ({formatDate(start)} -{" "}
         {formatDate(end)} )
       </h6>
     );
   };
 
+  // Figure our the username of the trip creator
+  const created = () => {
+    if (!trip.id) return "";
+    //get user_trip of creator
+    const created = trip.user_trips.find((t) => t.created === true);
+    //get user that created
+    const user = trip.users.find((u) => u.id === created.user_id);
+    return user.user_name;
+  };
+
+  const collaborators = (creator) => {
+    //keep the creator out of the collaborators list
+    const users = trip.users.filter((u) => u.user_name !== creator);
+    return users.map((u, i) => {
+      return i === users.length - 1 ? `${u.user_name}` : `${u.user_name}, `;
+    });
+  };
+
+  const creator = created();
+  const collabs = collaborators(creator);
   return (
     <div>
       <DeleteAlert
@@ -94,53 +104,63 @@ const TripDetails = ({
         deleteAction={handleDelete}
         closeAction={setShow}
       />
-      <h3>{name}</h3>
-      {/* Convert start and end to simple dd/mm/yy format */}
-      {presentDates(start_date, end_date)}
-      <h6>{`Distance: ${(distance / 1000).toFixed(2)} kilometers`}</h6>
-      <h6>{`Accumulated Elevation Gain: ${aeg.toFixed(2)} meters`}</h6>
-      <p>{notes}</p>
-      {location.pathname === "/profile" ? (
-        <>
-          <Link to={`/trip/${id}`}>
-            <SubmitButton btnTxt={"Map"} />
-          </Link>
-          <Button
-            className="form-btn"
-            variant="outline-success"
-            href="#editTrip"
-            onClick={handleEdit}
-          >
-            Edit
-          </Button>
-          <Button
-            className="form-btn"
-            variant="outline-danger"
-            onClick={deleteClicked}
-          >
-            Delete
-          </Button>
-        </>
-      ) : (
-        <>
-          <Button
-            className="form-btn"
-            variant="outline-success"
-            onClick={handleAccept}
-          >
-            Accept
-          </Button>
-          <Button
-            className="form-btn"
-            variant="outline-danger"
-            onClick={handleDecline}
-          >
-            Decline
-          </Button>
-        </>
-      )}
-      {completed ? <h6>Trip Complete! Nice work!</h6> : null}
       <ListGroup>
+        <ListGroup.Item>
+          <h3>{name}</h3>
+          <h5>Created By: {creator} </h5>
+          {collabs.length ? (
+            <h6 className="tab">Collaborators: {collabs} </h6>
+          ) : null}
+          {/* Convert start and end to simple dd/mm/yy format */}
+          {presentDates(start_date, end_date)}
+          <h6 className="tab">{`Distance: ${(distance / 1000).toFixed(
+            2
+          )} kilometers`}</h6>
+          <h6 className="tab">{`Accumulated Elevation Gain: ${aeg.toFixed(
+            2
+          )} meters`}</h6>
+          <p>{notes}</p>
+          {location.pathname === "/profile" ? (
+            <>
+              <Link to={`/trip/${id}`}>
+                <SubmitButton btnTxt={"Map"} />
+              </Link>
+              <Button
+                className="form-btn"
+                variant="outline-success"
+                href="#editTrip"
+                onClick={handleEdit}
+              >
+                Edit
+              </Button>
+              <Button
+                className="form-btn"
+                variant="outline-danger"
+                onClick={deleteClicked}
+              >
+                Delete
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button
+                className="form-btn"
+                variant="outline-success"
+                onClick={handleAccept}
+              >
+                Accept
+              </Button>
+              <Button
+                className="form-btn"
+                variant="outline-danger"
+                onClick={handleDecline}
+              >
+                Decline
+              </Button>
+            </>
+          )}
+          {completed ? <h6>Trip Complete! Nice work!</h6> : null}
+        </ListGroup.Item>
         {legs
           .sort((a, b) => formatDate(a.date) - formatDate(a.date))
           .map((leg) => {
@@ -148,12 +168,12 @@ const TripDetails = ({
               <ListGroup.Item key={leg.id}>
                 <h5>{leg.sport}</h5>
                 {presentDates(leg.start_date, leg.end_date)}
-                <p>{`Distance: ${(leg.distance / 1000).toFixed(
+                <h6 className="tab">{`Distance: ${(leg.distance / 1000).toFixed(
                   2
-                )} kilometers`}</p>
-                <p>{`Accumulated Elevation Gain: ${leg.aeg.toFixed(
+                )} kilometers`}</h6>
+                <h6 className="tab">{`Accumulated Elevation Gain: ${leg.aeg.toFixed(
                   2
-                )} meters`}</p>
+                )} meters`}</h6>
                 <p>{leg.notes}</p>
               </ListGroup.Item>
             );
