@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { useLocation, useHistory } from "react-router-dom";
 import { signedIn, handleLogOut } from "../actions/UserActions";
-import { getInvites } from "../actions/TripActions";
+import { getInvites, clearTrip } from "../actions/TripActions";
 import { Navbar, Nav, NavDropdown, Button, Dropdown } from "react-bootstrap";
 import compass from "../images/compass.png";
 
@@ -12,6 +12,7 @@ const NavBar = ({
   getInvites,
   invites,
   handleLogOut: logout,
+  clearTrip,
 }) => {
   const handleLogout = () => {
     localStorage.clear();
@@ -27,8 +28,10 @@ const NavBar = ({
   //set state for showind nav dropdown
   const [show, setShow] = useState(false);
 
-  //Handle lcikcs to the navigatin dropdown
+  //Handle clicks to the navigatin dropdown
   const handleNavClick = (route) => {
+    //if navigating to the profile clear our the trip field in app state to set up next visit to maps page
+    if (route === "/profile") clearTrip();
     history.push(route);
     setShow(!show);
   };
@@ -49,13 +52,13 @@ const NavBar = ({
     switch (location.pathname) {
       case "/login":
         return (
-          <Button href="/signup" variant="outline-success">
+          <Button href="/signup" variant="outline-dark">
             <strong>Sign Up</strong>
           </Button>
         );
       case "/signup":
         return (
-          <Button href="/login" className="form-btn" variant="outline-success">
+          <Button href="/login" className="form-btn" variant="outline-dark">
             <strong>Log In</strong>
           </Button>
         );
@@ -169,4 +172,5 @@ export default connect(mapStateToProps, {
   signedIn,
   getInvites,
   handleLogOut,
+  clearTrip,
 })(NavBar);

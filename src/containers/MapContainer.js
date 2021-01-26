@@ -35,7 +35,7 @@ const MapContainer = ({
   // Get id of trip from route
   let { id } = useParams();
 
-  //set temporary default cetner at Upset Rapid
+  //set temporary default center at Upset Rapid
   const c = [36.355308, -112.695433];
 
   //calcualte distance of polyline
@@ -137,7 +137,7 @@ const MapContainer = ({
       history.push("/login");
     }
     if (trip.id && !bounds && !centerRef.current) {
-      // if a trip is loaded into state app state and componenet state has no bounds, get the bounds
+      // if a trip is loaded into app state and component state has no bounds, get the bounds
       if (trip?.locations?.length) {
         const mapBounds = latLngBounds();
         trip.locations.forEach((loc) => mapBounds.extend([loc.lat, loc.lng]));

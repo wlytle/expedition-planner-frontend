@@ -19,6 +19,11 @@ export const updateLeg = (leg) => {
   return { type: UPDATE_LEG, payload: leg };
 };
 
+//rest trip value in state
+export const clearTrip = () => {
+  return { type: LOAD_TRIP, payload: { legs: [] } };
+};
+
 //set up the headers
 export const makeHeader = () => {
   const token = localStorage.getItem("jwt");
