@@ -10,6 +10,7 @@ import {
   DELETE_LEG,
   FETCHED,
   ACCEPT_INVITATION,
+  DECLINE_INVITATION,
 } from "../actions/types";
 
 const initialState = {
@@ -71,7 +72,7 @@ const TripReducer = (state = initialState, action) => {
       );
       return {
         ...state,
-        trip: { ...state.trip, legs: newLegs, lcoations: newLocs },
+        trip: { ...state.trip, legs: newLegs, locations: newLocs },
       };
     case ACCEPT_INVITATION:
       //move accepted trip from invites into trips
@@ -85,6 +86,14 @@ const TripReducer = (state = initialState, action) => {
         ...state,
         allTrips: [...state.allTrips, newTrip],
         invites: newInvites,
+      };
+    case DECLINE_INVITATION:
+      newInvites = state.invites.filter(
+        (trip) => trip.id !== action.payload.trip_id
+      );
+      return {
+        ...state,
+        invitations: [...state.invitations, newInvites],
       };
     case FETCHED:
       return { ...state, fetched: action.payload };

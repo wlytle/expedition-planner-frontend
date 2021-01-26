@@ -10,6 +10,7 @@ import {
   DELETE_LEG,
   FETCHING,
   ACCEPT_INVITATION,
+  DECLINE_INVITATION,
 } from "./types";
 import { API } from "../constants";
 
@@ -262,11 +263,11 @@ export const declineInvitation = (id) => {
   return (dispatch) => {
     const headers = makeHeader();
     fetch(API + "/user_trips/" + id, {
-      method: "PATCH",
+      method: "DELETE",
       headers,
     })
       .then((r) => r.json())
-      .then((trip) => dispatch({ type: ACCEPT_INVITATION, payload: trip }))
+      .then((trip) => dispatch({ type: DECLINE_INVITATION, payload: trip }))
       .catch(console.log);
   };
 };

@@ -16,6 +16,7 @@ export const DELETE_TRIP = "DELETE_TRIP";
 export const SET_TRIP_ID = "SET_TRIP_ID";
 export const FETCHED = "FETCHED";
 export const ACCEPT_INVITATION = "ACCEPT_INVITATION";
+export const DECLINE_INVITATION = "DECLINE_INVITATION";
 
 //MapActions
 export const TOGGLE_PANE = "TOGGLE_PANE";

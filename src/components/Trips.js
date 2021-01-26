@@ -11,6 +11,7 @@ const Trips = ({ allTrips, invites }) => {
   const formRef = useRef();
   const newRef = useRef();
   const [selectedTrip, setSelectedTrip] = useState(false);
+  const [displayId, setDisplayId] = useState(null);
 
   let location = useLocation();
   let history = useHistory();
@@ -24,19 +25,31 @@ const Trips = ({ allTrips, invites }) => {
     setSelectedTrip(trip);
   };
   //Close Edit Form
-  const closeEdit = () => {
-    console.log(formRef.current);
+  const closeEdit = (id) => {
+    //set the id of the currently displayed trip
     if (formRef.current.getAttribute("aria-hidden")) {
       formRef.current.setAttribute("aria-hidden", true);
       formRef.current.className = "fade tab-pane";
     }
   };
+
+  //close the new trip form
   const closeNew = () => {
-    console.log(newRef.current);
+    const id = location.hash.slice(1);
+    // closePane(id);
     if (newRef.current.getAttribute("aria-hidden")) {
       newRef.current.setAttribute("aria-hidden", true);
       newRef.current.className = "fade tab-pane";
     }
+  };
+
+  //close current pane
+  const closePane = (id) => {
+    console.log("close", id);
+    const curPane = document.getElementById(`list-group-trips-tabpane-#${id}`);
+    if (!curPane) return;
+    curPane.setAttribute("aria-hidden", true);
+    curPane.className = "fade tab-pane";
   };
 
   // open trip detail
@@ -44,13 +57,27 @@ const Trips = ({ allTrips, invites }) => {
     // just incase also close the edit form
     closeEdit();
     closeNew();
+    closePane(prevDisplay);
+    // set this id as the next value for previous display
+    setDisplayId(id);
     const curPane = document.getElementById(`list-group-trips-tabpane-#${id}`);
     curPane.setAttribute("aria-hidden", false);
     curPane.className = "fade tab-pane active show";
   };
 
+  //Record previous values
+  const usePrevious = (value) => {
+    const ref = useRef();
+    useEffect(() => {
+      ref.current = value;
+    });
+    return ref.current;
+  };
+
+  //record currently open display window to be closed when the next one is clicked
+  const prevDisplay = usePrevious(displayId);
   useEffect(() => {
-    // check if we hav ebeen directed here from the invites link and if so get the has value and open the correspodnign trip detail
+    // check if we have been directed here from the invites link and if so get the has value and open the correspodnign trip detail
     if (location?.pathname === "/invites" && location?.hash.length) {
       // Get selected invite id
       const id = location.hash.slice(1);
@@ -78,7 +105,7 @@ const Trips = ({ allTrips, invites }) => {
                       action
                       key={trip.id}
                       href={`#${trip.id}`}
-                      onClick={closeEdit}
+                      onClick={() => closeEdit(trip.id)}
                     >
                       {" "}
                       {trip.name}
@@ -87,7 +114,11 @@ const Trips = ({ allTrips, invites }) => {
                 })
               ) : (
                 <ListGroup.Item>
-                  You don't have any invitations right now.
+                  {`You don't have any ${
+                    location.pathname === "invitations"
+                      ? "invitations"
+                      : "trips"
+                  }right now.`}
                 </ListGroup.Item>
               )}
             </ListGroup>

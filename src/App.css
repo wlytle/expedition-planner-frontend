@@ -97,10 +97,12 @@ ion-icon {
  /* Sapce the submit button out */
 .form-btn {
   margin-top: 10px;
+  margin-right: 4px;
+  margin-bottom: 10px;
 }
 /* space out form labels */
 .form-label {
-  margin-top: 10px;
+  margin-top: 5px;
 }
 /*  */
 .trip-list .list-group-item.active {

@@ -4,11 +4,21 @@ import { useLocation } from "react-router-dom";
 import pluralize from "pluralize";
 import { Link } from "react-router-dom";
 import { Button, ListGroup } from "react-bootstrap";
-import { deleteTrip, acceptInvitation } from "../actions/TripActions";
+import {
+  deleteTrip,
+  acceptInvitation,
+  declineInvitation,
+} from "../actions/TripActions";
 import SubmitButton from "./SubmitButton";
 import DeleteAlert from "./DeleteAlert";
 
-const TripDetails = ({ trip, edit, deleteTrip, acceptInvitation }) => {
+const TripDetails = ({
+  trip,
+  edit,
+  deleteTrip,
+  acceptInvitation,
+  declineInvitation,
+}) => {
   const [show, setShow] = useState(false);
   const location = useLocation();
 
@@ -16,13 +26,16 @@ const TripDetails = ({ trip, edit, deleteTrip, acceptInvitation }) => {
   const distance = legs.reduce((accum, { distance }) => accum + distance, 0);
   const aeg = legs.reduce((accum, { aeg }) => accum + aeg, 0);
 
-  //close this pane and open the edit form
-  const handleEdit = () => {
-    const curPane = document.getElementById(
-      `list-group-trips-tabpane-#${trip.id}`
-    );
+  //close current pane
+  const closePane = (id) => {
+    const curPane = document.getElementById(`list-group-trips-tabpane-#${id}`);
     curPane.setAttribute("aria-hidden", true);
     curPane.className = "fade tab-pane";
+  };
+
+  //close this pane and open the edit form
+  const handleEdit = () => {
+    closePane(trip.id);
     edit(trip);
   };
 
@@ -34,16 +47,18 @@ const TripDetails = ({ trip, edit, deleteTrip, acceptInvitation }) => {
   //Delete trip_id
   const handleDelete = () => {
     deleteTrip(trip.id);
+    closePane(trip.id);
   };
 
   //Accept trip invitation
   const handleAccept = () => {
     acceptInvitation(trip.id);
+    closePane(trip.id);
   };
 
   //Decline trip invitation
   const handleDecline = () => {
-    console.log("Decline");
+    declineInvitation(trip.id);
   };
 
   //make datetime objects
@@ -148,4 +163,8 @@ const TripDetails = ({ trip, edit, deleteTrip, acceptInvitation }) => {
   );
 };
 
-export default connect(null, { deleteTrip, acceptInvitation })(TripDetails);
+export default connect(null, {
+  deleteTrip,
+  acceptInvitation,
+  declineInvitation,
+})(TripDetails);
