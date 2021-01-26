@@ -39,10 +39,8 @@ const Profile = ({
       getInvites();
     }
   });
-  console.log(process.env.PUBLIC_URL + "images/grand-canyon.jpg");
   return (
     <Container>
-      <EditProfile />
       <Row>
         <h1 className="d-flex align-items-center justify-content-center">
           {location.pathname === "/profile" ? "My Trips" : "My Invitations"}

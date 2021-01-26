@@ -9,6 +9,7 @@ import TripDetails from "./TripDetails";
 //Render a list of alll a users trips with a pop up tab to show trip details
 const Trips = ({ allTrips, invites }) => {
   const formRef = useRef();
+  const newRef = useRef();
   const [selectedTrip, setSelectedTrip] = useState(false);
 
   let location = useLocation();
@@ -24,14 +25,25 @@ const Trips = ({ allTrips, invites }) => {
   };
   //Close Edit Form
   const closeEdit = () => {
+    console.log(formRef.current);
     if (formRef.current.getAttribute("aria-hidden")) {
       formRef.current.setAttribute("aria-hidden", true);
       formRef.current.className = "fade tab-pane";
     }
   };
+  const closeNew = () => {
+    console.log(newRef.current);
+    if (newRef.current.getAttribute("aria-hidden")) {
+      newRef.current.setAttribute("aria-hidden", true);
+      newRef.current.className = "fade tab-pane";
+    }
+  };
 
   // open trip detail
   const openDetail = (id) => {
+    // just incase also close the edit form
+    closeEdit();
+    closeNew();
     const curPane = document.getElementById(`list-group-trips-tabpane-#${id}`);
     curPane.setAttribute("aria-hidden", false);
     curPane.className = "fade tab-pane active show";
@@ -42,7 +54,7 @@ const Trips = ({ allTrips, invites }) => {
     if (location?.pathname === "/invites" && location?.hash.length) {
       // Get selected invite id
       const id = location.hash.slice(1);
-      invites.find((i) => i.id === id)
+      invites.find((i) => i.id === +id)
         ? openDetail(id)
         : history.push("/invites");
     }
@@ -82,10 +94,10 @@ const Trips = ({ allTrips, invites }) => {
           </Col>
           <Col sm={8}>
             <Tab.Content>
-              <Tab.Pane eventKey="#newTrip" ref={formRef}>
+              <Tab.Pane eventKey="#newTrip" ref={newRef}>
                 <NewTripForm />
               </Tab.Pane>
-              <Tab.Pane eventKey="#ediTrip" ref={formRef}>
+              <Tab.Pane eventKey="#editTrip" ref={formRef}>
                 {selectedTrip ? (
                   <EditTripForm trip={selectedTrip} closeEdit={closeEdit} />
                 ) : null}

@@ -243,8 +243,22 @@ export const deleteLeg = (leg_id) => {
   };
 };
 
-//except invitation
+//Accept invitation
 export const acceptInvitation = (id) => {
+  return (dispatch) => {
+    const headers = makeHeader();
+    fetch(API + "/user_trips/" + id, {
+      method: "PATCH",
+      headers,
+    })
+      .then((r) => r.json())
+      .then((trip) => dispatch({ type: ACCEPT_INVITATION, payload: trip }))
+      .catch(console.log);
+  };
+};
+
+//Decline invitation
+export const declineInvitation = (id) => {
   return (dispatch) => {
     const headers = makeHeader();
     fetch(API + "/user_trips/" + id, {

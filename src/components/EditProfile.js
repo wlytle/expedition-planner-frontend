@@ -57,7 +57,6 @@ const EditProfile = ({ user, editUser, failedAuth, error, handleLogOut }) => {
     }
   });
   const inputClass = error ? "is-invalid" : "";
-  console.log(process.env.PUBLIC_URL + "images/grand-canyon.jpg");
   return (
     <section>
       <Container className="min-vh-100">
