@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import { Col, Row, Container, Form, Card, Button } from "react-bootstrap";
+import { Col, Row, Container, Form, Card } from "react-bootstrap";
 import { connect } from "react-redux";
 import { signIn } from "../actions/UserActions";
 import SubmitButton from "./SubmitButton";

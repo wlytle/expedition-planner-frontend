@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { Button, Col, Row, Container, Form, Card } from "react-bootstrap";
 import { connect } from "react-redux";
@@ -10,6 +10,7 @@ import {
 } from "../actions/UserActions";
 import SubmitButton from "./SubmitButton";
 import DeleteAlert from "../components/DeleteAlert";
+import canyon from "../images/grand-canyon.JPG";
 
 const EditProfile = ({ user, editUser, failedAuth, error, handleLogOut }) => {
   const [username, setUsername] = useState(user.username);
@@ -47,6 +48,14 @@ const EditProfile = ({ user, editUser, failedAuth, error, handleLogOut }) => {
     });
   };
 
+  // if useState got set before redux state was loaded in set the suer naem to auto fill the form
+  useEffect(() => {
+    if (!user.id && !localStorage.getItem("userId")) {
+      history.push("/login");
+    } else if (user.id && !username) {
+      setUsername(user.username);
+    }
+  });
   const inputClass = error ? "is-invalid" : "";
   return (
     <section>
@@ -57,8 +66,18 @@ const EditProfile = ({ user, editUser, failedAuth, error, handleLogOut }) => {
           deleteAction={handleDelete}
           closeAction={setShow}
         />
-        <Row className="min-vh-100">
-          <Col>
+        <Row className=" min-vh-100">
+          <Col
+            id="login"
+            md={{ span: 6, offset: 0 }}
+            style={{ marginTop: "40px" }}
+          >
+            {" "}
+            <Card>
+              <Card.Img src={canyon} alt="Grand Canyon" />
+            </Card>{" "}
+          </Col>
+          <Col md={{ span: 4, offset: 1 }} style={{ marginTop: "40px" }}>
             <Card>
               <Card.Body>
                 <Form onSubmit={handleSubmit}>

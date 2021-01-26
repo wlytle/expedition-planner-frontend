@@ -1,6 +1,7 @@
 import {
   LOAD_TRIP,
   ALL_TRIPS,
+  INVITES,
   UPDATE_TRIPS,
   DELETE_TRIP,
   SET_TRIP_ID,
@@ -8,6 +9,8 @@ import {
   UPDATE_LEG,
   DELETE_LEG,
   FETCHING,
+  ACCEPT_INVITATION,
+  DECLINE_INVITATION,
 } from "./types";
 import { API } from "../constants";
 
@@ -17,7 +20,7 @@ export const updateLeg = (leg) => {
 };
 
 //set up the headers
-const makeHeader = () => {
+export const makeHeader = () => {
   const token = localStorage.getItem("jwt");
   return {
     "Content-Type": "application/json",
@@ -27,7 +30,7 @@ const makeHeader = () => {
 };
 
 //Create a new trip with the current user being added to db as the creator
-export const createTrip = (name, start_date, end_date, notes) => {
+export const createTrip = (name, start_date, end_date, notes, collabs) => {
   return (dispatch) => {
     dispatch({ type: FETCHING });
     const headers = makeHeader();
@@ -40,6 +43,7 @@ export const createTrip = (name, start_date, end_date, notes) => {
           start_date,
           end_date,
           notes,
+          collabs,
         },
       }),
     })
@@ -64,6 +68,24 @@ export const getTrips = () => {
       .then((r) => r.json())
       .then((trips) => {
         dispatch({ type: ALL_TRIPS, payload: trips });
+        // dispatch({ type: INVITES, payload: pending });
+      })
+      .catch(console.log);
+  };
+};
+
+//Get all trips with pendign invitiations
+export const getInvites = () => {
+  return (dispatch) => {
+    const headers = makeHeader();
+
+    fetch(API + "/invites", {
+      method: "GET",
+      headers,
+    })
+      .then((r) => r.json())
+      .then((trips) => {
+        dispatch({ type: INVITES, payload: trips });
       })
       .catch(console.log);
   };
@@ -211,7 +233,6 @@ export const editLegMeta = (leg) => {
 
 //Delete a leg
 export const deleteLeg = (leg_id) => {
-  console.log("Woot");
   return (dispatch) => {
     const headers = makeHeader();
     fetch(API + "/legs/" + leg_id, {
@@ -219,6 +240,34 @@ export const deleteLeg = (leg_id) => {
       headers,
     })
       .then(dispatch({ type: DELETE_LEG, payload: leg_id }))
+      .catch(console.log);
+  };
+};
+
+//Accept invitation
+export const acceptInvitation = (id) => {
+  return (dispatch) => {
+    const headers = makeHeader();
+    fetch(API + "/user_trips/" + id, {
+      method: "PATCH",
+      headers,
+    })
+      .then((r) => r.json())
+      .then((trip) => dispatch({ type: ACCEPT_INVITATION, payload: trip }))
+      .catch(console.log);
+  };
+};
+
+//Decline invitation
+export const declineInvitation = (id) => {
+  return (dispatch) => {
+    const headers = makeHeader();
+    fetch(API + "/user_trips/" + id, {
+      method: "DELETE",
+      headers,
+    })
+      .then((r) => r.json())
+      .then((trip) => dispatch({ type: DECLINE_INVITATION, payload: trip }))
       .catch(console.log);
   };
 };

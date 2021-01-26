@@ -1,6 +1,7 @@
 import {
   LOAD_TRIP,
   ALL_TRIPS,
+  INVITES,
   DELETE_TRIP,
   UPDATE_TRIPS,
   SET_TRIP_ID,
@@ -8,6 +9,8 @@ import {
   UPDATE_LEG,
   DELETE_LEG,
   FETCHED,
+  ACCEPT_INVITATION,
+  DECLINE_INVITATION,
 } from "../actions/types";
 
 const initialState = {
@@ -15,15 +18,18 @@ const initialState = {
   allTrips: [],
   newId: null,
   fetched: false,
+  invites: [],
 };
 
-let newLegs, newLocs, newTrips;
+let newLegs, newLocs, newTrips, newTrip, newInvites;
 const TripReducer = (state = initialState, action) => {
   switch (action.type) {
     case LOAD_TRIP:
       return { ...state, trip: action.payload, newId: null };
     case ALL_TRIPS:
       return { ...state, allTrips: action.payload, fetched: true };
+    case INVITES:
+      return { ...state, invites: action.payload };
     case UPDATE_TRIPS:
       //replace the updated trip with older version
       newTrips = state.allTrips.filter((trip) => trip.id !== action.payload.id);
@@ -66,7 +72,28 @@ const TripReducer = (state = initialState, action) => {
       );
       return {
         ...state,
-        trip: { ...state.trip, legs: newLegs, lcoations: newLocs },
+        trip: { ...state.trip, legs: newLegs, locations: newLocs },
+      };
+    case ACCEPT_INVITATION:
+      //move accepted trip from invites into trips
+      newTrip = state.invites.find(
+        (trip) => trip.id === action.payload.trip_id
+      );
+      newInvites = state.invites.filter(
+        (trip) => trip.id !== action.payload.trip_id
+      );
+      return {
+        ...state,
+        allTrips: [...state.allTrips, newTrip],
+        invites: newInvites,
+      };
+    case DECLINE_INVITATION:
+      newInvites = state.invites.filter(
+        (trip) => trip.id !== action.payload.trip_id
+      );
+      return {
+        ...state,
+        invitations: [...state.invitations, newInvites],
       };
     case FETCHED:
       return { ...state, fetched: action.payload };

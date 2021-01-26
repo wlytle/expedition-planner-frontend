@@ -4,8 +4,9 @@ import { useHistory } from "react-router-dom";
 import { Row, Col, Card, Form, Container } from "react-bootstrap";
 import { createTrip } from "../actions/TripActions";
 import SubmitButton from "./SubmitButton";
+import AsyncSearchBar from "./AsyncSearchBar";
 
-const NewTripForm = ({ user, trip, newId, createTrip }) => {
+const NewTripForm = ({ newId, createTrip }) => {
   const date = new Date();
   const today = date.toJSON().slice(0, 10);
 
@@ -20,7 +21,7 @@ const NewTripForm = ({ user, trip, newId, createTrip }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     //create a new trip
-    createTrip(tripName, startDate, endDate);
+    createTrip(tripName, startDate, endDate, formNotes, collabs);
   };
 
   useEffect(() => {
@@ -54,7 +55,7 @@ const NewTripForm = ({ user, trip, newId, createTrip }) => {
                       type="date"
                       name="endDate"
                       value={endDate}
-                      onChange={(e) => setEndDate(e.target.value)}
+                      onChange={(e) => setStartDate(e.target.value)}
                     />
                   </Form.Group>
 
@@ -72,13 +73,7 @@ const NewTripForm = ({ user, trip, newId, createTrip }) => {
                     <Form.Label className="form-label">
                       Collaborators
                     </Form.Label>
-                    <Form.Control
-                      placeholder="collaborators"
-                      type="text"
-                      name="collabs"
-                      value={collabs}
-                      onChange={(e) => setCollabs(e.target.value)}
-                    />
+                    <AsyncSearchBar setCollabs={setCollabs} collabs={collabs} />
                   </Form.Group>
 
                   <Form.Group controlId="ControlTextarea">
@@ -103,8 +98,6 @@ const NewTripForm = ({ user, trip, newId, createTrip }) => {
 
 const mapStateToProps = (state) => {
   return {
-    user: state.UserReducer.user,
-    trip: state.TripReducer.trip,
     newId: state.TripReducer.newId,
   };
 };

@@ -1,22 +1,37 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
-import { useLocation } from "react-router-dom";
-import { signedIn } from "../actions/UserActions";
-import {
-  Navbar,
-  Nav,
-  NavDropdown,
-  Button,
-  DropdownButton,
-} from "react-bootstrap";
-import DropdownMenu from "react-bootstrap/esm/DropdownMenu";
+import { useLocation, useHistory } from "react-router-dom";
+import { signedIn, handleLogOut } from "../actions/UserActions";
+import { getInvites } from "../actions/TripActions";
+import { Navbar, Nav, NavDropdown, Button, Dropdown } from "react-bootstrap";
+import compass from "../images/compass.png";
 
-const NavBar = ({ user, signedIn }) => {
+const NavBar = ({
+  user,
+  signedIn,
+  getInvites,
+  invites,
+  handleLogOut: logout,
+}) => {
   const handleLogout = () => {
     localStorage.clear();
+    logout();
+    history.push("/login");
   };
-
+  // get the end point of the url
   const location = useLocation();
+
+  //set up hsitroy items
+  let history = useHistory();
+
+  //set state for showind nav dropdown
+  const [show, setShow] = useState(false);
+
+  //Handle lcikcs to the navigatin dropdown
+  const handleNavClick = (route) => {
+    history.push(route);
+    setShow(!show);
+  };
 
   useEffect(() => {
     //No user signd in but session in local storage sign user in
@@ -25,8 +40,9 @@ const NavBar = ({ user, signedIn }) => {
         id: localStorage.getItem("userId"),
         username: localStorage.getItem("username"),
       });
+      getInvites();
     }
-  });
+  }, [invites, getInvites, signedIn, user.id]);
 
   // sett the far right of  the nav bar bassed on location
   const setNavEnd = () => {
@@ -46,20 +62,82 @@ const NavBar = ({ user, signedIn }) => {
       default:
         return (
           <Nav className="mr-auto">
-            <strong>
-              <NavDropdown
-                title={user.username ? user.username : "menu"}
-                id="basic-nav-dropdown"
-                align="right"
+            {/* if ther are invites render a badge and add invites to drop down */}
+            {invites.length ? (
+              <Dropdown>
+                <Dropdown.Toggle
+                  roll="menu"
+                  id="invites-dropdown"
+                  className="dropdown-toggle"
+                >
+                  <span className="fa-stack" data-count={invites.length}>
+                    <ion-icon id="notification" name="notifications-outline">
+                      {" "}
+                    </ion-icon>
+                  </span>
+                </Dropdown.Toggle>
+                <Dropdown.Menu>
+                  {invites.map((i) => (
+                    <Dropdown.Item
+                      key={i.id}
+                      onClick={() => handleNavClick(`/invites#${i.id}`)}
+                    >
+                      {i.name}
+                    </Dropdown.Item>
+                  ))}
+                </Dropdown.Menu>
+              </Dropdown>
+            ) : (
+              <Dropdown>
+                <Dropdown.Toggle
+                  roll="menu"
+                  id="invites-dropdown"
+                  className="dropdown-toggle"
+                >
+                  <ion-icon id="notification" name="notifications-outline">
+                    {" "}
+                  </ion-icon>
+                </Dropdown.Toggle>
+                <Dropdown.Menu>
+                  <Dropdown.Item>You don't have any invites</Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+            )}
+
+            <Dropdown>
+              <Dropdown.Toggle
+                roll="menu"
+                id="profile-dropdown"
+                className="dropdown-toggle"
               >
-                <NavDropdown.Item href="/profile">My Profile</NavDropdown.Item>
+                <strong>{user.username}</strong>
+                <ion-icon name="person-outline"></ion-icon>
+              </Dropdown.Toggle>
+              <Dropdown.Menu>
+                <Dropdown.Item
+                  className="dropdown-item"
+                  onClick={() => handleNavClick("/profile")}
+                >
+                  My Profile
+                </Dropdown.Item>
+
+                <Dropdown.Item
+                  className="nav-Dropdown.Item"
+                  onClick={() => handleNavClick("/profile/edit")}
+                >
+                  Edit Profile
+                </Dropdown.Item>
+
                 <NavDropdown.Divider />
-                <NavDropdown.Item href="/login" onClick={handleLogout}>
+                <Dropdown.Item
+                  className="nav-link"
+                  to="/login"
+                  onClick={handleLogout}
+                >
                   Logout
-                </NavDropdown.Item>
-              </NavDropdown>
-            </strong>
-            <ion-icon className="dropdown" name="person-outline"></ion-icon>
+                </Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
           </Nav>
         );
     }
@@ -68,14 +146,11 @@ const NavBar = ({ user, signedIn }) => {
   return (
     <Navbar id="nav-bar" bg="light" expand="lg" sticky="top">
       <Navbar.Brand href="/profile">
-        <img
-          className="compass"
-          src={process.env.PUBLIC_URL + "images/compass.png"}
-          alt="Compass Rose"
-        />
+        <img className="compass" src={compass} alt="Compass Rose" />
         Bushwhacker!
       </Navbar.Brand>
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
+
       <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
         {setNavEnd()}
       </Navbar.Collapse>
@@ -83,6 +158,15 @@ const NavBar = ({ user, signedIn }) => {
   );
 };
 
-export default connect((state) => ({ user: state.UserReducer.user }), {
+const mapStateToProps = (state) => {
+  return {
+    user: state.UserReducer.user,
+    invites: state.TripReducer.invites,
+  };
+};
+
+export default connect(mapStateToProps, {
   signedIn,
+  getInvites,
+  handleLogOut,
 })(NavBar);

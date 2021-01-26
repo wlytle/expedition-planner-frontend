@@ -14,8 +14,9 @@ const EditTripForm = ({ trip, editTrip, closeEdit }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    //create a new trip
+    //EditTrip
     editTrip(tripName, startDate, endDate, formNotes, markCompleted, id);
+
     //open the trip detail page for this trip
     const curPane = document.getElementById(
       `list-group-trips-tabpane-#${trip.id}`
