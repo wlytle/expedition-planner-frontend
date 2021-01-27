@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import * as d3 from "d3";
 import { Card } from "react-bootstrap";
 
-const EleChart = ({ data, width, height }) => {
+const EleChart = ({ data, width, height, setBlip }) => {
   useEffect(() => {
     drawChart();
   }, [data]);
@@ -118,7 +118,7 @@ const EleChart = ({ data, width, height }) => {
       const xPos = d3.mouse(this)[0];
       const x0 = bisect(data, xScale.invert(xPos));
       const d0 = data[x0];
-      console.log(d0.locs);
+      setBlip(d0.locs);
       focus.attr(
         "transform",
         `translate(${xScale(d0.label)},${yScale(d0.value)})`

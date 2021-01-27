@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import EleChart from "../components/EleChart";
 
-function EleContainer({ mapData, map, trip }) {
+function EleContainer({ map, trip, setBlip }) {
   //   useEffect(() => {
   //     const chartData = getData();
   //   });
@@ -79,7 +79,7 @@ function EleContainer({ mapData, map, trip }) {
   return (
     <div className="ele">
       {chartData?.length ? (
-        <EleChart data={chartData} width={400} height={300} />
+        <EleChart data={chartData} setBlip={setBlip} width={400} height={300} />
       ) : null}
     </div>
   );

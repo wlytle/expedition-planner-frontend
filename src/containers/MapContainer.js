@@ -30,8 +30,13 @@ const MapContainer = ({
   const editRef = useRef();
   const mapRef = useRef();
   const centerRef = useRef();
+  const blipRef = useRef();
 
   const [bounds, setBounds] = useState(false);
+  const [blip, setBlip] = useState({
+    lat: 37.86307938367891,
+    lng: -107.56290413439275,
+  });
   let history = useHistory();
   // Get id of trip from route
   let { id } = useParams();
@@ -133,6 +138,16 @@ const MapContainer = ({
 
   // Reload current trip from database incase of page load
   useEffect(() => {
+    if (blip) {
+      const { current = {} } = mapRef;
+      const { leafletElement: map } = current;
+      if (blipRef.current) map.removeLayer(blipRef.current);
+      blipRef.current = L.circle(blip, {
+        radius: 150,
+        fillOpacity: 1,
+      });
+      blipRef.current.addTo(map);
+    }
     //Prevent not logged in users form seeing the map
     if (!user.id && !localStorage.getItem("userId")) {
       history.push("/login");
@@ -208,7 +223,9 @@ const MapContainer = ({
                     color: "red",
                   },
                 },
-                circle: false,
+                circle: {
+                  className: "Circle",
+                },
                 circlemarker: false,
                 polygon: false,
                 marker: true,
@@ -230,10 +247,11 @@ const MapContainer = ({
                   />
                 ))
               : null}
+            <button onClick={() => console.log("CLICK@")}>Click me!</button>
           </FeatureGroup>
         </LayersControl>
       </Map>
-      {trip.id ? <EleContainer mapData={trip.locations} map={mapRef} /> : null}
+      {trip.id ? <EleContainer map={mapRef} setBlip={setBlip} /> : null}
     </>
   );
 };

@@ -144,7 +144,14 @@ a.nav-link {
   margin-left: 40px;
 }
 
+/* Elevation profile styles */
 .area {
   fill: lightsteelblue;
   stroke-width: 0;
+}
+
+.leaflet-touch .leaflet-draw-toolbar .leaflet-draw-draw-circle{
+  background: url("./images/mtn.svg") !important;
+  background-size: 10%;
+  background-color: #FFF !important;
 }
