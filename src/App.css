@@ -143,3 +143,8 @@ a.nav-link {
 .tab {
   margin-left: 40px;
 }
+
+.area {
+  fill: lightsteelblue;
+  stroke-width: 0;
+}

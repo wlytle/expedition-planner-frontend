@@ -11,7 +11,8 @@ import "leaflet-draw/dist/leaflet.draw.css";
 import { addLeg, getTrip, editLeg, deleteLeg } from "../actions/TripActions";
 import { togglePane, openPane } from "../actions/MapActions";
 import TripLeg from "../components/TripLeg";
-import LegForm from "..//components/LegForm";
+import LegForm from "../components/LegForm";
+import EleContainer from "./EleContainer";
 
 const MapContainer = ({
   trip,
@@ -155,8 +156,6 @@ const MapContainer = ({
       getTrip(id);
     }
   });
-
-  console.log(trip?.locations?.length, trip);
   return (
     <>
       <SlidingPane
@@ -234,6 +233,7 @@ const MapContainer = ({
           </FeatureGroup>
         </LayersControl>
       </Map>
+      {trip.id ? <EleContainer mapData={trip.locations} map={mapRef} /> : null}
     </>
   );
 };
