@@ -1,8 +1,9 @@
 import React, { useEffect } from "react";
+import { connect } from "react-redux";
 import * as d3 from "d3";
 import { Card } from "react-bootstrap";
 
-const EleChart = ({ data, width, height, setBlip }) => {
+const EleChart = ({ data, width, height, setBlip, elevation }) => {
   useEffect(() => {
     drawChart();
   }, [data]);
@@ -133,10 +134,14 @@ const EleChart = ({ data, width, height, setBlip }) => {
     }
   }
 
+  const styles = !elevation ? { display: "none" } : { display: "block" };
+
   return (
-    <Card>
+    <Card id="ele-card" style={styles}>
       <div id="container" />
     </Card>
   );
 };
-export default EleChart;
+export default connect((state) => ({
+  elevation: state.TripReducer.elevation,
+}))(EleChart);

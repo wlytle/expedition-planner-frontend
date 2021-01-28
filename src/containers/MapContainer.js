@@ -37,6 +37,8 @@ const MapContainer = ({
     lat: 37.86307938367891,
     lng: -107.56290413439275,
   });
+  const [sidebar, setSidebar] = useState(false);
+  const [selected, setSelected] = useState("home");
   let history = useHistory();
   // Get id of trip from route
   let { id } = useParams();
@@ -58,7 +60,7 @@ const MapContainer = ({
     console.log(e);
     // onShapeDrawn(e);
     const { layerType, layer } = e;
-    if (layerType === "marker") {
+    if (layerType === "circle") {
     }
     if (layerType === "polyline") {
       // calculate distance of polyline
@@ -141,6 +143,7 @@ const MapContainer = ({
     if (blip) {
       const { current = {} } = mapRef;
       const { leafletElement: map } = current;
+      // add blip on map corresponding to ele profile track
       if (blipRef.current) map.removeLayer(blipRef.current);
       blipRef.current = L.circle(blip, {
         radius: 150,
@@ -171,6 +174,16 @@ const MapContainer = ({
       getTrip(id);
     }
   });
+
+  const onClose = () => {
+    setSidebar(true);
+  };
+
+  const onOpen = (id) => {
+    setSidebar(false);
+    setSelected(id);
+  };
+
   return (
     <>
       <SlidingPane
@@ -223,14 +236,13 @@ const MapContainer = ({
                     color: "red",
                   },
                 },
-                circle: {
-                  className: "Circle",
-                },
+                circle: false,
                 circlemarker: false,
                 polygon: false,
                 marker: true,
               }}
             />
+
             {/* add in all of the existing trip legs */}
             {trip.legs
               ? trip.legs.map((leg) => (
@@ -247,7 +259,6 @@ const MapContainer = ({
                   />
                 ))
               : null}
-            <button onClick={() => console.log("CLICK@")}>Click me!</button>
           </FeatureGroup>
         </LayersControl>
       </Map>

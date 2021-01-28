@@ -30,7 +30,7 @@ function EleContainer({ map, trip, setBlip }) {
       }
     }
     // sort the data by leg start date
-    data.sort((a, b) => a.leg.start_date - b.leg.start_date);
+    data.sort((a, b) => new Date(b.start_date) - new Date(a.start_date));
     return getDistance(data);
   };
 
@@ -79,7 +79,7 @@ function EleContainer({ map, trip, setBlip }) {
   return (
     <div className="ele">
       {chartData?.length ? (
-        <EleChart data={chartData} setBlip={setBlip} width={400} height={300} />
+        <EleChart data={chartData} setBlip={setBlip} width={400} height={200} />
       ) : null}
     </div>
   );

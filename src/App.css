@@ -155,3 +155,15 @@ a.nav-link {
   background-size: 10%;
   background-color: #FFF !important;
 }
+
+#ele{
+  margin-right: 10px;
+  margin-top: 5px;
+}
+
+#ele-card {
+  position:absolute;
+  top: 50%;
+  width: 500px;
+  z-index:5000;
+}

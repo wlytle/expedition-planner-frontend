@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { useLocation, useHistory } from "react-router-dom";
 import { signedIn, handleLogOut } from "../actions/UserActions";
-import { getInvites, clearTrip } from "../actions/TripActions";
+import { getInvites, clearTrip, showElevation } from "../actions/TripActions";
 import { Navbar, Nav, NavDropdown, Button, Dropdown } from "react-bootstrap";
 import compass from "../images/compass.png";
 
@@ -13,6 +13,8 @@ const NavBar = ({
   invites,
   handleLogOut: logout,
   clearTrip,
+  trip,
+  showElevation,
 }) => {
   const handleLogout = () => {
     localStorage.clear();
@@ -65,6 +67,13 @@ const NavBar = ({
       default:
         return (
           <Nav className="mr-auto">
+            {location.pathname.includes("/trip") && trip.locations?.length ? (
+              <ion-icon
+                onClick={showElevation}
+                id="ele"
+                name="analytics-outline"
+              ></ion-icon>
+            ) : null}
             {/* if ther are invites render a badge and add invites to drop down */}
             {invites.length ? (
               <Dropdown>
@@ -165,6 +174,7 @@ const mapStateToProps = (state) => {
   return {
     user: state.UserReducer.user,
     invites: state.TripReducer.invites,
+    trip: state.TripReducer.trip,
   };
 };
 
@@ -173,4 +183,5 @@ export default connect(mapStateToProps, {
   getInvites,
   handleLogOut,
   clearTrip,
+  showElevation,
 })(NavBar);

@@ -162,7 +162,7 @@ const TripDetails = ({
           {completed ? <h6>Trip Complete! Nice work!</h6> : null}
         </ListGroup.Item>
         {legs
-          .sort((a, b) => formatDate(a.date) - formatDate(a.date))
+          .sort((a, b) => new Date(a.start_date) - new Date(b.start_date))
           .map((leg) => {
             return (
               <ListGroup.Item key={leg.id}>

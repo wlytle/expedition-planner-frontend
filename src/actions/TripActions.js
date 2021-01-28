@@ -11,6 +11,7 @@ import {
   FETCHING,
   ACCEPT_INVITATION,
   DECLINE_INVITATION,
+  SHOW_ELEVATION,
 } from "./types";
 import { API } from "../constants";
 
@@ -32,6 +33,10 @@ export const makeHeader = () => {
     Accept: "application/json",
     Authorization: `bearer ${token}`,
   };
+};
+// toggle the elevation profile
+export const showElevation = () => {
+  return { type: SHOW_ELEVATION };
 };
 
 //Create a new trip with the current user being added to db as the creator

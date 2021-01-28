@@ -11,6 +11,7 @@ import {
   FETCHED,
   ACCEPT_INVITATION,
   DECLINE_INVITATION,
+  SHOW_ELEVATION,
 } from "../actions/types";
 
 const initialState = {
@@ -19,6 +20,7 @@ const initialState = {
   newId: null,
   fetched: false,
   invites: [],
+  elevation: false,
 };
 
 let newLegs, newLocs, newTrips, newTrip, newInvites;
@@ -97,6 +99,8 @@ const TripReducer = (state = initialState, action) => {
       };
     case FETCHED:
       return { ...state, fetched: action.payload };
+    case SHOW_ELEVATION:
+      return { ...state, elevation: !state.elevation };
     default:
       return state;
   }
