@@ -37,8 +37,7 @@ const MapContainer = ({
     lat: 37.86307938367891,
     lng: -107.56290413439275,
   });
-  const [sidebar, setSidebar] = useState(false);
-  const [selected, setSelected] = useState("home");
+
   let history = useHistory();
   // Get id of trip from route
   let { id } = useParams();
@@ -174,15 +173,6 @@ const MapContainer = ({
       getTrip(id);
     }
   });
-
-  const onClose = () => {
-    setSidebar(true);
-  };
-
-  const onOpen = (id) => {
-    setSidebar(false);
-    setSelected(id);
-  };
 
   return (
     <>

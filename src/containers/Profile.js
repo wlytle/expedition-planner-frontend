@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
 import { Container, Row, Col } from "react-bootstrap";
-import EleContainer from "./EleContainer";
 import Trips from "../components/Trips";
 import { signedIn } from "../actions/UserActions";
 import { getInvites, getTrips } from "../actions/TripActions";

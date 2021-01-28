@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { useLocation } from "react-router-dom";
 import pluralize from "pluralize";
 import { Link } from "react-router-dom";
-import { Button, ListGroup, ListGroupItem } from "react-bootstrap";
+import { Button, ListGroup } from "react-bootstrap";
 import {
   deleteTrip,
   acceptInvitation,

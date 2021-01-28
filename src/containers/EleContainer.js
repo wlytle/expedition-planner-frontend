@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { connect } from "react-redux";
 import EleChart from "../components/EleChart";
 
@@ -9,12 +9,10 @@ function EleContainer({ map, trip, setBlip }) {
 
   const getData = () => {
     let data = [];
-    let loc, locs, legId, leg, distance, ele;
+    let locs, legId, leg, ele;
     const layers = map.current.leafletElement._layers;
     //itereate through all map layers
     for (const layer in layers) {
-      //reset distance array for each layer
-      distance = [];
       //only move forward with map layers that have location data
       if (layers[layer].getLatLngs) {
         locs = layers[layer].getLatLngs();
@@ -30,7 +28,9 @@ function EleContainer({ map, trip, setBlip }) {
       }
     }
     // sort the data by leg start date
-    data.sort((a, b) => new Date(b.start_date) - new Date(a.start_date));
+    data.sort(
+      (a, b) => new Date(a.leg.start_date) - new Date(b.leg.start_date)
+    );
     return getDistance(data);
   };
 
