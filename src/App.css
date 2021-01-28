@@ -163,7 +163,19 @@ a.nav-link {
 
 #ele-card {
   position:absolute;
-  top: 50%;
-  width: 500px;
   z-index:5000;
+  width: 500px;
+  /* display: none; */
+  transform: translate(1%, 0) !important;
+  transition-duration: 1s;
+}
+#ele-card.active {
+  display: block;
+  /* top: 50%; */
+  /* transition-property: top;
+  transition-duration: 1.5s; */
+    transition: transform 1s;
+    /* transition-delay: 1s; */
+    transform: translate(1%, -101%) !important;
+  
 }

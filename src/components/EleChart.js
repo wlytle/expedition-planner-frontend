@@ -134,10 +134,10 @@ const EleChart = ({ data, width, height, setBlip, elevation }) => {
     }
   }
 
-  const styles = !elevation ? { display: "none" } : { display: "block" };
+  const eleClass = !elevation ? "" : "active";
 
   return (
-    <Card id="ele-card" style={styles}>
+    <Card id="ele-card" className={eleClass}>
       <div id="container" />
     </Card>
   );
