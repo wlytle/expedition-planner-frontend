@@ -5,7 +5,7 @@
 
 /* Set map size */
 #mapid { 
-  height: 87vh;
+  height: 89vh;
   bottom: 0;
  }
 
@@ -131,7 +131,12 @@ map {
 }
 
 .pane-overlay {
-  margin-top: 6.28%
+  margin-top: 5.4%;
+  z-index: 5000;
+}
+
+.slide-pane__header {
+  background-color: #fcfcfc;
 }
 
 /* Unstyle links */

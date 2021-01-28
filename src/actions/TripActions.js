@@ -242,6 +242,7 @@ export const editLegMeta = (leg) => {
         const { aeg, distance, id, notes, sport, locations } = data;
         const leg = { id, aeg, distance, notes, sport };
         dispatch({ type: UPDATE_LEG, payload: { leg, locations } });
+        dispatch({ type: FETCHING });
       })
       .catch(console.log);
   };

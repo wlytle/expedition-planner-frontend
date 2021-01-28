@@ -191,7 +191,7 @@ const MapContainer = ({
         className="pane-overlay"
         onRequestClose={() => closePane()}
       >
-        <LegForm leg={selectedLeg} />
+        <LegForm leg={selectedLeg} closePane={closePane} />
       </SlidingPane>
       <Map
         id="mapid"
