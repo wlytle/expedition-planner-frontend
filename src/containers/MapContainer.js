@@ -25,6 +25,7 @@ const MapContainer = ({
   deleteLeg,
   togglePane,
   openPane,
+  elevation,
 }) => {
   // initialize ref to edit controls
   const editRef = useRef();
@@ -33,10 +34,7 @@ const MapContainer = ({
   const blipRef = useRef();
 
   const [bounds, setBounds] = useState(false);
-  const [blip, setBlip] = useState({
-    lat: 37.86307938367891,
-    lng: -107.56290413439275,
-  });
+  const [blip, setBlip] = useState({});
 
   let history = useHistory();
   // Get id of trip from route
@@ -139,16 +137,18 @@ const MapContainer = ({
 
   // Reload current trip from database incase of page load
   useEffect(() => {
-    if (blip) {
+    if (blip.lat) {
       const { current = {} } = mapRef;
       const { leafletElement: map } = current;
-      // add blip on map corresponding to ele profile track
+      // add blip on map corresponding to ele profile track and remove previous blip
       if (blipRef.current) map.removeLayer(blipRef.current);
-      blipRef.current = L.circle(blip, {
-        radius: 150,
-        fillOpacity: 1,
-      });
-      blipRef.current.addTo(map);
+      if (elevation) {
+        blipRef.current = L.circle(blip, {
+          radius: 150,
+          fillOpacity: 1,
+        });
+        blipRef.current.addTo(map);
+      }
     }
     //Prevent not logged in users form seeing the map
     if (!user.id && !localStorage.getItem("userId")) {
@@ -157,6 +157,7 @@ const MapContainer = ({
     if (trip.id && !bounds && !centerRef.current) {
       // if a trip is loaded into app state and component state has no bounds, get the bounds
       if (trip?.locations?.length) {
+        console.log("Gettin bounds");
         const mapBounds = latLngBounds();
         trip.locations.forEach((loc) => mapBounds.extend([loc.lat, loc.lng]));
         // if there are legs to get bounds from set them in state
@@ -169,6 +170,7 @@ const MapContainer = ({
         map.on("locationfound", handleOnLocationFound);
       }
     } else if (!trip.id) {
+      console.log("gettingTrip");
       // load trip into state if it's not there yet
       getTrip(id);
     }
@@ -235,7 +237,7 @@ const MapContainer = ({
 
             {/* add in all of the existing trip legs */}
             {trip.legs
-              ? trip.legs.map((leg) => (
+              ? trip.legs.map((leg, i) => (
                   <TripLeg
                     key={leg.id}
                     id={leg.id}
@@ -252,7 +254,7 @@ const MapContainer = ({
           </FeatureGroup>
         </LayersControl>
       </Map>
-      {trip.id ? <EleContainer map={mapRef} setBlip={setBlip} /> : null}
+      {elevation ? <EleContainer map={mapRef} setBlip={setBlip} /> : null}
     </>
   );
 };
@@ -262,6 +264,7 @@ const mapStateToProps = (state) => {
     pane: state.MapReducer.pane,
     selectedLeg: state.MapReducer.selectedLeg,
     user: state.UserReducer.user,
+    elevation: state.TripReducer.elevation,
   };
 };
 

@@ -15,8 +15,11 @@ const NavBar = ({
   clearTrip,
   trip,
   showElevation,
+  elevation,
 }) => {
   const handleLogout = () => {
+    //Clear trip out of state
+    clearTrip();
     localStorage.clear();
     logout();
     history.push("/login");
@@ -33,9 +36,10 @@ const NavBar = ({
   //Handle clicks to the navigatin dropdown
   const handleNavClick = (route) => {
     //if navigating to the profile clear our the trip field in app state to set up next visit to maps page
-    if (route === "/profile") clearTrip();
+    if (!route.includes("/trip")) clearTrip();
     history.push(route);
     setShow(!show);
+    if (elevation) showElevation();
   };
 
   useEffect(() => {
@@ -175,6 +179,7 @@ const mapStateToProps = (state) => {
     user: state.UserReducer.user,
     invites: state.TripReducer.invites,
     trip: state.TripReducer.trip,
+    elevation: state.TripReducer.elevation,
   };
 };
 

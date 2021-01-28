@@ -8,9 +8,9 @@ function EleContainer({ map, trip, setBlip }) {
   //   });
 
   const getData = () => {
+    const layers = map.current.leafletElement._layers;
     let data = [];
     let locs, legId, leg, ele;
-    const layers = map.current.leafletElement._layers;
     //itereate through all map layers
     for (const layer in layers) {
       //only move forward with map layers that have location data
@@ -50,6 +50,7 @@ function EleContainer({ map, trip, setBlip }) {
           distance = curr.locs[j].distanceTo(
             data[i - 1].locs[data[i - 1].locs.length - 1]
           );
+
           distance =
             +(distance / 1000).toFixed(2) +
             chartData[chartData.length - 1].label;
@@ -64,7 +65,7 @@ function EleContainer({ map, trip, setBlip }) {
         chartData.push({
           label: distance,
           value: ele,
-          tooltipContent: `<b>Distance: </b>${distance} km<br><b>Elevation: </b>${ele} m`,
+          tooltipContent: `<b>Sport: </b>${curr.leg.sport}<br> <b>Distance: </b>${distance} km<br><b>Elevation: </b>${ele} m`,
           locs: curr.locs[j],
         });
       }

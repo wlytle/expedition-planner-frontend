@@ -146,8 +146,15 @@ a.nav-link {
 
 /* Elevation profile styles */
 .area {
-  fill: lightsteelblue;
+  fill:#787979;
+  fill-opacity: 0.7;
   stroke-width: 0;
+}
+.grid {
+  stroke-opacity: 0.2;
+}
+.tooltip {
+  border-width: 5px;
 }
 
 .leaflet-touch .leaflet-draw-toolbar .leaflet-draw-draw-circle{

@@ -23,8 +23,14 @@ const EleChart = ({ data, width, height, setBlip, elevation }) => {
     const svg = d3
       .select("#container")
       .append("svg")
-      .attr("width", width + margin.left + margin.right)
-      .attr("height", height + margin.top + margin.bottom)
+      //   .attr("width", width + margin.left + margin.right)
+      //   .attr("height", height + margin.top + margin.bottom)
+      .attr(
+        "viewBox",
+        `0 0 ${width + margin.left + margin.right} ${
+          height + margin.top + margin.bottom
+        }`
+      )
       .append("g")
       .attr("transform", `translate(${margin.left},${margin.top})`);
 
@@ -54,6 +60,24 @@ const EleChart = ({ data, width, height, setBlip, elevation }) => {
       .y1((d) => yScale(d.value))
       .curve(d3.curveMonotoneX);
 
+    // Define and evenly space out axis ticks
+    const xAxisTicks = 8;
+    const yAxisTicks = 6;
+    const makeXGridlines = (xScale) => d3.axisBottom(xScale).ticks(xAxisTicks);
+    const makeYGridlines = (yScale) => d3.axisLeft(yScale).ticks(yAxisTicks);
+
+    d3.axisBottom(xScale)
+      // ...
+      .ticks(yAxisTicks)
+      .tickSize(0)
+      .tickPadding(9);
+
+    d3.axisLeft(yScale)
+      // ...
+      .tickSize(0)
+      .tickPadding(8)
+      .ticks(yAxisTicks);
+
     // draw Y Grid
     svg
       .append("g")
@@ -61,18 +85,54 @@ const EleChart = ({ data, width, height, setBlip, elevation }) => {
       .attr("transform", `translate(0,${height})`)
       .call(d3.axisBottom(xScale).tickSize(-height).tickFormat(""));
     //   draw X Grid
-    // svg
-    //   .append("g")
-    //   .attr("class", "grid")
-    //   .call(d3.axisLeft(yScale).tickSize(-width).tickFormat(""));
+    svg
+      .append("g")
+      .attr("class", "grid")
+      .call(d3.axisLeft(yScale).tickSize(-width).tickFormat(""));
     // draw X axis
     svg
       .append("g")
       .attr("class", "x-axis")
       .attr("transform", `translate(0,${height})`)
-      .call(d3.axisBottom().scale(xScale).tickSize(15));
+      .call(d3.axisBottom().scale(xScale).tickSize(""));
+
+    //x-axis label
+    svg
+      .append("text")
+      .attr("class", "x label")
+      .attr("text-anchor", "end")
+      .attr("x", width / 2 + 30)
+      .attr("y", height + 30)
+      .text("Distance (km)");
+
+    //Y-axis label
+    svg
+      .append("text")
+      .attr("class", "y label")
+      .attr("text-anchor", "end")
+      .attr("y", -45)
+      .attr("x", -45)
+      .attr("dy", ".75em")
+      .attr("transform", "rotate(-90)")
+      .text("Elevation (m)");
+
+    // Make X grid:
+    // svg
+    //   .append("g")
+    //   .attr("class", "grid")
+    //   .attr("transform", `translate(0, ${height})`)
+    //   .call(
+    //     makeXGridlines(xScale)
+    //       // STRETCH IT PARALLEL TO Y:
+    //       .tickSize(-height)
+    //       // NO FORMAT, THESE JUST BE LINES:
+    //       .tickFormat("")
+    //   );
     // Draw y-axis
-    svg.append("g").attr("class", "y-axis").call(d3.axisLeft(yScale));
+    svg
+      .append("g")
+      .attr("class", "y-axis")
+      .call(d3.axisLeft(yScale).tickSize(""));
 
     // draw data line
     svg
@@ -81,7 +141,7 @@ const EleChart = ({ data, width, height, setBlip, elevation }) => {
       .attr("stroke", "#f6c3d0")
       .attr("stroke-width", 4)
       .attr("class", "area")
-      .attr("fill", "steelblue")
+
       .attr("d", area);
 
     //if the line is focused on add the tooltip
@@ -109,7 +169,7 @@ const EleChart = ({ data, width, height, setBlip, elevation }) => {
         focus.style("display", null);
       })
       .on("mouseout", () => {
-        tooltip.transition().duration(300).style("opacity", 0);
+        tooltip.transition().duration(50).style("opacity", 0);
       })
       .on("mousemove", mousemove);
 
@@ -124,12 +184,12 @@ const EleChart = ({ data, width, height, setBlip, elevation }) => {
         "transform",
         `translate(${xScale(d0.label)},${yScale(d0.value)})`
       );
-      tooltip.transition().duration(300).style("opacity", 0.9);
+      tooltip.transition().duration(50).style("opacity", 0.9);
       tooltip
         .html(d0.tooltipContent || d0.label)
         .style(
           "transform",
-          `translate(${xScale(d0.label)}px,${yScale(d0.value) - 300}px)`
+          `translate(${xScale(d0.label)}px,${yScale(d0.value) - 350}px)`
         );
     }
   }
