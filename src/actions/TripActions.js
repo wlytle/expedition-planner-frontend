@@ -12,6 +12,7 @@ import {
   ACCEPT_INVITATION,
   DECLINE_INVITATION,
   SHOW_ELEVATION,
+  ANIMATE_ELEVATION,
 } from "./types";
 import { API } from "../constants";
 
@@ -37,6 +38,11 @@ export const makeHeader = () => {
 // toggle the elevation profile
 export const showElevation = () => {
   return { type: SHOW_ELEVATION };
+};
+
+// animate the elevation profile
+export const elevationAnimation = () => {
+  return { type: ANIMATE_ELEVATION };
 };
 
 //Create a new trip with the current user being added to db as the creator

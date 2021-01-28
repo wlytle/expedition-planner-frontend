@@ -2,8 +2,18 @@ import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import * as d3 from "d3";
 import { Card } from "react-bootstrap";
+import { CSSTransition } from "react-transition-group";
+import { showElevation } from "../actions/TripActions";
 
-const EleChart = ({ data, width, height, setBlip, elevation }) => {
+const EleChart = ({
+  data,
+  width,
+  height,
+  setBlip,
+  elevation,
+  animateEle,
+  showElevation,
+}) => {
   useEffect(() => {
     drawChart();
   }, [data]);
@@ -194,14 +204,31 @@ const EleChart = ({ data, width, height, setBlip, elevation }) => {
     }
   }
 
-  const eleClass = !elevation ? "" : "active";
+  const eleClass = animateEle ? "active" : "inactive";
 
   return (
-    <Card id="ele-card" className={eleClass}>
+    // <CSSTransition
+    //   in={animateEle}
+    //   timeout={400}
+    //   className="elevation"
+    //   onExited={showElevation}
+    // >
+    <Card
+      id="ele-card"
+      className={eleClass}
+      style={{ transform: "translate(1%, 0)" }}
+    >
       <div id="container" />
     </Card>
+    // </CSSTransition>
   );
 };
-export default connect((state) => ({
-  elevation: state.TripReducer.elevation,
-}))(EleChart);
+
+const mapStateToProps = (state) => {
+  return {
+    elevation: state.TripReducer.elevation,
+    animateEle: state.TripReducer.animateEle,
+  };
+};
+
+export default connect(mapStateToProps, { showElevation })(EleChart);

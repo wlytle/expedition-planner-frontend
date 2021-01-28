@@ -2,7 +2,12 @@ import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { useLocation, useHistory } from "react-router-dom";
 import { signedIn, handleLogOut } from "../actions/UserActions";
-import { getInvites, clearTrip, showElevation } from "../actions/TripActions";
+import {
+  getInvites,
+  clearTrip,
+  showElevation,
+  elevationAnimation,
+} from "../actions/TripActions";
 import { Navbar, Nav, NavDropdown, Button, Dropdown } from "react-bootstrap";
 import compass from "../images/compass.png";
 
@@ -15,6 +20,7 @@ const NavBar = ({
   clearTrip,
   trip,
   showElevation,
+  elevationAnimation,
   elevation,
 }) => {
   const handleLogout = () => {
@@ -40,6 +46,20 @@ const NavBar = ({
     history.push(route);
     setShow(!show);
     if (elevation) showElevation();
+  };
+
+  const handleElevationClick = () => {
+    if (!elevation) {
+      showElevation();
+      setTimeout(() => {
+        elevationAnimation();
+      }, 100);
+    } else {
+      elevationAnimation();
+      setTimeout(() => {
+        showElevation();
+      }, 1020);
+    }
   };
 
   useEffect(() => {
@@ -73,7 +93,7 @@ const NavBar = ({
           <Nav className="mr-auto">
             {location.pathname.includes("/trip") && trip.locations?.length ? (
               <ion-icon
-                onClick={showElevation}
+                onClick={handleElevationClick}
                 id="ele"
                 name="analytics-outline"
               ></ion-icon>
@@ -189,4 +209,5 @@ export default connect(mapStateToProps, {
   handleLogOut,
   clearTrip,
   showElevation,
+  elevationAnimation,
 })(NavBar);

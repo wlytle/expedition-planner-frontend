@@ -176,6 +176,8 @@ const MapContainer = ({
     }
   });
 
+  const eleClass = !elevation ? "" : "active";
+
   return (
     <>
       <SlidingPane
@@ -254,7 +256,9 @@ const MapContainer = ({
           </FeatureGroup>
         </LayersControl>
       </Map>
+      {/* <div id="ele-card" className={eleClass}> */}
       {elevation ? <EleContainer map={mapRef} setBlip={setBlip} /> : null}
+      {/* </div> */}
     </>
   );
 };

@@ -146,7 +146,7 @@ a.nav-link {
 
 /* Elevation profile styles */
 .area {
-  fill:#787979;
+  fill:#3b6335;
   fill-opacity: 0.7;
   stroke-width: 0;
 }
@@ -173,16 +173,51 @@ a.nav-link {
   z-index:5000;
   width: 500px;
   /* display: none; */
-  transform: translate(1%, 0) !important;
-  transition-duration: 1s;
+   transform: translate(1%, 0) !important; 
+  /* transition-duration: 1s;  */
+  
 }
 #ele-card.active {
   display: block;
   /* top: 50%; */
-  /* transition-property: top;
-  transition-duration: 1.5s; */
-    transition: transform 1s;
-    /* transition-delay: 1s; */
-    transform: translate(1%, -101%) !important;
+   /* transition-property: top;
+  transition-duration: 1.5s; 
+     transition: transform 3s;  */
+     /* transition-delay: 1s;  */
+     transition-duration: 1s;
+     transform: translate(1%, -101%) !important;
+}
+
+#ele-card.inactive {
+  display: block;
+  /* top: 50%; */
+   /* transition-property: top;
+  transition-duration: 1.5s; 
+     transition: transform 3s;  */
+     /* transition-delay: 1s;  */
+     transition-duration: 1s;
+     transform: translate(1%, -0%) !important;
+}
   
+
+.elevation-enter {
+  transform: translate(1%, 0)
+}
+.elevation-enter-active {
+  top: 50%;
+  transform: translate(1%, -101%) !important;
+  transition: translate 300ms;
+}
+/* .elevation-enter-done{
+  transform: translate(1%, -101%)
+} */
+.elevation-exit {
+  transform: translate(1%, -101%)
+} 
+.elevation-exit-active {
+  transform: translate(1%, 0%);
+  transition: translate 300ms;
+}
+.elevation-exit-done {
+  transform: translate(1%, 0%);
 }
