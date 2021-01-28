@@ -4,8 +4,6 @@ import { useParams, useHistory } from "react-router-dom";
 import L, { latLngBounds } from "leaflet";
 import { TileLayer, Map, FeatureGroup, LayersControl } from "react-leaflet";
 import { EditControl } from "react-leaflet-draw";
-import SlidingPane from "react-sliding-pane";
-import { Card } from "react-bootstrap";
 import "react-sliding-pane/dist/react-sliding-pane.css";
 import "leaflet/dist/leaflet.css";
 import "leaflet-draw/dist/leaflet.draw.css";
@@ -161,7 +159,7 @@ const MapContainer = ({
       if (blipRef.current) map.removeLayer(blipRef.current);
       if (elevation) {
         blipRef.current = L.circle(blip, {
-          radius: 150,
+          radius: 100,
           fillOpacity: 1,
         });
         blipRef.current.addTo(map);
@@ -197,17 +195,6 @@ const MapContainer = ({
 
   return (
     <>
-      {/* <SlidingPane
-        closeIcon={<p>X</p>}
-        isOpen={pane}
-        title={`Distance: ${(selectedLeg.distance / 1000).toFixed(2)} km AEG: ${
-          selectedLeg.aeg
-        } m`}
-        from="left"
-        width="400px"
-        className="pane-overlay"
-        onRequestClose={() => closePane()}
-      > */}
       {pane ? (
         <div
           id="pane-card"
@@ -223,7 +210,7 @@ const MapContainer = ({
           />
         </div>
       ) : null}
-      {/* </SlidingPane> */}
+
       <Map
         id="mapid"
         className={pane ? "map-respond" : "map"}
@@ -264,7 +251,7 @@ const MapContainer = ({
                 circle: false,
                 circlemarker: false,
                 polygon: false,
-                marker: true,
+                marker: false,
               }}
             />
 

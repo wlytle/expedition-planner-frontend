@@ -6,14 +6,7 @@ import Trips from "../components/Trips";
 import { signedIn } from "../actions/UserActions";
 import { getInvites, getTrips } from "../actions/TripActions";
 
-const Profile = ({
-  user,
-  fetched,
-  allTrips,
-  signedIn,
-  getTrips,
-  getInvites,
-}) => {
+const Profile = ({ user, fetched, signedIn, getTrips, getInvites }) => {
   let history = useHistory();
   let location = useLocation();
 

@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { Row, Col, Card, Form, Container } from "react-bootstrap";
 import { editTrip } from "../actions/TripActions";
 import SubmitButton from "./SubmitButton";
+import AsyncSearchBar from "./AsyncSearchBar";
 
 const EditTripForm = ({ trip, editTrip, closeEdit }) => {
   const { id, name, start_date, end_date, completed, notes } = trip;
@@ -10,12 +11,21 @@ const EditTripForm = ({ trip, editTrip, closeEdit }) => {
   const [startDate, setStartDate] = useState(start_date.slice(0, 10));
   const [endDate, setEndDate] = useState(end_date.slice(0, 10));
   const [formNotes, setFormNotes] = useState(notes);
+  const [collabs, setCollabs] = useState("");
   const [markCompleted, setMarkCompleted] = useState(completed);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     //EditTrip
-    editTrip(tripName, startDate, endDate, formNotes, markCompleted, id);
+    editTrip(
+      tripName,
+      startDate,
+      endDate,
+      formNotes,
+      markCompleted,
+      id,
+      collabs
+    );
 
     //open the trip detail page for this trip
     const curPane = document.getElementById(
@@ -84,6 +94,15 @@ const EditTripForm = ({ trip, editTrip, closeEdit }) => {
                       value={endDate}
                       onChange={(e) => setEndDate(e.target.value)}
                     />
+                    <Form.Group controlId="formBasicCollaborators">
+                      <Form.Label className="form-label">
+                        Collaborators
+                      </Form.Label>
+                      <AsyncSearchBar
+                        setCollabs={setCollabs}
+                        collabs={collabs}
+                      />
+                    </Form.Group>
                   </Form.Group>
                   <Form.Check
                     label="Completed"

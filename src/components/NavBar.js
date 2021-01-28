@@ -7,6 +7,7 @@ import {
   clearTrip,
   showElevation,
   elevationAnimation,
+  unFetch,
 } from "../actions/TripActions";
 import { Navbar, Nav, NavDropdown, Button, Dropdown } from "react-bootstrap";
 import compass from "../images/compass.png";
@@ -22,6 +23,7 @@ const NavBar = ({
   showElevation,
   elevationAnimation,
   elevation,
+  unFetch,
 }) => {
   const handleLogout = () => {
     //Clear trip out of state
@@ -43,6 +45,7 @@ const NavBar = ({
   const handleNavClick = (route) => {
     //if navigating to the profile clear our the trip field in app state to set up next visit to maps page
     if (!route.includes("/trip")) clearTrip();
+    unFetch(false);
     history.push(route);
     setShow(!show);
     if (elevation) showElevation();
@@ -186,7 +189,6 @@ const NavBar = ({
         Bushwhacker!
       </Navbar.Brand>
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
-
       <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
         {setNavEnd()}
       </Navbar.Collapse>
@@ -210,4 +212,5 @@ export default connect(mapStateToProps, {
   clearTrip,
   showElevation,
   elevationAnimation,
+  unFetch,
 })(NavBar);

@@ -13,6 +13,7 @@ import {
   DECLINE_INVITATION,
   SHOW_ELEVATION,
   ANIMATE_ELEVATION,
+  FETCHED,
 } from "./types";
 import { API } from "../constants";
 
@@ -24,6 +25,11 @@ export const updateLeg = (leg) => {
 //rest trip value in state
 export const clearTrip = () => {
   return { type: LOAD_TRIP, payload: { legs: [] } };
+};
+
+//rest alltrip fethced flag in state
+export const unFetch = () => {
+  return { type: FETCHED, payload: false };
 };
 
 //set up the headers
@@ -108,11 +114,19 @@ export const getInvites = () => {
 };
 
 //Update a trip
-export const editTrip = (name, start_date, end_date, notes, completed, id) => {
+export const editTrip = (
+  name,
+  start_date,
+  end_date,
+  notes,
+  completed,
+  id,
+  collabs
+) => {
   return (dispatch) => {
     dispatch({ type: FETCHING });
     const headers = makeHeader();
-
+    console.log(collabs);
     fetch(API + "/trips/" + id, {
       method: "PATCH",
       headers,
@@ -123,6 +137,7 @@ export const editTrip = (name, start_date, end_date, notes, completed, id) => {
           end_date,
           notes,
           completed,
+          collabs,
         },
       }),
     })

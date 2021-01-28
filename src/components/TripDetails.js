@@ -21,7 +21,6 @@ const TripDetails = ({
 }) => {
   const [show, setShow] = useState(false);
   const location = useLocation();
-
   const { name, start_date, end_date, completed, id, legs, notes } = trip;
   const distance = legs.reduce((accum, { distance }) => accum + distance, 0);
   const aeg = legs.reduce((accum, { aeg }) => accum + aeg, 0);
@@ -82,13 +81,28 @@ const TripDetails = ({
     //get user_trip of creator
     const created = trip.user_trips.find((t) => t.created === true);
     //get user that created
-    const user = trip.users.find((u) => u.id === created.user_id);
-    return user.user_name;
+    if (created) {
+      const user = trip.users.find((u) => u.id === created.user_id);
+      return user;
+      //incase the trip creator as deleted their account
+    } else return "Trip Creator has gone missing";
   };
 
   const collaborators = (creator) => {
     //keep the creator out of the collaborators list
-    const users = trip.users.filter((u) => u.user_name !== creator);
+    let users;
+    if (typeof y === "string") {
+      users = trip.user_trips.filter((u) => u.accepted);
+    } else {
+      users = trip.user_trips.filter(
+        (u) => u.user_id !== creator.id && u.accepted
+      );
+    }
+    //get colaborator ids
+    const col = users.map((u) => u.user_id);
+    //get user objects from colaborator ids
+    users = trip.users.filter((u) => col.includes(u.id));
+    //map through collabortors for display purposes
     return users.map((u, i) => {
       return i === users.length - 1 ? `${u.user_name}` : `${u.user_name}, `;
     });
@@ -107,7 +121,7 @@ const TripDetails = ({
       <ListGroup>
         <ListGroup.Item>
           <h3>{name}</h3>
-          <h5>Created By: {creator} </h5>
+          <h5>Created By: {creator.user_name} </h5>
           {collabs.length ? (
             <h6 className="tab">Collaborators: {collabs} </h6>
           ) : null}

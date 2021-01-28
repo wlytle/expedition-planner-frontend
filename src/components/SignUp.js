@@ -29,7 +29,6 @@ const SignUp = ({ signUp, user, failedAuth, error }) => {
     setErrors(
       validateForm(username, password, passwordConfirmation, failedAuth)
     );
-    debugger;
     if (errors?.none) signUp(username, password, passwordConfirmation);
   };
 
