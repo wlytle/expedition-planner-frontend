@@ -5,11 +5,12 @@ import L, { latLngBounds } from "leaflet";
 import { TileLayer, Map, FeatureGroup, LayersControl } from "react-leaflet";
 import { EditControl } from "react-leaflet-draw";
 import SlidingPane from "react-sliding-pane";
+import { Card } from "react-bootstrap";
 import "react-sliding-pane/dist/react-sliding-pane.css";
 import "leaflet/dist/leaflet.css";
 import "leaflet-draw/dist/leaflet.draw.css";
 import { addLeg, getTrip, editLeg, deleteLeg } from "../actions/TripActions";
-import { togglePane, openPane } from "../actions/MapActions";
+import { togglePane, openPane, animatePane } from "../actions/MapActions";
 import TripLeg from "../components/TripLeg";
 import LegForm from "../components/LegForm";
 import EleContainer from "./EleContainer";
@@ -26,6 +27,8 @@ const MapContainer = ({
   togglePane,
   openPane,
   elevation,
+  animatePane,
+  animate,
 }) => {
   // initialize ref to edit controls
   const editRef = useRef();
@@ -127,12 +130,26 @@ const MapContainer = ({
     )
       return;
     const leg = trip.legs.find((leg) => leg.id === e.target.options.legId);
+
     openPane(leg);
+    setTimeout(() => {
+      animatePane();
+    }, 100);
   };
 
   //close edit pane on close button click
   const closePane = () => {
-    togglePane();
+    if (!pane) {
+      togglePane();
+      setTimeout(() => {
+        animatePane();
+      }, 100);
+    } else {
+      animatePane();
+      setTimeout(() => {
+        togglePane();
+      }, 1020);
+    }
   };
 
   // Reload current trip from database incase of page load
@@ -176,11 +193,11 @@ const MapContainer = ({
     }
   });
 
-  const eleClass = !elevation ? "" : "active";
+  const paneClass = animate ? "active" : "inactive";
 
   return (
     <>
-      <SlidingPane
+      {/* <SlidingPane
         closeIcon={<p>X</p>}
         isOpen={pane}
         title={`Distance: ${(selectedLeg.distance / 1000).toFixed(2)} km AEG: ${
@@ -190,9 +207,23 @@ const MapContainer = ({
         width="400px"
         className="pane-overlay"
         onRequestClose={() => closePane()}
-      >
-        <LegForm leg={selectedLeg} closePane={closePane} />
-      </SlidingPane>
+      > */}
+      {pane ? (
+        <div
+          id="pane-card"
+          className={paneClass}
+          style={{ transform: "translate(1%, 0)" }}
+        >
+          <LegForm
+            leg={selectedLeg}
+            closePane={closePane}
+            title={`Distance: ${(selectedLeg.distance / 1000).toFixed(
+              2
+            )} km AEG: ${selectedLeg.aeg} m`}
+          />
+        </div>
+      ) : null}
+      {/* </SlidingPane> */}
       <Map
         id="mapid"
         className={pane ? "map-respond" : "map"}
@@ -245,6 +276,7 @@ const MapContainer = ({
                     id={leg.id}
                     sport={leg.sport}
                     toggleEdit={toggleEdit}
+                    closePane={closePane}
                     locs={trip.locations.filter((loc) => {
                       if (loc.leg_id === leg.id) {
                         return [loc.lat, loc.lng];
@@ -266,6 +298,7 @@ const mapStateToProps = (state) => {
   return {
     trip: state.TripReducer.trip,
     pane: state.MapReducer.pane,
+    animate: state.MapReducer.animate,
     selectedLeg: state.MapReducer.selectedLeg,
     user: state.UserReducer.user,
     elevation: state.TripReducer.elevation,
@@ -279,4 +312,5 @@ export default connect(mapStateToProps, {
   editLeg,
   togglePane,
   openPane,
+  animatePane,
 })(MapContainer);
