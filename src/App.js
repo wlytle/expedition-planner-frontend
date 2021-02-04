@@ -11,6 +11,7 @@ import Profile from "./containers/Profile";
 import EditProfile from "./components/EditProfile";
 import NavBar from "./components/NavBar";
 import MapContainer from "./containers/MapContainer";
+import PageNotFound from "./components/PageNotFound";
 import "./App.css";
 
 function App() {
@@ -41,6 +42,9 @@ function App() {
           <Login />
         </Route>
         <Route path="/trip/:id" children={<MapContainer />} />
+        <Route path="*">
+          <PageNotFound />
+        </Route>
       </Switch>
     </Router>
   );

@@ -223,3 +223,8 @@ a.nav-link {
   text-decoration: none;
   color: black
 }
+
+/* page not found iamges */
+#page-nf {
+  width: 250px;
+}
