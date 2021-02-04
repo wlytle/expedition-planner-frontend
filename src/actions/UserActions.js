@@ -54,7 +54,9 @@ export const signIn = (username, password) => {
         handleAuthReturn(data, dispatch);
         dispatch({ type: FETCHED, payload: false });
       })
-      .catch((e) => console.log(e));
+      .catch((data) => {
+        dispatch(failedAuth(data.error));
+      });
   };
 };
 
@@ -62,27 +64,47 @@ export const signIn = (username, password) => {
 export const signUp = (username, password, passwordConfirmation) => {
   return (dispatch) => {
     dispatch({ type: FETCHING });
-    fetch(API + "/users", {
-      method: "POST",
+    switch (true) {
+      case username === "" || password === "" || passwordConfirmation === "":
+        dispatch(failedAuth("All fields are required"));
+        break;
+      case password !== passwordConfirmation:
+        dispatch(failedAuth("Passwords must match"));
+        break;
+      default:
+        fetch(API + "/users", {
+          method: "POST",
 
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: JSON.stringify({
-        user: {
-          user_name: username,
-          password,
-          password_confirmation: passwordConfirmation,
-        },
-      }),
-    })
-      .then((r) => r.json())
-      .then((data) => {
-        console.log(data);
-        handleAuthReturn(data, dispatch);
-      })
-      .catch((e) => console.log(e));
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify({
+            user: {
+              user_name: username,
+              password,
+              password_confirmation: passwordConfirmation,
+            },
+          }),
+        })
+          .then((r) => r.json())
+          .then((data) => {
+            if (data.error) {
+              const error = data.error?.user_name
+                ? data.error.user_name[0]
+                : data.error;
+
+              dispatch(failedAuth(error));
+            } else {
+              handleAuthReturn(data, dispatch);
+            }
+          })
+          .catch((data) => {
+            // if user_name error is thrown extract it from the resposne
+            dispatch(failedAuth(data.error));
+            dispatch({ type: FETCHED, payload: false });
+          });
+    }
   };
 };
 

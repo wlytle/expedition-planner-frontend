@@ -17,18 +17,38 @@ const SignUp = ({ signUp, user, failedAuth, error }) => {
     passwordErrors = "";
 
   //set class  names to properly dispaly errors
-  if (errors?.all) {
-    allErrors = "is-invalid";
-  } else if (errors?.username) {
-    usernameErrors = "is-invalid";
-  } else if (errors?.password) {
-    passwordErrors = "is-invalid";
+  switch (error) {
+    case "Passwords must match":
+      passwordErrors = "is-invalid";
+      break;
+    case "All fields are required":
+      allErrors = "is-invalid";
+      break;
+    case `${username} is already taken`:
+      usernameErrors = "is-invalid";
+      break;
+    default:
+      break;
   }
+  // if (error?.all) {
+  //   allErrors = "is-invalid";
+  // } else if (errors?.username) {
+  //   usernameErrors = "is-invalid";
+  // } else if (errors?.password) {
+  //   passwordErrors = "is-invalid";
+  // }
   const handleSubmit = (e) => {
     e.preventDefault();
-    setErrors(
-      validateForm(username, password, passwordConfirmation, failedAuth)
-    );
+    // setErrors(
+    //   validateForm(username, password, passwordConfirmation, failedAuth)
+    // );
+    // trySignUp();
+    signUp(username, password, passwordConfirmation);
+  };
+
+  //attempt to create a new account
+  const trySignUp = () => {
+    console.log(errors);
     if (errors?.none) signUp(username, password, passwordConfirmation);
   };
 
@@ -36,6 +56,7 @@ const SignUp = ({ signUp, user, failedAuth, error }) => {
     if (user.id) {
       history.push("/profile");
     }
+    // if no errors upon page re-render then submit button has been clicked and tests are passing so create account
   });
 
   return (

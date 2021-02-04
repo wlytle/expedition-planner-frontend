@@ -187,9 +187,6 @@ const NavBar = ({
       <Navbar.Brand href="/profile">
         <img className="compass" src={compass} alt="Compass Rose" />
         Bushwhacker!{" "}
-        <a href={"https://github.com/wlytle"} id="signiture">
-          By Will
-        </a>
       </Navbar.Brand>
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
       <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
