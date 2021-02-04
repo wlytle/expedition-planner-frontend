@@ -55,11 +55,7 @@ const MapContainer = ({
 
   //update the backend and state on confirmation of leg created
   const _onCreate = (e) => {
-    console.log(e);
-    // onShapeDrawn(e);
     const { layerType, layer } = e;
-    if (layerType === "circle") {
-    }
     if (layerType === "polyline") {
       // calculate distance of polyline
       const distance = getDistance(layer.getLatLngs());
@@ -69,7 +65,7 @@ const MapContainer = ({
         latlngs: layer.getLatLngs(),
         distance,
       });
-      //remove the layer from the drawn functional group it will be rerendered from state to allow fo identical access controls for all paaths newly created and laoded in
+      //remove the layer from the drawn functional group it will be rerendered from state to allow for identical access controls for all paths newly created and laoded in
       const fg = editRef.current.leafletElement.options.edit.featureGroup;
       fg.removeLayer(fg._layers[e.layer._leaflet_id]);
     }
@@ -159,7 +155,7 @@ const MapContainer = ({
       if (blipRef.current) map.removeLayer(blipRef.current);
       if (elevation) {
         blipRef.current = L.circle(blip, {
-          radius: 100,
+          radius: 150,
           fillOpacity: 1,
         });
         blipRef.current.addTo(map);
@@ -172,7 +168,6 @@ const MapContainer = ({
     if (trip.id && !bounds && !centerRef.current) {
       // if a trip is loaded into app state and component state has no bounds, get the bounds
       if (trip?.locations?.length) {
-        console.log("Gettin bounds");
         const mapBounds = latLngBounds();
         trip.locations.forEach((loc) => mapBounds.extend([loc.lat, loc.lng]));
         // if there are legs to get bounds from set them in state
@@ -185,7 +180,6 @@ const MapContainer = ({
         map.on("locationfound", handleOnLocationFound);
       }
     } else if (!trip.id) {
-      console.log("gettingTrip");
       // load trip into state if it's not there yet
       getTrip(id);
     }
@@ -275,9 +269,7 @@ const MapContainer = ({
           </FeatureGroup>
         </LayersControl>
       </Map>
-      {/* <div id="ele-card" className={eleClass}> */}
       {elevation ? <EleContainer map={mapRef} setBlip={setBlip} /> : null}
-      {/* </div> */}
     </>
   );
 };

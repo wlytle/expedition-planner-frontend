@@ -126,18 +126,6 @@ const EleChart = ({
       .attr("transform", "rotate(-90)")
       .text("Elevation (m)");
 
-    // Make X grid:
-    // svg
-    //   .append("g")
-    //   .attr("class", "grid")
-    //   .attr("transform", `translate(0, ${height})`)
-    //   .call(
-    //     makeXGridlines(xScale)
-    //       // STRETCH IT PARALLEL TO Y:
-    //       .tickSize(-height)
-    //       // NO FORMAT, THESE JUST BE LINES:
-    //       .tickFormat("")
-    //   );
     // Draw y-axis
     svg
       .append("g")
@@ -207,12 +195,6 @@ const EleChart = ({
   const eleClass = animateEle ? "active" : "inactive";
 
   return (
-    // <CSSTransition
-    //   in={animateEle}
-    //   timeout={400}
-    //   className="elevation"
-    //   onExited={showElevation}
-    // >
     <Card
       id="ele-card"
       className={eleClass}
@@ -220,7 +202,6 @@ const EleChart = ({
     >
       <div id="container" />
     </Card>
-    // </CSSTransition>
   );
 };
 

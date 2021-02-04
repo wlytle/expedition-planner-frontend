@@ -3,10 +3,6 @@ import { connect } from "react-redux";
 import EleChart from "../components/EleChart";
 
 function EleContainer({ map, trip, setBlip }) {
-  //   useEffect(() => {
-  //     const chartData = getData();
-  //   });
-
   const getData = () => {
     const layers = map.current.leafletElement._layers;
     let data = [];
