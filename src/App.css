@@ -5,7 +5,7 @@
 
 /* Set map size */
 #mapid { 
-  height: 87vh;
+  height: 89vh;
   bottom: 0;
  }
 
@@ -113,25 +113,18 @@ ion-icon {
   background-color:rgba(0, 128, 0, 0.3);
 }
 
-/* Drawer stuff */
-.map-respond {
-  transition: transform 0.5s;
-  will-change: transform;
-  margin-left: 400px;
-}
-
-map {
-  transition: transform 0.5s;
-  will-change: transform;
-  margin-left: 0px;
-}
 
 .slide-pane .slide-pane__title {
   font-size: 16px;
 }
 
 .pane-overlay {
-  margin-top: 6.28%
+  margin-top: 5.4%;
+  z-index: 5000;
+}
+
+.slide-pane__header {
+  background-color: #fcfcfc;
 }
 
 /* Unstyle links */
@@ -142,4 +135,96 @@ a.nav-link {
 /* style trip details */
 .tab {
   margin-left: 40px;
+}
+
+/* Elevation profile styles */
+.area {
+  fill:#3b6335;
+  fill-opacity: 0.7;
+  stroke-width: 0;
+}
+.grid {
+  stroke-opacity: 0.2;
+}
+.tooltip {
+  border-width: 5px;
+}
+
+.leaflet-touch .leaflet-draw-toolbar .leaflet-draw-draw-circle{
+  background: url("./images/mtn.svg") !important;
+  background-size: 10%;
+  background-color: #FFF !important;
+}
+
+#ele{
+  margin-right: 10px;
+  margin-top: 5px;
+}
+
+#ele-card {
+  position:absolute;
+  z-index:5000;
+  width: 500px;
+  /* display: none; */
+   transform: translate(1%, 0) !important; 
+  /* transition-duration: 1s;  */
+  
+}
+#ele-card.active {
+  display: block;
+  /* top: 50%; */
+   /* transition-property: top;
+  transition-duration: 1.5s; 
+     transition: transform 3s;  */
+     /* transition-delay: 1s;  */
+     transition-duration: 1s;
+     transform: translate(1%, -101%) !important;
+}
+
+#ele-card.inactive {
+  display: block;
+
+     transition-duration: 1s;
+     transform: translate(1%, -0%) !important;
+}
+  
+
+#pane-card {
+  position:absolute;
+  z-index:5000;
+  width: 500px;
+  height: 80%;
+   transform: translate(-100%, 15%) !important; 
+  
+}
+#pane-card.active {
+     transition-duration: 1s;
+     transform: translate(1%, 15%) !important;
+}
+
+#pane-card.inactive {
+     display: block;
+     transition-duration: 1s;
+     transform: translate(-100%, 15%) !important;
+}
+
+#close-icon {
+  margin-left: 30%;
+}
+  
+/* navbar signiture */
+#signiture {
+  font-size: 12px;
+  text-decoration: none;
+  color: black
+}
+#signiture:active {
+  font-size: 12px;
+  text-decoration: none;
+  color: black
+}
+
+/* page not found iamges */
+#page-nf {
+  width: 250px;
 }

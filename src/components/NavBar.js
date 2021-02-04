@@ -2,7 +2,13 @@ import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { useLocation, useHistory } from "react-router-dom";
 import { signedIn, handleLogOut } from "../actions/UserActions";
-import { getInvites } from "../actions/TripActions";
+import {
+  getInvites,
+  clearTrip,
+  showElevation,
+  elevationAnimation,
+  unFetch,
+} from "../actions/TripActions";
 import { Navbar, Nav, NavDropdown, Button, Dropdown } from "react-bootstrap";
 import compass from "../images/compass.png";
 
@@ -12,8 +18,16 @@ const NavBar = ({
   getInvites,
   invites,
   handleLogOut: logout,
+  clearTrip,
+  trip,
+  showElevation,
+  elevationAnimation,
+  elevation,
+  unFetch,
 }) => {
   const handleLogout = () => {
+    //Clear trip out of state
+    clearTrip();
     localStorage.clear();
     logout();
     history.push("/login");
@@ -27,10 +41,28 @@ const NavBar = ({
   //set state for showind nav dropdown
   const [show, setShow] = useState(false);
 
-  //Handle lcikcs to the navigatin dropdown
+  //Handle clicks to the navigatin dropdown
   const handleNavClick = (route) => {
+    //if navigating to the profile clear our the trip field in app state to set up next visit to maps page
+    if (!route.includes("/trip")) clearTrip();
+    unFetch(false);
     history.push(route);
     setShow(!show);
+    if (elevation) showElevation();
+  };
+
+  const handleElevationClick = () => {
+    if (!elevation) {
+      showElevation();
+      setTimeout(() => {
+        elevationAnimation();
+      }, 100);
+    } else {
+      elevationAnimation();
+      setTimeout(() => {
+        showElevation();
+      }, 1020);
+    }
   };
 
   useEffect(() => {
@@ -49,19 +81,26 @@ const NavBar = ({
     switch (location.pathname) {
       case "/login":
         return (
-          <Button href="/signup" variant="outline-success">
+          <Button href="/signup" variant="outline-dark">
             <strong>Sign Up</strong>
           </Button>
         );
       case "/signup":
         return (
-          <Button href="/login" className="form-btn" variant="outline-success">
+          <Button href="/login" className="form-btn" variant="outline-dark">
             <strong>Log In</strong>
           </Button>
         );
       default:
         return (
           <Nav className="mr-auto">
+            {location.pathname.includes("/trip") && trip.locations?.length ? (
+              <ion-icon
+                onClick={handleElevationClick}
+                id="ele"
+                name="analytics-outline"
+              ></ion-icon>
+            ) : null}
             {/* if ther are invites render a badge and add invites to drop down */}
             {invites.length ? (
               <Dropdown>
@@ -147,10 +186,9 @@ const NavBar = ({
     <Navbar id="nav-bar" bg="light" expand="lg" sticky="top">
       <Navbar.Brand href="/profile">
         <img className="compass" src={compass} alt="Compass Rose" />
-        Bushwhacker!
+        Bushwhacker!{" "}
       </Navbar.Brand>
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
-
       <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
         {setNavEnd()}
       </Navbar.Collapse>
@@ -162,6 +200,8 @@ const mapStateToProps = (state) => {
   return {
     user: state.UserReducer.user,
     invites: state.TripReducer.invites,
+    trip: state.TripReducer.trip,
+    elevation: state.TripReducer.elevation,
   };
 };
 
@@ -169,4 +209,8 @@ export default connect(mapStateToProps, {
   signedIn,
   getInvites,
   handleLogOut,
+  clearTrip,
+  showElevation,
+  elevationAnimation,
+  unFetch,
 })(NavBar);

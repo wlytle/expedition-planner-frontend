@@ -17,7 +17,10 @@ export const SET_TRIP_ID = "SET_TRIP_ID";
 export const FETCHED = "FETCHED";
 export const ACCEPT_INVITATION = "ACCEPT_INVITATION";
 export const DECLINE_INVITATION = "DECLINE_INVITATION";
+export const SHOW_ELEVATION = "SHOW_ELEVATION";
+export const ANIMATE_ELEVATION = "ANIMATE_ELEVATION";
 
 //MapActions
 export const TOGGLE_PANE = "TOGGLE_PANE";
 export const OPEN_PANE = "OPEN_PANE";
+export const ANIMATE_PANE = "ANIMATE_PANE";

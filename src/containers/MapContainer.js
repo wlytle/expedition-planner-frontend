@@ -4,14 +4,14 @@ import { useParams, useHistory } from "react-router-dom";
 import L, { latLngBounds } from "leaflet";
 import { TileLayer, Map, FeatureGroup, LayersControl } from "react-leaflet";
 import { EditControl } from "react-leaflet-draw";
-import SlidingPane from "react-sliding-pane";
 import "react-sliding-pane/dist/react-sliding-pane.css";
 import "leaflet/dist/leaflet.css";
 import "leaflet-draw/dist/leaflet.draw.css";
 import { addLeg, getTrip, editLeg, deleteLeg } from "../actions/TripActions";
-import { togglePane, openPane } from "../actions/MapActions";
+import { togglePane, openPane, animatePane } from "../actions/MapActions";
 import TripLeg from "../components/TripLeg";
-import LegForm from "..//components/LegForm";
+import LegForm from "../components/LegForm";
+import EleContainer from "./EleContainer";
 
 const MapContainer = ({
   trip,
@@ -24,18 +24,24 @@ const MapContainer = ({
   deleteLeg,
   togglePane,
   openPane,
+  elevation,
+  animatePane,
+  animate,
 }) => {
   // initialize ref to edit controls
   const editRef = useRef();
   const mapRef = useRef();
   const centerRef = useRef();
+  const blipRef = useRef();
 
   const [bounds, setBounds] = useState(false);
+  const [blip, setBlip] = useState({});
+
   let history = useHistory();
   // Get id of trip from route
   let { id } = useParams();
 
-  //set temporary default cetner at Upset Rapid
+  //set temporary default center at Upset Rapid
   const c = [36.355308, -112.695433];
 
   //calcualte distance of polyline
@@ -49,11 +55,7 @@ const MapContainer = ({
 
   //update the backend and state on confirmation of leg created
   const _onCreate = (e) => {
-    console.log(e);
-    // onShapeDrawn(e);
     const { layerType, layer } = e;
-    if (layerType === "marker") {
-    }
     if (layerType === "polyline") {
       // calculate distance of polyline
       const distance = getDistance(layer.getLatLngs());
@@ -63,7 +65,7 @@ const MapContainer = ({
         latlngs: layer.getLatLngs(),
         distance,
       });
-      //remove the layer from the drawn functional group it will be rerendered from state to allow fo identical access controls for all paaths newly created and laoded in
+      //remove the layer from the drawn functional group it will be rerendered from state to allow for identical access controls for all paths newly created and laoded in
       const fg = editRef.current.leafletElement.options.edit.featureGroup;
       fg.removeLayer(fg._layers[e.layer._leaflet_id]);
     }
@@ -122,22 +124,49 @@ const MapContainer = ({
     )
       return;
     const leg = trip.legs.find((leg) => leg.id === e.target.options.legId);
+
     openPane(leg);
+    setTimeout(() => {
+      animatePane();
+    }, 100);
   };
 
   //close edit pane on close button click
   const closePane = () => {
-    togglePane();
+    if (!pane) {
+      togglePane();
+      setTimeout(() => {
+        animatePane();
+      }, 100);
+    } else {
+      animatePane();
+      setTimeout(() => {
+        togglePane();
+      }, 1020);
+    }
   };
 
   // Reload current trip from database incase of page load
   useEffect(() => {
+    if (blip.lat) {
+      const { current = {} } = mapRef;
+      const { leafletElement: map } = current;
+      // add blip on map corresponding to ele profile track and remove previous blip
+      if (blipRef.current) map.removeLayer(blipRef.current);
+      if (elevation) {
+        blipRef.current = L.circle(blip, {
+          radius: 150,
+          fillOpacity: 1,
+        });
+        blipRef.current.addTo(map);
+      }
+    }
     //Prevent not logged in users form seeing the map
     if (!user.id && !localStorage.getItem("userId")) {
       history.push("/login");
     }
     if (trip.id && !bounds && !centerRef.current) {
-      // if a trip is loaded into state app state and componenet state has no bounds, get the bounds
+      // if a trip is loaded into app state and component state has no bounds, get the bounds
       if (trip?.locations?.length) {
         const mapBounds = latLngBounds();
         trip.locations.forEach((loc) => mapBounds.extend([loc.lat, loc.lng]));
@@ -156,22 +185,26 @@ const MapContainer = ({
     }
   });
 
-  console.log(trip?.locations?.length, trip);
+  const paneClass = animate ? "active" : "inactive";
+
   return (
     <>
-      <SlidingPane
-        closeIcon={<p>X</p>}
-        isOpen={pane}
-        title={`Distance: ${(selectedLeg.distance / 1000).toFixed(2)} km AEG: ${
-          selectedLeg.aeg
-        } m`}
-        from="left"
-        width="400px"
-        className="pane-overlay"
-        onRequestClose={() => closePane()}
-      >
-        <LegForm leg={selectedLeg} />
-      </SlidingPane>
+      {pane ? (
+        <div
+          id="pane-card"
+          className={paneClass}
+          style={{ transform: "translate(1%, 0)" }}
+        >
+          <LegForm
+            leg={selectedLeg}
+            closePane={closePane}
+            title={`Distance: ${(selectedLeg.distance / 1000).toFixed(
+              2
+            )} km AEG: ${selectedLeg.aeg} m`}
+          />
+        </div>
+      ) : null}
+
       <Map
         id="mapid"
         className={pane ? "map-respond" : "map"}
@@ -212,17 +245,19 @@ const MapContainer = ({
                 circle: false,
                 circlemarker: false,
                 polygon: false,
-                marker: true,
+                marker: false,
               }}
             />
+
             {/* add in all of the existing trip legs */}
             {trip.legs
-              ? trip.legs.map((leg) => (
+              ? trip.legs.map((leg, i) => (
                   <TripLeg
                     key={leg.id}
                     id={leg.id}
                     sport={leg.sport}
                     toggleEdit={toggleEdit}
+                    closePane={closePane}
                     locs={trip.locations.filter((loc) => {
                       if (loc.leg_id === leg.id) {
                         return [loc.lat, loc.lng];
@@ -234,6 +269,7 @@ const MapContainer = ({
           </FeatureGroup>
         </LayersControl>
       </Map>
+      {elevation ? <EleContainer map={mapRef} setBlip={setBlip} /> : null}
     </>
   );
 };
@@ -241,8 +277,10 @@ const mapStateToProps = (state) => {
   return {
     trip: state.TripReducer.trip,
     pane: state.MapReducer.pane,
+    animate: state.MapReducer.animate,
     selectedLeg: state.MapReducer.selectedLeg,
     user: state.UserReducer.user,
+    elevation: state.TripReducer.elevation,
   };
 };
 
@@ -253,4 +291,5 @@ export default connect(mapStateToProps, {
   editLeg,
   togglePane,
   openPane,
+  animatePane,
 })(MapContainer);

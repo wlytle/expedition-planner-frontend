@@ -1,11 +1,17 @@
 import React from "react";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+} from "react-router-dom";
 import SignUp from "./components/SignUp";
 import Login from "./components/Login";
 import Profile from "./containers/Profile";
 import EditProfile from "./components/EditProfile";
 import NavBar from "./components/NavBar";
 import MapContainer from "./containers/MapContainer";
+import PageNotFound from "./components/PageNotFound";
 import "./App.css";
 
 function App() {
@@ -14,6 +20,9 @@ function App() {
       <NavBar />
 
       <Switch>
+        <Route exact path="/">
+          <Redirect to="/login" />
+        </Route>
         <Route exact path="/profile">
           <Profile />
         </Route>
@@ -33,6 +42,9 @@ function App() {
           <Login />
         </Route>
         <Route path="/trip/:id" children={<MapContainer />} />
+        <Route path="*">
+          <PageNotFound />
+        </Route>
       </Switch>
     </Router>
   );

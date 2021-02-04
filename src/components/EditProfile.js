@@ -24,6 +24,7 @@ const EditProfile = ({ user, editUser, failedAuth, error, handleLogOut }) => {
     if (password === passwordConfirmation) {
       const id = user.id;
       editUser(id, username, password);
+      history.push("/profile");
     } else {
       failedAuth("Passords must match!");
     }

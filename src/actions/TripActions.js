@@ -11,12 +11,25 @@ import {
   FETCHING,
   ACCEPT_INVITATION,
   DECLINE_INVITATION,
+  SHOW_ELEVATION,
+  ANIMATE_ELEVATION,
+  FETCHED,
 } from "./types";
 import { API } from "../constants";
 
 //Update a leg of the trip
 export const updateLeg = (leg) => {
   return { type: UPDATE_LEG, payload: leg };
+};
+
+//rest trip value in state
+export const clearTrip = () => {
+  return { type: LOAD_TRIP, payload: { legs: [] } };
+};
+
+//rest alltrip fethced flag in state
+export const unFetch = () => {
+  return { type: FETCHED, payload: false };
 };
 
 //set up the headers
@@ -27,6 +40,15 @@ export const makeHeader = () => {
     Accept: "application/json",
     Authorization: `bearer ${token}`,
   };
+};
+// toggle the elevation profile
+export const showElevation = () => {
+  return { type: SHOW_ELEVATION };
+};
+
+// animate the elevation profile
+export const elevationAnimation = () => {
+  return { type: ANIMATE_ELEVATION };
 };
 
 //Create a new trip with the current user being added to db as the creator
@@ -92,11 +114,19 @@ export const getInvites = () => {
 };
 
 //Update a trip
-export const editTrip = (name, start_date, end_date, notes, completed, id) => {
+export const editTrip = (
+  name,
+  start_date,
+  end_date,
+  notes,
+  completed,
+  id,
+  collabs
+) => {
   return (dispatch) => {
     dispatch({ type: FETCHING });
     const headers = makeHeader();
-
+    console.log(collabs);
     fetch(API + "/trips/" + id, {
       method: "PATCH",
       headers,
@@ -107,6 +137,7 @@ export const editTrip = (name, start_date, end_date, notes, completed, id) => {
           end_date,
           notes,
           completed,
+          collabs,
         },
       }),
     })
@@ -226,6 +257,7 @@ export const editLegMeta = (leg) => {
         const { aeg, distance, id, notes, sport, locations } = data;
         const leg = { id, aeg, distance, notes, sport };
         dispatch({ type: UPDATE_LEG, payload: { leg, locations } });
+        dispatch({ type: FETCHING });
       })
       .catch(console.log);
   };

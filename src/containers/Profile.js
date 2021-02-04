@@ -2,19 +2,11 @@ import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
 import { Container, Row, Col } from "react-bootstrap";
-import EditProfile from "../components/EditProfile";
 import Trips from "../components/Trips";
 import { signedIn } from "../actions/UserActions";
 import { getInvites, getTrips } from "../actions/TripActions";
 
-const Profile = ({
-  user,
-  fetched,
-  allTrips,
-  signedIn,
-  getTrips,
-  getInvites,
-}) => {
+const Profile = ({ user, fetched, signedIn, getTrips, getInvites }) => {
   let history = useHistory();
   let location = useLocation();
 

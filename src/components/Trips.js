@@ -20,6 +20,7 @@ const Trips = ({ allTrips, invites }) => {
 
   //open Edit Form
   const triggerForm = (trip) => {
+    closePane(trip.id);
     formRef.current.setAttribute("aria-hidden", false);
     formRef.current.className = "fade tab-pane active show";
     setSelectedTrip(trip);
@@ -54,6 +55,7 @@ const Trips = ({ allTrips, invites }) => {
 
   // open trip detail
   const openDetail = (id) => {
+    console.log("OOPEN");
     // just incase also close the edit form
     closeEdit();
     closeNew();
