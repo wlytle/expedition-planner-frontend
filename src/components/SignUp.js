@@ -10,10 +10,6 @@ const SignUp = ({ signUp, user, failedAuth, error }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
-<<<<<<< HEAD
-=======
-  const [errors, setErrors] = useState({});
->>>>>>> dev
   let history = useHistory();
   let allErrors = "",
     usernameErrors = "",
@@ -50,10 +46,6 @@ const SignUp = ({ signUp, user, failedAuth, error }) => {
   };
 
   //attempt to create a new account
-  const trySignUp = () => {
-    console.log(errors);
-    if (errors?.none) signUp(username, password, passwordConfirmation);
-  };
 
   useEffect(() => {
     if (user.id) {
