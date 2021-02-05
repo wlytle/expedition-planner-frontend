@@ -29,29 +29,15 @@ const SignUp = ({ signUp, user, failedAuth, error }) => {
     default:
       break;
   }
-  // if (error?.all) {
-  //   allErrors = "is-invalid";
-  // } else if (errors?.username) {
-  //   usernameErrors = "is-invalid";
-  // } else if (errors?.password) {
-  //   passwordErrors = "is-invalid";
-  // }
   const handleSubmit = (e) => {
     e.preventDefault();
-    // setErrors(
-    //   validateForm(username, password, passwordConfirmation, failedAuth)
-    // );
-    // trySignUp();
     signUp(username, password, passwordConfirmation);
   };
-
-  //attempt to create a new account
 
   useEffect(() => {
     if (user.id) {
       history.push("/profile");
     }
-    // if no errors upon page re-render then submit button has been clicked and tests are passing so create account
   });
 
   return (
@@ -67,7 +53,7 @@ const SignUp = ({ signUp, user, failedAuth, error }) => {
             <Card>
               <Card.Img
                 src={process.env.PUBLIC_URL + "images/citadel-crop.jpg"}
-                alt="Nevada Sajama"
+                alt="Bears Ears National Monument"
               />
             </Card>{" "}
           </Col>
