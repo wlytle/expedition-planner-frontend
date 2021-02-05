@@ -117,9 +117,7 @@ const Trips = ({ allTrips, invites }) => {
               ) : (
                 <ListGroup.Item>
                   {`You don't have any ${
-                    location.pathname === "invitations"
-                      ? "invitations "
-                      : "trips "
+                    location.pathname === "/invites" ? "invitations " : "trips "
                   }right now.`}
                 </ListGroup.Item>
               )}

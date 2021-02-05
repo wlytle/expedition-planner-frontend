@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import AsyncSelect from "react-select/async";
 import makeAnimated from "react-select/animated";
 import { makeHeader } from "../actions/TripActions";
+import { API } from "../constants";
 
 const AsyncSearchBar = ({ setCollabs }) => {
   //set default query terms
@@ -13,7 +14,7 @@ const AsyncSearchBar = ({ setCollabs }) => {
   // fetch filteres search results for dropdown
   const loadOptions = () => {
     const headers = makeHeader();
-    return fetch(`http://localhost:3000/collabs?q=${query}`, {
+    return fetch(`${API}/collabs?q=${query}`, {
       method: "GET",
       headers,
     }).then((res) => res.json());
