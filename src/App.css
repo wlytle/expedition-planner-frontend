@@ -1,38 +1,230 @@
-.App {
-  text-align: center;
+/* For leaflet-draw */
+.sr-only {
+  display: none;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+/* Set map size */
+#mapid { 
+  height: 89vh;
+  bottom: 0;
+ }
+
+/* nabar image */
+.compass {
+  width: 10% 
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+/* navbar backgound */
+#nav-bar {
+  background-image: url("./images/SpoonGraphics-Topographic-Map-1.png") 
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+div#basic-navbar-nav {
+  margin-right: 40px;
+}
+
+/* Configure drop down over icons */
+ .dropdown-toggle{
+  background-color: rgba(0,0,0,0);
+  border-color: rgba(0,0,0,0);
+  box-shadow: rgba(0,0,0,0);
+  color: black;
+ }
+ /*Overwrite css default colors for buttons */
+ #invites-dropdown:active, #profile-dropdown:active {
+  background-color: rgba(0,0,0,0);
+  border-color: rgba(0,0,0,0);
+  box-shadow: 0 0 0 0.25rem rgba(0,0,0,0);
+  color: black;
+ }
+ #invites-dropdown:focus, #profile-dropdown:focus {
+  background-color: rgba(0,0,0,0);
+  border-color: rgba(0,0,0,0);
+  box-shadow: 0 0 0 0.25rem rgba(0,0,0,0);
+  color: black;
+ }
+
+ #invites-dropdown:hover, #profile-dropdown:hover {
+  background-color: rgba(0,0,0,0);
+  border-color: rgba(0,0,0,0);
+  box-shadow: 0 0 0 0.25rem rgba(0,0,0,0);
+  color: black;
+ }
+
+/* add invites bage to bell icon */
+.fa-stack[data-count]:after{
+  position:absolute;
+  right:0%;
+  top:1%;
+  content: attr(data-count);
+  font-size:55%;
+  padding:.6em;
+  border-radius:999px;
+  line-height:.75em;
   color: white;
+  background:rgba(255,0,0,.85);
+  text-align:center;
+  min-width:2em;
+  font-weight:bold;
+  margin-right: 50px;
+  margin-top: 10px;
 }
 
-.App-link {
-  color: #61dafb;
+/* padd out the notification icon */
+  #notification {
+    margin-right: 10px;
+  }
+
+
+/* Card styling */
+.card {
+  box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
+}
+/* signin and log inimages */
+.card-img {
+  padding: 16px
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* style lists to match cards */
+.list-group {
+  box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
+}
+
+/* Nav Icons */
+ion-icon {
+  font-size: 32px;
+}
+ /* Sapce the submit button out */
+.form-btn {
+  margin-top: 10px;
+  margin-right: 4px;
+  margin-bottom: 10px;
+}
+/* space out form labels */
+.form-label {
+  margin-top: 5px;
+}
+/*  */
+.trip-list .list-group-item.active {
+  background-color: green;
+}
+
+.trip-list .list-group-item:hover {
+  background-color:rgba(0, 128, 0, 0.3);
+}
+
+
+.slide-pane .slide-pane__title {
+  font-size: 16px;
+}
+
+.pane-overlay {
+  margin-top: 5.4%;
+  z-index: 5000;
+}
+
+.slide-pane__header {
+  background-color: #fcfcfc;
+}
+
+/* Unstyle links */
+a.nav-link {
+  text-decoration: none;
+}
+
+/* style trip details */
+.tab {
+  margin-left: 40px;
+}
+
+/* Elevation profile styles */
+.area {
+  fill:#3b6335;
+  fill-opacity: 0.7;
+  stroke-width: 0;
+}
+.grid {
+  stroke-opacity: 0.2;
+}
+.tooltip {
+  border-width: 5px;
+}
+
+.leaflet-touch .leaflet-draw-toolbar .leaflet-draw-draw-circle{
+  background: url("./images/mtn.svg") !important;
+  background-size: 10%;
+  background-color: #FFF !important;
+}
+
+#ele{
+  margin-right: 10px;
+  margin-top: 5px;
+}
+
+#ele-card {
+  position:absolute;
+  z-index:5000;
+  width: 500px;
+  /* display: none; */
+   transform: translate(1%, 0) !important; 
+  /* transition-duration: 1s;  */
+  
+}
+#ele-card.active {
+  display: block;
+  /* top: 50%; */
+   /* transition-property: top;
+  transition-duration: 1.5s; 
+     transition: transform 3s;  */
+     /* transition-delay: 1s;  */
+     transition-duration: 1s;
+     transform: translate(1%, -101%) !important;
+}
+
+#ele-card.inactive {
+  display: block;
+
+     transition-duration: 1s;
+     transform: translate(1%, -0%) !important;
+}
+  
+
+#pane-card {
+  position:absolute;
+  z-index:5000;
+  width: 500px;
+  height: 80%;
+   transform: translate(-100%, 15%) !important; 
+  
+}
+#pane-card.active {
+     transition-duration: 1s;
+     transform: translate(1%, 15%) !important;
+}
+
+#pane-card.inactive {
+     display: block;
+     transition-duration: 1s;
+     transform: translate(-100%, 15%) !important;
+}
+
+#close-icon {
+  margin-left: 30%;
+}
+  
+/* navbar signiture */
+#signiture {
+  font-size: 12px;
+  text-decoration: none;
+  color: black
+}
+#signiture:active {
+  font-size: 12px;
+  text-decoration: none;
+  color: black
+}
+
+/* page not found iamges */
+#page-nf {
+  width: 250px;
 }

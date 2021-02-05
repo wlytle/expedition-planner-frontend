@@ -10,6 +10,10 @@ const SignUp = ({ signUp, user, failedAuth, error }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
+<<<<<<< HEAD
+=======
+  const [errors, setErrors] = useState({});
+>>>>>>> dev
   let history = useHistory();
   let allErrors = "",
     usernameErrors = "",
