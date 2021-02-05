@@ -3,7 +3,7 @@ import { useHistory } from "react-router-dom";
 import { Col, Row, Container, Form, Card } from "react-bootstrap";
 import { connect } from "react-redux";
 import { signUp, failedAuth } from "../actions/UserActions";
-import { validateForm } from "../helpers";
+import citadel from "../images/citadel-crop.JPG";
 import SubmitButton from "./SubmitButton";
 
 const SignUp = ({ signUp, user, failedAuth, error }) => {
@@ -51,10 +51,7 @@ const SignUp = ({ signUp, user, failedAuth, error }) => {
           >
             {" "}
             <Card>
-              <Card.Img
-                src={process.env.PUBLIC_URL + "images/citadel-crop.jpg"}
-                alt="Bears Ears National Monument"
-              />
+              <Card.Img src={citadel} alt="Bears Ears National Monument" />
             </Card>{" "}
           </Col>
           <Col md={{ span: 4, offset: 1 }} style={{ marginTop: "40px" }}>
