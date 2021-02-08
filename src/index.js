@@ -7,13 +7,7 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import rootReducer from "./reducers/index";
 
-let store = createStore(
-  rootReducer,
-  compose(
-    applyMiddleware(thunk),
-    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
-  )
-);
+let store = createStore(rootReducer, compose(applyMiddleware(thunk)));
 
 ReactDOM.render(
   <Provider store={store}>
