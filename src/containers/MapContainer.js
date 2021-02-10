@@ -183,7 +183,17 @@ const MapContainer = ({
       // load trip into state if it's not there yet
       getTrip(id);
     }
-  });
+  }, [
+    bounds,
+    blip,
+    user.id,
+    trip.id,
+    trip.locations,
+    elevation,
+    history,
+    getTrip,
+    id,
+  ]);
 
   const paneClass = animate ? "active" : "inactive";
 

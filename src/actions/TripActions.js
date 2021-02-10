@@ -161,7 +161,6 @@ export const getTrip = (id) => {
     })
       .then((r) => r.json())
       .then((trip) => {
-        console.log(trip);
         dispatch({ type: LOAD_TRIP, payload: trip });
       })
       .catch(console.log);

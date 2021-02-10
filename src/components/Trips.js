@@ -36,8 +36,6 @@ const Trips = ({ allTrips, invites }) => {
 
   //close the new trip form
   const closeNew = () => {
-    const id = location.hash.slice(1);
-    // closePane(id);
     if (newRef.current.getAttribute("aria-hidden")) {
       newRef.current.setAttribute("aria-hidden", true);
       newRef.current.className = "fade tab-pane";
@@ -46,7 +44,6 @@ const Trips = ({ allTrips, invites }) => {
 
   //close current pane
   const closePane = (id) => {
-    console.log("close", id);
     const curPane = document.getElementById(`list-group-trips-tabpane-#${id}`);
     if (!curPane) return;
     curPane.setAttribute("aria-hidden", true);
@@ -55,7 +52,6 @@ const Trips = ({ allTrips, invites }) => {
 
   // open trip detail
   const openDetail = (id) => {
-    console.log("OOPEN");
     // just incase also close the edit form
     closeEdit();
     closeNew();

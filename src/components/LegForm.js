@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
-import { Col, Row, Container, Form, Card } from "react-bootstrap";
+import { Col, Row, Form, Card } from "react-bootstrap";
 import { editLegMeta } from "../actions/TripActions";
 import SubmitButton from "./SubmitButton";
 import { sports } from "../constants";

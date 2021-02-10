@@ -59,7 +59,7 @@ const EditProfile = ({ user, editUser, failedAuth, error, handleLogOut }) => {
     } else if (user.id && !username) {
       setUsername(user.username);
     }
-  });
+  }, [history, user.id, user.username, username]);
   const inputClass = error ? "is-invalid" : "";
   return (
     <section>

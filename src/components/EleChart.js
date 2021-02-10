@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import * as d3 from "d3";
 import { Card } from "react-bootstrap";
-import { CSSTransition } from "react-transition-group";
 import { showElevation } from "../actions/TripActions";
 
 const EleChart = ({
@@ -71,10 +70,7 @@ const EleChart = ({
       .curve(d3.curveMonotoneX);
 
     // Define and evenly space out axis ticks
-    const xAxisTicks = 8;
     const yAxisTicks = 6;
-    const makeXGridlines = (xScale) => d3.axisBottom(xScale).ticks(xAxisTicks);
-    const makeYGridlines = (yScale) => d3.axisLeft(yScale).ticks(yAxisTicks);
 
     d3.axisBottom(xScale)
       // ...

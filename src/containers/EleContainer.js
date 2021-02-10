@@ -70,7 +70,7 @@ function EleContainer({ map, trip, setBlip }) {
     return chartData;
   };
 
-  // send our data to a function to render the chart
+  // send our data to a function to render the chartcode
   const chartData = getData();
   console.log(chartData);
   return (
