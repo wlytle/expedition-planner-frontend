@@ -159,13 +159,15 @@ const NavBar = ({
                 >
                   My Profile
                 </Dropdown.Item>
-
-                <Dropdown.Item
-                  className="nav-Dropdown.Item"
-                  onClick={() => handleNavClick("/profile/edit")}
-                >
-                  Edit Profile
-                </Dropdown.Item>
+                {/* Disable edit if guest */}
+                {user.username !== "Guest" ? (
+                  <Dropdown.Item
+                    className="nav-Dropdown.Item"
+                    onClick={() => handleNavClick("/profile/edit")}
+                  >
+                    Edit Profile
+                  </Dropdown.Item>
+                ) : null}
 
                 <NavDropdown.Divider />
                 <Dropdown.Item

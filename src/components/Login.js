@@ -11,14 +11,12 @@ const Login = ({ signIn, user, fetching, error }) => {
   let history = useHistory();
 
   const handleSubmit = (e) => {
-    debugger;
     e.preventDefault();
     signIn(username, password);
   };
 
-  const submitGuest = (e) => {
-    console.log(e.target);
-    debugger;
+  const submitGuest = () => {
+    signIn("Guest", "password");
   };
 
   useEffect(() => {

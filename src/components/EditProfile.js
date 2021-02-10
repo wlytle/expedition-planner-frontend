@@ -51,7 +51,10 @@ const EditProfile = ({ user, editUser, failedAuth, error, handleLogOut }) => {
 
   // if useState got set before redux state was loaded in set the suer naem to auto fill the form
   useEffect(() => {
-    if (!user.id && !localStorage.getItem("userId")) {
+    if (
+      (!user.id && !localStorage.getItem("userId")) ||
+      user.username === "Guest"
+    ) {
       history.push("/login");
     } else if (user.id && !username) {
       setUsername(user.username);

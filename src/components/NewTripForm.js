@@ -54,7 +54,7 @@ const NewTripForm = ({ newId, createTrip }) => {
                     <Form.Control
                       type="date"
                       name="endDate"
-                      value={endDate}
+                      value={startDate}
                       onChange={(e) => setStartDate(e.target.value)}
                     />
                   </Form.Group>
