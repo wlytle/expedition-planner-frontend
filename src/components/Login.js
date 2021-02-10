@@ -11,8 +11,14 @@ const Login = ({ signIn, user, fetching, error }) => {
   let history = useHistory();
 
   const handleSubmit = (e) => {
+    debugger;
     e.preventDefault();
     signIn(username, password);
+  };
+
+  const submitGuest = (e) => {
+    console.log(e.target);
+    debugger;
   };
 
   useEffect(() => {
@@ -42,7 +48,7 @@ const Login = ({ signIn, user, fetching, error }) => {
           <Col md={{ span: 4, offset: 1 }} style={{ marginTop: "40px" }}>
             <Card>
               <Card.Body>
-                <Form onSubmit={handleSubmit}>
+                <Form onSubmit={(e) => handleSubmit(e)}>
                   <Form.Group controlId="formBasicUsername">
                     <Form.Label className="form-label">Username</Form.Label>
                     <Form.Control
@@ -68,7 +74,19 @@ const Login = ({ signIn, user, fetching, error }) => {
                     <div className="invalid-feedback">{error}</div>
                   </Form.Group>
 
-                  <SubmitButton fetching={fetching} btnTxt={"Log In"} />
+                  <SubmitButton
+                    type="submit"
+                    fetching={fetching}
+                    btnTxt={"Log In"}
+                  />
+                  <SubmitButton
+                    type="button"
+                    handleClick={submitGuest}
+                    id="guest"
+                    btnTxt={"Continue as guest"}
+                    fetching={fetching}
+                    variant="outline-primary"
+                  />
                 </Form>
               </Card.Body>
             </Card>
